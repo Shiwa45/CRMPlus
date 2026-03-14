@@ -16,6 +16,7 @@ class LeadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lead
         fields = '__all__'
+        read_only_fields = ['created_by']
 
 class LeadActivitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,6 +30,9 @@ class LeadSourceViewSet(viewsets.ModelViewSet):
 class LeadViewSet(viewsets.ModelViewSet):
     queryset = Lead.objects.all()
     serializer_class = LeadSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
 
     @action(detail=False, methods=['get'])
     def stats(self, request):

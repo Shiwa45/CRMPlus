@@ -28,6 +28,7 @@ class KPITargetSerializer(serializers.ModelSerializer):
     class Meta:
         model = KPITarget
         fields = '__all__'
+        read_only_fields = ['user']
 
 class NotificationPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,6 +46,9 @@ class DashboardPreferenceViewSet(viewsets.ModelViewSet):
 class KPITargetViewSet(viewsets.ModelViewSet):
     queryset = KPITarget.objects.all()
     serializer_class = KPITargetSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class NotificationPreferenceViewSet(viewsets.ModelViewSet):
     queryset = NotificationPreference.objects.all()

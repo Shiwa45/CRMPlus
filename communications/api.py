@@ -12,16 +12,19 @@ class EmailConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailConfiguration
         fields = '__all__'
+        read_only_fields = ['user']
 
 class EmailTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailTemplate
         fields = '__all__'
+        read_only_fields = ['user']
 
 class EmailCampaignSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailCampaign
         fields = '__all__'
+        read_only_fields = ['user']
 
 class EmailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,6 +40,7 @@ class EmailSequenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailSequence
         fields = '__all__'
+        read_only_fields = ['user']
 
 class EmailSequenceStepSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,6 +58,9 @@ class EmailConfigurationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
     @action(detail=True, methods=['post'])
     def test(self, request, pk=None):
@@ -79,12 +86,18 @@ class EmailTemplateViewSet(viewsets.ModelViewSet):
     queryset = EmailTemplate.objects.all()
     serializer_class = EmailTemplateSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 class EmailCampaignViewSet(viewsets.ModelViewSet):
     queryset = EmailCampaign.objects.all()
     serializer_class = EmailCampaignSerializer
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
     @action(detail=True, methods=['post'])
     def start(self, request, pk=None):
@@ -152,6 +165,9 @@ class EmailTrackingViewSet(viewsets.ModelViewSet):
 class EmailSequenceViewSet(viewsets.ModelViewSet):
     queryset = EmailSequence.objects.all()
     serializer_class = EmailSequenceSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class EmailSequenceStepViewSet(viewsets.ModelViewSet):
     queryset = EmailSequenceStep.objects.all()
