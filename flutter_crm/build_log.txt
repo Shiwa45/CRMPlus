@@ -1,0 +1,505 @@
+[ +424 ms] Unable to locate an Android SDK.
+[  +13 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[        ] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[   +1 ms] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[   +1 ms] executing: [C:\Users\shiwa\flutter/] git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[  +83 ms] Exit code 0 from: git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[        ] 2026-03-03 16:03:22 -0800
+[  +20 ms] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[   +3 ms] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[  +71 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[        ] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[   +1 ms] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[  +28 ms] Skipping pub get: version match.
+[  +95 ms] Found plugin video_player at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player-2.9.1\
+[   +6 ms] Found plugin video_player_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_web-2.3.2\
+[  +10 ms] Found plugin video_player_avfoundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_avfoundation-2.6.1\
+[   +4 ms] Found plugin video_player_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_android-2.7.1\
+[   +7 ms] Found plugin url_launcher at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.0\
+[   +2 ms] Found plugin url_launcher_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.1\
+[   +7 ms] Found plugin url_launcher_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.3.0\
+[   +3 ms] Found plugin url_launcher_macos at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.1.0\
+[   +3 ms] Found plugin url_launcher_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.1.1\
+[   +4 ms] Found plugin url_launcher_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.2.5\
+[   +3 ms] Found plugin url_launcher_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.0\
+[  +38 ms] Found plugin shared_preferences at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.3.2\
+[   +2 ms] Found plugin shared_preferences_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +5 ms] Found plugin path_provider_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.2.1\
+[   +9 ms] Found plugin shared_preferences_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.2\
+[   +1 ms] Found plugin shared_preferences_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +2 ms] Found plugin path_provider_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +4 ms] Found plugin shared_preferences_foundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.2\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.3.2\
+[   +6 ms] Found plugin quill_html_editor at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\quill_html_editor-2.2.8\
+[   +1 ms] Found plugin webview_flutter_wkwebview at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_wkwebview-3.14.0\
+[   +3 ms] Found plugin webview_flutter_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_android-3.16.7\
+[   +2 ms] Found plugin webview_flutter at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter-4.8.0\
+[   +6 ms] Found plugin pointer_interceptor at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor-0.10.1+2\
+[   +1 ms] Found plugin pointer_interceptor_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor_web-0.10.2+1\
+[   +2 ms] Found plugin pointer_interceptor_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor_ios-0.10.1\
+[   +1 ms] Found plugin file_picker at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\file_picker-6.2.1\
+[   +1 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.17\
+[   +5 ms] Found plugin google_maps_flutter at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter-2.9.0\
+[   +2 ms] Found plugin google_maps_flutter_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_web-0.5.10\
+[   +7 ms] Found plugin google_maps_flutter_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_ios-2.13.0\
+[   +2 ms] Found plugin google_maps_flutter_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_android-2.14.4\
+[   +3 ms] Found plugin path_provider at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.2\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.3.2\
+[   +1 ms] Found plugin path_provider_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.2\
+[  +26 ms] Package quill_html_editor:android references quill_html_editor:android as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of quill_html_editor to either avoid referencing a default implementation via `platforms: android: default_package: quill_html_editor` or add an inline implementation to quill_html_editor via `platforms: android:` `pluginClass` or `dartPluginClass`.
+
+[   +3 ms] Package quill_html_editor:ios references quill_html_editor:ios as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of quill_html_editor to either avoid referencing a default implementation via `platforms: ios: default_package: quill_html_editor` or add an inline implementation to quill_html_editor via `platforms: ios:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:linux references file_picker:linux as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: linux: default_package: file_picker` or add an inline implementation to file_picker via `platforms: linux:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:macos references file_picker:macos as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: macos: default_package: file_picker` or add an inline implementation to file_picker via `platforms: macos:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:windows references file_picker:windows as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: windows: default_package: file_picker` or add an inline implementation to file_picker via `platforms: windows:` `pluginClass` or `dartPluginClass`.
+
+[  +58 ms] Found plugin video_player at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player-2.9.1\
+[   +1 ms] Found plugin video_player_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_web-2.3.2\
+[   +6 ms] Found plugin video_player_avfoundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_avfoundation-2.6.1\
+[   +2 ms] Found plugin video_player_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_android-2.7.1\
+[   +4 ms] Found plugin url_launcher at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.0\
+[   +1 ms] Found plugin url_launcher_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.1\
+[   +3 ms] Found plugin url_launcher_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.3.0\
+[   +2 ms] Found plugin url_launcher_macos at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.1.0\
+[   +1 ms] Found plugin url_launcher_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.1.1\
+[   +1 ms] Found plugin url_launcher_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.2.5\
+[   +1 ms] Found plugin url_launcher_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.0\
+[  +18 ms] Found plugin shared_preferences at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.3.2\
+[   +1 ms] Found plugin shared_preferences_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +2 ms] Found plugin path_provider_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.2.1\
+[   +6 ms] Found plugin shared_preferences_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.2\
+[   +2 ms] Found plugin shared_preferences_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +2 ms] Found plugin shared_preferences_foundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.2\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.3.2\
+[   +2 ms] Found plugin quill_html_editor at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\quill_html_editor-2.2.8\
+[   +1 ms] Found plugin webview_flutter_wkwebview at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_wkwebview-3.14.0\
+[   +3 ms] Found plugin webview_flutter_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_android-3.16.7\
+[   +1 ms] Found plugin webview_flutter at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter-4.8.0\
+[   +4 ms] Found plugin pointer_interceptor at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor-0.10.1+2\
+[   +1 ms] Found plugin pointer_interceptor_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor_web-0.10.2+1\
+[   +2 ms] Found plugin pointer_interceptor_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor_ios-0.10.1\
+[   +2 ms] Found plugin file_picker at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\file_picker-6.2.1\
+[   +2 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.17\
+[   +3 ms] Found plugin google_maps_flutter at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter-2.9.0\
+[   +1 ms] Found plugin google_maps_flutter_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_web-0.5.10\
+[   +8 ms] Found plugin google_maps_flutter_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_ios-2.13.0\
+[   +2 ms] Found plugin google_maps_flutter_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_android-2.14.4\
+[   +2 ms] Found plugin path_provider at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.2\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.3.2\
+[   +1 ms] Found plugin path_provider_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.2\
+[  +16 ms] Package quill_html_editor:android references quill_html_editor:android as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of quill_html_editor to either avoid referencing a default implementation via `platforms: android: default_package: quill_html_editor` or add an inline implementation to quill_html_editor via `platforms: android:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package quill_html_editor:ios references quill_html_editor:ios as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of quill_html_editor to either avoid referencing a default implementation via `platforms: ios: default_package: quill_html_editor` or add an inline implementation to quill_html_editor via `platforms: ios:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:linux references file_picker:linux as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: linux: default_package: file_picker` or add an inline implementation to file_picker via `platforms: linux:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:macos references file_picker:macos as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: macos: default_package: file_picker` or add an inline implementation to file_picker via `platforms: macos:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:windows references file_picker:windows as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: windows: default_package: file_picker` or add an inline implementation to file_picker via `platforms: windows:` `pluginClass` or `dartPluginClass`.
+
+[  +16 ms] Skipping generating web_plugin_registrant.dart because it is up-to-date.
+[  +38 ms] Found plugin video_player at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player-2.9.1\
+[   +1 ms] Found plugin video_player_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_web-2.3.2\
+[   +5 ms] Found plugin video_player_avfoundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_avfoundation-2.6.1\
+[   +1 ms] Found plugin video_player_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_android-2.7.1\
+[   +3 ms] Found plugin url_launcher at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.0\
+[   +1 ms] Found plugin url_launcher_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.1\
+[   +3 ms] Found plugin url_launcher_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.3.0\
+[   +1 ms] Found plugin url_launcher_macos at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.1.0\
+[   +1 ms] Found plugin url_launcher_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.1.1\
+[   +1 ms] Found plugin url_launcher_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.2.5\
+[   +1 ms] Found plugin url_launcher_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.0\
+[  +16 ms] Found plugin shared_preferences at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.3.2\
+[   +1 ms] Found plugin shared_preferences_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +3 ms] Found plugin path_provider_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.2.1\
+[   +6 ms] Found plugin shared_preferences_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.2\
+[   +1 ms] Found plugin shared_preferences_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +3 ms] Found plugin shared_preferences_foundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.2\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.3.2\
+[   +2 ms] Found plugin quill_html_editor at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\quill_html_editor-2.2.8\
+[   +1 ms] Found plugin webview_flutter_wkwebview at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_wkwebview-3.14.0\
+[   +2 ms] Found plugin webview_flutter_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_android-3.16.7\
+[   +1 ms] Found plugin webview_flutter at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter-4.8.0\
+[   +4 ms] Found plugin pointer_interceptor at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor-0.10.1+2\
+[   +1 ms] Found plugin pointer_interceptor_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor_web-0.10.2+1\
+[   +2 ms] Found plugin pointer_interceptor_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor_ios-0.10.1\
+[   +1 ms] Found plugin file_picker at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\file_picker-6.2.1\
+[   +2 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.17\
+[   +3 ms] Found plugin google_maps_flutter at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter-2.9.0\
+[   +1 ms] Found plugin google_maps_flutter_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_web-0.5.10\
+[   +5 ms] Found plugin google_maps_flutter_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_ios-2.13.0\
+[   +2 ms] Found plugin google_maps_flutter_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_android-2.14.4\
+[   +2 ms] Found plugin path_provider at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.2\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.3.2\
+[   +1 ms] Found plugin path_provider_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.2\
+[  +13 ms] Package quill_html_editor:android references quill_html_editor:android as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of quill_html_editor to either avoid referencing a default implementation via `platforms: android: default_package: quill_html_editor` or add an inline implementation to quill_html_editor via `platforms: android:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package quill_html_editor:ios references quill_html_editor:ios as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of quill_html_editor to either avoid referencing a default implementation via `platforms: ios: default_package: quill_html_editor` or add an inline implementation to quill_html_editor via `platforms: ios:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:linux references file_picker:linux as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: linux: default_package: file_picker` or add an inline implementation to file_picker via `platforms: linux:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:macos references file_picker:macos as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: macos: default_package: file_picker` or add an inline implementation to file_picker via `platforms: macos:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:windows references file_picker:windows as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: windows: default_package: file_picker` or add an inline implementation to file_picker via `platforms: windows:` `pluginClass` or `dartPluginClass`.
+
+[   +5 ms] Generating C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\android\app\src\main\java\io\flutter\plugins\GeneratedPluginRegistrant.java
+[   +1 ms] Skipping generating GeneratedPluginRegistrant.java because it is up-to-date.
+[   +7 ms] Skipping generating generated_plugin_registrant.h because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugin_registrant.cc because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugins.cmake because it is up-to-date.
+[   +2 ms] Skipping generating generated_plugin_registrant.h because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugin_registrant.cc because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugins.cmake because it is up-to-date.
+[        ] Package quill_html_editor:android references quill_html_editor:android as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of quill_html_editor to either avoid referencing a default implementation via `platforms: android: default_package: quill_html_editor` or add an inline implementation to quill_html_editor via `platforms: android:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package quill_html_editor:ios references quill_html_editor:ios as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of quill_html_editor to either avoid referencing a default implementation via `platforms: ios: default_package: quill_html_editor` or add an inline implementation to quill_html_editor via `platforms: ios:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:linux references file_picker:linux as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: linux: default_package: file_picker` or add an inline implementation to file_picker via `platforms: linux:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:macos references file_picker:macos as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: macos: default_package: file_picker` or add an inline implementation to file_picker via `platforms: macos:` `pluginClass` or `dartPluginClass`.
+
+[        ] Package file_picker:windows references file_picker:windows as the default plugin, but it does not provide an inline implementation.
+           Ask the maintainers of file_picker to either avoid referencing a default implementation via `platforms: windows: default_package: file_picker` or add an inline implementation to file_picker via `platforms: windows:` `pluginClass` or `dartPluginClass`.
+
+[   +3 ms] Skipping generating GeneratedPluginRegistrant.h because it is up-to-date.
+[   +1 ms] Skipping generating GeneratedPluginRegistrant.m because it is up-to-date.
+[   +1 ms] Skipping generating GeneratedPluginRegistrant.swift because it is up-to-date.
+[ +171 ms] Found plugin video_player at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player-2.9.1\
+[   +1 ms] Found plugin video_player_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_web-2.3.2\
+[   +7 ms] Found plugin video_player_avfoundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_avfoundation-2.6.1\
+[   +2 ms] Found plugin video_player_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\video_player_android-2.7.1\
+[   +4 ms] Found plugin url_launcher at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.0\
+[   +2 ms] Found plugin url_launcher_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.1\
+[   +2 ms] Found plugin url_launcher_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.3.0\
+[   +2 ms] Found plugin url_launcher_macos at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.1.0\
+[   +1 ms] Found plugin url_launcher_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.1.1\
+[   +1 ms] Found plugin url_launcher_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.2.5\
+[   +1 ms] Found plugin url_launcher_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.0\
+[  +17 ms] Found plugin shared_preferences at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.3.2\
+[   +1 ms] Found plugin shared_preferences_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +2 ms] Found plugin path_provider_windows at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.2.1\
+[   +7 ms] Found plugin shared_preferences_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.2\
+[   +1 ms] Found plugin shared_preferences_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +2 ms] Found plugin shared_preferences_foundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.2\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.3.2\
+[   +2 ms] Found plugin quill_html_editor at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\quill_html_editor-2.2.8\
+[   +1 ms] Found plugin webview_flutter_wkwebview at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_wkwebview-3.14.0\
+[   +3 ms] Found plugin webview_flutter_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_android-3.16.7\
+[   +1 ms] Found plugin webview_flutter at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter-4.8.0\
+[   +4 ms] Found plugin pointer_interceptor at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor-0.10.1+2\
+[   +1 ms] Found plugin pointer_interceptor_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor_web-0.10.2+1\
+[   +3 ms] Found plugin pointer_interceptor_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\pointer_interceptor_ios-0.10.1\
+[   +2 ms] Found plugin file_picker at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\file_picker-6.2.1\
+[   +1 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.17\
+[   +3 ms] Found plugin google_maps_flutter at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter-2.9.0\
+[   +1 ms] Found plugin google_maps_flutter_web at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_web-0.5.10\
+[   +6 ms] Found plugin google_maps_flutter_ios at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_ios-2.13.0\
+[   +2 ms] Found plugin google_maps_flutter_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\google_maps_flutter_android-2.14.4\
+[   +2 ms] Found plugin path_provider at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.2\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.3.2\
+[   +1 ms] Found plugin path_provider_android at C:\Users\shiwa\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.2\
+[  +34 ms] generated_plugin_registrant.dart not found. Skipping.
+[   +2 ms] Compiling lib\main.dart for the Web...
+[  +11 ms] Initializing file store
+[   +2 ms] Done initializing file store
+[  +54 ms] Skipping target: web_entrypoint
+[   +2 ms] invalidated build due to missing files: C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\web\*\index.html, C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\web\flutter_bootstrap.js
+[   +4 ms] Skipping target: gen_localizations
+[   +4 ms] web_templated_files: Starting due to {InvalidatedReasonKind.outputMissing: The following outputs were missing: C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\build\web\*\index.html, InvalidatedReasonKind.inputMissing: The following inputs were missing: C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\web\*\index.html,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\web\flutter_bootstrap.js}
+[   +2 ms] dart_build: Starting due to {InvalidatedReasonKind.inputChanged: The following inputs have updated contents: C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\package_config.json}
+[   +2 ms] web_static_assets: Starting due to {InvalidatedReasonKind.outputMissing: The following outputs were missing: C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\flutter.js,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\canvaskit.js,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\canvaskit.js.symbols,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\canvaskit.wasm,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\chromium\canvaskit.js,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\chromium\canvaskit.js.symbols,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\chromium\canvaskit.wasm,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\skwasm.js,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\skwasm.js.symbols,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\skwasm.wasm,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\skwasm_heavy.js,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\skwasm_heavy.js.symbols,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\skwasm_heavy.wasm,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\wimp.js,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\wimp.js.symbols,C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\canvaskit\wimp.wasm}
+[ +712 ms] web_static_assets: Complete
+[   +7 ms] dart2js: Starting due to {}
+[   +9 ms] executing: C:\Users\shiwa\flutter\bin\cache\dart-sdk\bin\dart.exe compile js --platform-binaries=C:\Users\shiwa\flutter\bin\cache\flutter_web_sdk\kernel --invoker=flutter_tool -Ddart.vm.product=true -DFLUTTER_VERSION=3.41.4 -DFLUTTER_CHANNEL=stable -DFLUTTER_GIT_URL=https://github.com/flutter/flutter.git -DFLUTTER_FRAMEWORK_REVISION=ff37bef603 -DFLUTTER_ENGINE_REVISION=e4b8dca3f1 -DFLUTTER_DART_VERSION=3.11.1 -DFLUTTER_WEB_USE_SKIA=true -DFLUTTER_WEB_USE_SKWASM=false -DFLUTTER_WEB_CANVASKIT_URL=https://www.gstatic.com/flutter-canvaskit/e4b8dca3f1b4ede4c30371002441c88c12187ed6/ --native-null-assertions --no-source-maps -O4 --minify -o C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\app.dill --packages=C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\package_config.json --cfe-only C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\main.dart
+[   +1 ms] dart2wasm: Starting due to {}
+[   +2 ms] executing: C:\Users\shiwa\flutter\bin\cache\dart-sdk\bin\dart.exe compile wasm --packages=C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\package_config.json --extra-compiler-option=--platform=C:\Users\shiwa\flutter\bin\cache\flutter_web_sdk\kernel\dart2wasm_platform.dill -Ddart.vm.profile=false -Ddart.vm.product=true --extra-compiler-option=--delete-tostring-package-uri=dart:ui --extra-compiler-option=--delete-tostring-package-uri=package:flutter --extra-compiler-option=--import-shared-memory --extra-compiler-option=--shared-memory-max-pages=32768 -DFLUTTER_VERSION=3.41.4 -DFLUTTER_CHANNEL=stable -DFLUTTER_GIT_URL=https://github.com/flutter/flutter.git -DFLUTTER_FRAMEWORK_REVISION=ff37bef603 -DFLUTTER_ENGINE_REVISION=e4b8dca3f1 -DFLUTTER_DART_VERSION=3.11.1 -DFLUTTER_WEB_USE_SKIA=false -DFLUTTER_WEB_USE_SKWASM=true -DFLUTTER_WEB_CANVASKIT_URL=https://www.gstatic.com/flutter-canvaskit/e4b8dca3f1b4ede4c30371002441c88c12187ed6/ --extra-compiler-option=--depfile=C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\dart2wasm.d -O2 --strip-wasm --no-source-maps --minify --extra-compiler-option=--dry-run -o C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\main.dart.wasm C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\main.dart
+[  +68 ms] web_templated_files: Complete
+[  +51 ms] No packages with native assets. Skipping native assets compilation.
+[   +8 ms] dart_build: Complete
+[+28583 ms] ../../../AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_calendar-26.2.14/lib/src/calendar/views/calendar_view.dart:20:1:
+            Error: 'SelectionDetails' is imported from both 'package:flutter/src/widgets/selectable_region.dart' and 'package:syncfusion_flutter_calendar/src/calendar/common/calendar_view_helper.dart'.
+            import '../common/calendar_view_helper.dart';
+            ^^^^^^^^^^^^^^^^
+            ../../../AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_calendar-26.2.14/lib/src/calendar/appointment_layout/allday_appointment_layout.dart:8:1:
+            Error: 'SelectionDetails' is imported from both 'package:flutter/src/widgets/selectable_region.dart' and 'package:syncfusion_flutter_calendar/src/calendar/common/calendar_view_helper.dart'.
+            import '../common/calendar_view_helper.dart';
+            ^^^^^^^^^^^^^^^^
+            lib/helpers/theme/app_theme.dart:65:16:
+            Error: The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'.
+             - 'CardTheme' is from 'package:flutter/src/material/card_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/card_theme.dart').
+             - 'CardThemeData' is from 'package:flutter/src/material/card_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/card_theme.dart').
+                cardTheme: CardTheme(color: Color(0xffffffff)),
+                           ^
+            lib/helpers/theme/app_theme.dart:92:9:
+            Error: The argument type 'BottomAppBarTheme' can't be assigned to the parameter type 'BottomAppBarThemeData?'.
+             - 'BottomAppBarTheme' is from 'package:flutter/src/material/bottom_app_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/bottom_app_bar_theme.dart').
+             - 'BottomAppBarThemeData' is from 'package:flutter/src/material/bottom_app_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/bottom_app_bar_theme.dart').
+                    BottomAppBarTheme(color: Color(0xffeeeeee), elevation: 2),
+                    ^
+            lib/helpers/theme/app_theme.dart:95:18:
+            Error: The argument type 'TabBarTheme' can't be assigned to the parameter type 'TabBarThemeData?'.
+             - 'TabBarTheme' is from 'package:flutter/src/material/tab_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/tab_bar_theme.dart').
+             - 'TabBarThemeData' is from 'package:flutter/src/material/tab_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/tab_bar_theme.dart').
+                tabBarTheme: TabBarTheme(
+                             ^
+            lib/helpers/theme/app_theme.dart:157:16:
+            Error: The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'.
+             - 'CardTheme' is from 'package:flutter/src/material/card_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/card_theme.dart').
+             - 'CardThemeData' is from 'package:flutter/src/material/card_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/card_theme.dart').
+                cardTheme: CardTheme(color: Color(0xff1b1b1c)),
+                           ^
+            lib/helpers/theme/app_theme.dart:187:9:
+            Error: The argument type 'BottomAppBarTheme' can't be assigned to the parameter type 'BottomAppBarThemeData?'.
+             - 'BottomAppBarTheme' is from 'package:flutter/src/material/bottom_app_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/bottom_app_bar_theme.dart').
+             - 'BottomAppBarThemeData' is from 'package:flutter/src/material/bottom_app_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/bottom_app_bar_theme.dart').
+                    BottomAppBarTheme(color: Color(0xff464c52), elevation: 2),
+                    ^
+            lib/helpers/theme/app_theme.dart:190:18:
+            Error: The argument type 'TabBarTheme' can't be assigned to the parameter type 'TabBarThemeData?'.
+             - 'TabBarTheme' is from 'package:flutter/src/material/tab_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/tab_bar_theme.dart').
+             - 'TabBarThemeData' is from 'package:flutter/src/material/tab_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/tab_bar_theme.dart').
+                tabBarTheme: TabBarTheme(
+                             ^
+            lib/view/dashboard/dashboard_screen.dart:72:164:
+            Error: Member not found: 'bar_chart_3'.
+                                    child: stats("LEADS", controller.isLoadingStats ? '...' : controller.leadsCount.toString(), LucideIcons.arrow_up, " Realtime", LucideIcons.bar_chart_3, contentTheme.info)),
+                                                                                          ^^^^^^^^^^^
+            ../../../AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_calendar-26.2.14/lib/src/calendar/views/calendar_view.dart:9404:38:
+            Error: 'SelectionDetails' is imported from both 'package:flutter/src/widgets/selectable_region.dart' and 'package:syncfusion_flutter_calendar/src/calendar/common/calendar_view_helper.dart'.
+                _allDaySelectionNotifier.value = SelectionDetails(view, date);
+                                                 ^^^^^^^^^^^^^^^^
+            ../../../AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_calendar-26.2.14/lib/src/calendar/appointment_layout/allday_appointment_layout.dart:1439:31:
+            Error: 'SelectionDetails' is imported from both 'package:flutter/src/widgets/selectable_region.dart' and 'package:syncfusion_flutter_calendar/src/calendar/common/calendar_view_helper.dart'.
+                selectionNotifier.value = SelectionDetails(
+                                          ^^^^^^^^^^^^^^^^
+            Error: Compilation failed.
+[+73414 ms] Found incompatibilities with WebAssembly.
+
+            package:file_picker/_internal/file_picker_web.dart 2:1 - dart:html unsupported (0)
+            package:get/get_utils/src/platform/platform_web.dart 3:1 - dart:html unsupported (0)
+            package:universal_html/src/_sdk/html.dart 32:1 - dart:html unsupported (0)
+            package:universal_html/src/_sdk_html_additions.dart 16:1 - dart:html unsupported (0)
+[   +1 ms] Wasm dry run findings:
+[        ] Found incompatibilities with WebAssembly.
+
+           package:file_picker/_internal/file_picker_web.dart 2:1 - dart:html unsupported (0)
+           package:get/get_utils/src/platform/platform_web.dart 3:1 - dart:html unsupported (0)
+           package:universal_html/src/_sdk/html.dart 32:1 - dart:html unsupported (0)
+           package:universal_html/src/_sdk_html_additions.dart 16:1 - dart:html unsupported (0)
+
+[        ] Consider addressing these issues to enable wasm builds. See docs for more info: https://docs.flutter.dev/platform-integration/web/wasm
+
+[   +9 ms] Use --no-wasm-dry-run to disable these warnings.
+[   +4 ms] dart2wasm: Complete
+[   +5 ms] Persisting file store
+[   +4 ms] Done persisting file store
+[   +5 ms] Target dart2js failed: ProcessException: Process exited abnormally with exit code 1:
+           ../../../AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_calendar-26.2.14/lib/src/calendar/views/calendar_view.dart:20:1:
+           Error: 'SelectionDetails' is imported from both 'package:flutter/src/widgets/selectable_region.dart' and 'package:syncfusion_flutter_calendar/src/calendar/common/calendar_view_helper.dart'.
+           import '../common/calendar_view_helper.dart';
+           ^^^^^^^^^^^^^^^^
+           ../../../AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_calendar-26.2.14/lib/src/calendar/appointment_layout/allday_appointment_layout.dart:8:1:
+           Error: 'SelectionDetails' is imported from both 'package:flutter/src/widgets/selectable_region.dart' and 'package:syncfusion_flutter_calendar/src/calendar/common/calendar_view_helper.dart'.
+           import '../common/calendar_view_helper.dart';
+           ^^^^^^^^^^^^^^^^
+           lib/helpers/theme/app_theme.dart:65:16:
+           Error: The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'.
+            - 'CardTheme' is from 'package:flutter/src/material/card_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/card_theme.dart').
+            - 'CardThemeData' is from 'package:flutter/src/material/card_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/card_theme.dart').
+               cardTheme: CardTheme(color: Color(0xffffffff)),
+                          ^
+           lib/helpers/theme/app_theme.dart:92:9:
+           Error: The argument type 'BottomAppBarTheme' can't be assigned to the parameter type 'BottomAppBarThemeData?'.
+            - 'BottomAppBarTheme' is from 'package:flutter/src/material/bottom_app_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/bottom_app_bar_theme.dart').
+            - 'BottomAppBarThemeData' is from 'package:flutter/src/material/bottom_app_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/bottom_app_bar_theme.dart').
+                   BottomAppBarTheme(color: Color(0xffeeeeee), elevation: 2),
+                   ^
+           lib/helpers/theme/app_theme.dart:95:18:
+           Error: The argument type 'TabBarTheme' can't be assigned to the parameter type 'TabBarThemeData?'.
+            - 'TabBarTheme' is from 'package:flutter/src/material/tab_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/tab_bar_theme.dart').
+            - 'TabBarThemeData' is from 'package:flutter/src/material/tab_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/tab_bar_theme.dart').
+               tabBarTheme: TabBarTheme(
+                            ^
+           lib/helpers/theme/app_theme.dart:157:16:
+           Error: The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'.
+            - 'CardTheme' is from 'package:flutter/src/material/card_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/card_theme.dart').
+            - 'CardThemeData' is from 'package:flutter/src/material/card_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/card_theme.dart').
+               cardTheme: CardTheme(color: Color(0xff1b1b1c)),
+                          ^
+           lib/helpers/theme/app_theme.dart:187:9:
+           Error: The argument type 'BottomAppBarTheme' can't be assigned to the parameter type 'BottomAppBarThemeData?'.
+            - 'BottomAppBarTheme' is from 'package:flutter/src/material/bottom_app_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/bottom_app_bar_theme.dart').
+            - 'BottomAppBarThemeData' is from 'package:flutter/src/material/bottom_app_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/bottom_app_bar_theme.dart').
+                   BottomAppBarTheme(color: Color(0xff464c52), elevation: 2),
+                   ^
+           lib/helpers/theme/app_theme.dart:190:18:
+           Error: The argument type 'TabBarTheme' can't be assigned to the parameter type 'TabBarThemeData?'.
+            - 'TabBarTheme' is from 'package:flutter/src/material/tab_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/tab_bar_theme.dart').
+            - 'TabBarThemeData' is from 'package:flutter/src/material/tab_bar_theme.dart' ('../../../flutter/packages/flutter/lib/src/material/tab_bar_theme.dart').
+               tabBarTheme: TabBarTheme(
+                            ^
+           lib/view/dashboard/dashboard_screen.dart:72:164:
+           Error: Member not found: 'bar_chart_3'.
+                                   child: stats("LEADS", controller.isLoadingStats ? '...' : controller.leadsCount.toString(), LucideIcons.arrow_up, " Realtime", LucideIcons.bar_chart_3, contentTheme.info)),
+                                                                                          ^^^^^^^^^^^
+           ../../../AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_calendar-26.2.14/lib/src/calendar/views/calendar_view.dart:9404:38:
+           Error: 'SelectionDetails' is imported from both 'package:flutter/src/widgets/selectable_region.dart' and 'package:syncfusion_flutter_calendar/src/calendar/common/calendar_view_helper.dart'.
+               _allDaySelectionNotifier.value = SelectionDetails(view, date);
+                                                ^^^^^^^^^^^^^^^^
+           ../../../AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_calendar-26.2.14/lib/src/calendar/appointment_layout/allday_appointment_layout.dart:1439:31:
+           Error: 'SelectionDetails' is imported from both 'package:flutter/src/widgets/selectable_region.dart' and 'package:syncfusion_flutter_calendar/src/calendar/common/calendar_view_helper.dart'.
+               selectionNotifier.value = SelectionDetails(
+                                         ^^^^^^^^^^^^^^^^
+           Error: Compilation failed.
+             Command: C:\Users\shiwa\flutter\bin\cache\dart-sdk\bin\dart.exe compile js --platform-binaries=C:\Users\shiwa\flutter\bin\cache\flutter_web_sdk\kernel --invoker=flutter_tool -Ddart.vm.product=true -DFLUTTER_VERSION=3.41.4 -DFLUTTER_CHANNEL=stable -DFLUTTER_GIT_URL=https://github.com/flutter/flutter.git -DFLUTTER_FRAMEWORK_REVISION=ff37bef603 -DFLUTTER_ENGINE_REVISION=e4b8dca3f1 -DFLUTTER_DART_VERSION=3.11.1 -DFLUTTER_WEB_USE_SKIA=true -DFLUTTER_WEB_USE_SKWASM=false -DFLUTTER_WEB_CANVASKIT_URL=https://www.gstatic.com/flutter-canvaskit/e4b8dca3f1b4ede4c30371002441c88c12187ed6/ --native-null-assertions --no-source-maps -O4 --minify -o C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\app.dill --packages=C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\package_config.json --cfe-only C:\Users\shiwa\crmpro-main\crmpro-main\flutter_crm\.dart_tool\flutter_build\a0d71a472ba87d6ac033f3f6f2c70b17\main.dart
+           #0      RunResult.throwException (package:flutter_tools/src/base/process.dart:153:5)
+           #1      _DefaultProcessUtils.run (package:flutter_tools/src/base/process.dart:379:19)
+           <asynchronous suspension>
+           #2      Dart2JSTarget.build (package:flutter_tools/src/build_system/targets/web.dart:208:5)
+           <asynchronous suspension>
+           #3      _BuildInstance._invokeInternal (package:flutter_tools/src/build_system/build_system.dart:937:9)
+           <asynchronous suspension>
+           #4      Future.wait.<anonymous closure> (dart:async/future.dart:546:21)
+           <asynchronous suspension>
+           #5      _BuildInstance.invokeTarget (package:flutter_tools/src/build_system/build_system.dart:875:32)
+           <asynchronous suspension>
+           #6      Future.wait.<anonymous closure> (dart:async/future.dart:546:21)
+           <asynchronous suspension>
+           #7      _BuildInstance.invokeTarget (package:flutter_tools/src/build_system/build_system.dart:875:32)
+           <asynchronous suspension>
+           #8      FlutterBuildSystem.build (package:flutter_tools/src/build_system/build_system.dart:684:16)
+           <asynchronous suspension>
+           #9      WebBuilder.buildWeb (package:flutter_tools/src/web/compile.dart:107:34)
+           <asynchronous suspension>
+           #10     BuildWebCommand.runCommand (package:flutter_tools/src/commands/build_web.dart:300:5)
+           <asynchronous suspension>
+           #11     FlutterCommand.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command.dart:1590:27)
+           <asynchronous suspension>
+           #12     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #13     CommandRunner.runCommand (package:args/command_runner.dart:212:13)
+           <asynchronous suspension>
+           #14     FlutterCommandRunner.runCommand.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:496:9)
+           <asynchronous suspension>
+           #15     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #16     FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:431:5)
+           <asynchronous suspension>
+           #17     FlutterCommandRunner.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:307:33)
+           <asynchronous suspension>
+           #18     run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:104:11)
+           <asynchronous suspension>
+           #19     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #20     main (package:flutter_tools/executable.dart:103:3)
+           <asynchronous suspension>
+
+[   +5 ms] Compiling lib\main.dart for the Web... (completed in 103.0s)
+[        ] "flutter web" took 104,103ms.
+[  +90 ms] Error: Failed to compile application for the Web.
+[        ] 
+           #0      throwToolExit (package:flutter_tools/src/base/common.dart:34:3)
+           #1      WebBuilder.buildWeb (package:flutter_tools/src/web/compile.dart:152:7)
+           <asynchronous suspension>
+           #2      BuildWebCommand.runCommand (package:flutter_tools/src/commands/build_web.dart:300:5)
+           <asynchronous suspension>
+           #3      FlutterCommand.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command.dart:1590:27)
+           <asynchronous suspension>
+           #4      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #5      CommandRunner.runCommand (package:args/command_runner.dart:212:13)
+           <asynchronous suspension>
+           #6      FlutterCommandRunner.runCommand.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:496:9)
+           <asynchronous suspension>
+           #7      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #8      FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:431:5)
+           <asynchronous suspension>
+           #9      FlutterCommandRunner.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:307:33)
+           <asynchronous suspension>
+           #10     run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:104:11)
+           <asynchronous suspension>
+           #11     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #12     main (package:flutter_tools/executable.dart:103:3)
+           <asynchronous suspension>
+
+
+[        ] Running 1 shutdown hook
+[   +3 ms] Shutdown hooks complete
+[ +174 ms] exiting with code 1

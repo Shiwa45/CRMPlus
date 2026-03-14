@@ -1,0 +1,2996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Landing Page Designer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --primary-dark: #3730a3;
+            --bg-dark: #1e1e2e;
+            --bg-sidebar: #252536;
+            --bg-canvas: #f8f9fa;
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --card-bg: #2d2d44;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Top Navbar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: 56px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+
+        .navbar-brand svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .navbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: var(--card-bg);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+
+        .btn-icon {
+            padding: 8px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background: var(--card-bg);
+        }
+
+        .btn-icon.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 56px);
+        }
+
+        /* Left Sidebar - Components */
+        .sidebar-left {
+            width: 260px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            flex-shrink: 0;
+            transition: width 0.3s;
+        }
+
+        .sidebar-left.collapsed {
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .component-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .component-item:hover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .component-item:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        .component-item .icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .component-item .label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Canvas Area */
+        .canvas-wrapper {
+            flex: 1;
+            overflow: auto;
+            padding: 30px;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+        }
+
+        .canvas-container {
+            position: relative;
+        }
+
+        .device-frame {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            transition: width 0.3s;
+        }
+
+        .device-frame.desktop {
+            width: 1200px;
+        }
+
+        .device-frame.tablet {
+            width: 768px;
+        }
+
+        .device-frame.mobile {
+            width: 375px;
+        }
+
+        .canvas {
+            min-height: 600px;
+            position: relative;
+        }
+
+        .canvas-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            color: #94a3b8;
+            border: 2px dashed #cbd5e1;
+            margin: 20px;
+            border-radius: 12px;
+        }
+
+        .canvas-empty .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .canvas-empty h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #64748b;
+        }
+
+        .canvas-empty p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        /* Dropped Elements */
+        .dropped-element {
+            position: relative;
+            transition: box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .dropped-element:hover {
+            outline: 2px solid var(--primary-light);
+            outline-offset: -2px;
+        }
+
+        .dropped-element.selected {
+            outline: 2px solid var(--primary);
+            outline-offset: -2px;
+        }
+
+        .dropped-element .element-actions {
+            position: absolute;
+            top: -36px;
+            right: 4px;
+            display: none;
+            gap: 4px;
+            z-index: 50;
+        }
+
+        .dropped-element.selected .element-actions,
+        .dropped-element:hover .element-actions {
+            display: flex;
+        }
+
+        .element-actions button {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .element-actions button:hover {
+            transform: scale(1.1);
+        }
+
+        .element-actions .move-btn {
+            background: var(--primary);
+            cursor: grab;
+        }
+
+        .element-actions .clone-btn {
+            background: var(--success);
+        }
+
+        .element-actions .delete-btn {
+            background: var(--danger);
+        }
+
+        .element-actions .up-btn,
+        .element-actions .down-btn {
+            background: var(--warning);
+        }
+
+        /* Drop Indicator */
+        .drop-indicator {
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+            margin: 0 20px;
+            transition: opacity 0.2s;
+        }
+
+        .canvas.drag-over {
+            background: rgba(79, 70, 229, 0.02);
+        }
+
+        /* Right Sidebar - Properties */
+        .sidebar-right {
+            width: 300px;
+            background: var(--bg-sidebar);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            flex-shrink: 0;
+            transition: width 0.3s;
+        }
+
+        .sidebar-right.collapsed {
+            width: 0;
+            overflow: hidden;
+        }
+
+        .properties-panel {
+            padding: 16px;
+        }
+
+        .properties-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .prop-group {
+            margin-bottom: 16px;
+        }
+
+        .prop-group-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .prop-field {
+            margin-bottom: 12px;
+        }
+
+        .prop-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .prop-field input[type="text"],
+        .prop-field input[type="number"],
+        .prop-field input[type="url"],
+        .prop-field input[type="email"],
+        .prop-field textarea,
+        .prop-field select {
+            width: 100%;
+            padding: 8px 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-size: 13px;
+            transition: border-color 0.2s;
+        }
+
+        .prop-field input:focus,
+        .prop-field textarea:focus,
+        .prop-field select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .prop-field textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .prop-field input[type="color"] {
+            width: 40px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            background: var(--card-bg);
+            padding: 2px;
+        }
+
+        .color-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-row input[type="text"] {
+            flex: 1;
+        }
+
+        .prop-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .prop-row .prop-field {
+            flex: 1;
+        }
+
+        .prop-field input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+        }
+
+        .range-value {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 2px;
+        }
+
+        .no-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .no-selection .icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .no-selection p {
+            font-size: 13px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary-light);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab:hover {
+            color: var(--text-light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Viewport Buttons */
+        .viewport-btns {
+            display: flex;
+            gap: 4px;
+            background: var(--card-bg);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        /* Preview Component Styles */
+        .lp-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 80px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .lp-hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .lp-hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .lp-hero .cta-btn {
+            display: inline-block;
+            padding: 14px 36px;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .lp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 40px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .lp-header .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #4f46e5;
+        }
+
+        .lp-header nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        .lp-header nav a {
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .lp-header .header-cta {
+            padding: 8px 20px;
+            background: #4f46e5;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .lp-features {
+            padding: 60px 40px;
+            background: white;
+        }
+
+        .lp-features h2 {
+            text-align: center;
+            font-size: 32px;
+            color: #1f2937;
+            margin-bottom: 40px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .feature-card .feature-icon {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .lp-cta-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 60px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .lp-cta-section h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .lp-cta-section p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        .lp-cta-section .cta-btn {
+            display: inline-block;
+            padding: 14px 36px;
+            background: white;
+            color: #f5576c;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .lp-form-section {
+            padding: 60px 40px;
+            background: #f9fafb;
+        }
+
+        .lp-form-section h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 30px;
+        }
+
+        .lp-form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .lp-form .form-group {
+            margin-bottom: 16px;
+        }
+
+        .lp-form label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .lp-form input, .lp-form select, .lp-form textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .lp-form .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .lp-testimonials {
+            padding: 60px 40px;
+            background: white;
+        }
+
+        .lp-testimonials h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 40px;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: #f9fafb;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .testimonial-card .stars {
+            color: #f59e0b;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .testimonial-card .quote {
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        .testimonial-card .author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .testimonial-card .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .testimonial-card .author-info .name {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        .testimonial-card .author-info .role {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .lp-pricing {
+            padding: 60px 40px;
+            background: #f9fafb;
+        }
+
+        .lp-pricing h2 {
+            text-align: center;
+            font-size: 32px;
+            color: #1f2937;
+            margin-bottom: 40px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: #4f46e5;
+            transform: scale(1.05);
+        }
+
+        .pricing-card .plan-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .pricing-card .price {
+            font-size: 42px;
+            font-weight: 800;
+            color: #4f46e5;
+            margin-bottom: 4px;
+        }
+
+        .pricing-card .price span {
+            font-size: 16px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .pricing-card .plan-features {
+            list-style: none;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .pricing-card .plan-features li {
+            padding: 6px 0;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .pricing-card .plan-features li::before {
+            content: "✓ ";
+            color: #22c55e;
+            font-weight: 700;
+        }
+
+        .pricing-card .plan-btn {
+            display: block;
+            padding: 12px;
+            background: #4f46e5;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .lp-footer {
+            background: #1f2937;
+            padding: 40px;
+            color: #9ca3af;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer-grid h4 {
+            color: white;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        .footer-grid p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-grid ul {
+            list-style: none;
+        }
+
+        .footer-grid ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-grid ul li a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .lp-text-block {
+            padding: 40px;
+            background: white;
+        }
+
+        .lp-text-block h2 {
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+
+        .lp-text-block p {
+            font-size: 16px;
+            color: #4b5563;
+            line-height: 1.8;
+            max-width: 800px;
+        }
+
+        .lp-image-block {
+            padding: 0;
+            background: white;
+        }
+
+        .lp-image-block img {
+            width: 100%;
+            display: block;
+        }
+
+        .lp-image-block .placeholder-img {
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6366f1;
+            font-size: 48px;
+        }
+
+        .lp-divider {
+            padding: 20px 40px;
+            background: white;
+        }
+
+        .lp-divider hr {
+            border: none;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .lp-spacer {
+            background: white;
+        }
+
+        .lp-video-block {
+            padding: 40px;
+            background: white;
+            text-align: center;
+        }
+
+        .lp-video-block .video-placeholder {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1f2937;
+            border-radius: 12px;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+
+        .lp-stats {
+            padding: 60px 40px;
+            background: #4f46e5;
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item .stat-number {
+            font-size: 42px;
+            font-weight: 800;
+        }
+
+        .stat-item .stat-label {
+            font-size: 14px;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        .lp-faq {
+            padding: 60px 40px;
+            background: white;
+        }
+
+        .lp-faq h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 30px;
+        }
+
+        .faq-list {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            padding: 16px 20px;
+        }
+
+        .faq-item .faq-q {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .faq-item .faq-a {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .lp-countdown {
+            padding: 40px;
+            background: linear-gradient(135deg, #f5576c, #ff6f61);
+            text-align: center;
+            color: white;
+        }
+
+        .lp-countdown h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .countdown-timer .timer-box {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            min-width: 70px;
+        }
+
+        .countdown-timer .timer-box .number {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .countdown-timer .timer-box .unit {
+            font-size: 12px;
+            text-transform: uppercase;
+            opacity: 0.85;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-sidebar);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .modal pre {
+            background: #1a1a2e;
+            padding: 20px;
+            border-radius: 8px;
+            overflow: auto;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            max-height: 400px;
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2000;
+        }
+
+        .toast {
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+            font-size: 14px;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Layer panel */
+        .layers-list {
+            list-style: none;
+        }
+
+        .layers-list li {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            transition: all 0.2s;
+        }
+
+        .layers-list li:hover,
+        .layers-list li.active {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .layers-list li .layer-icon {
+            font-size: 16px;
+        }
+
+        .layers-list li .layer-name {
+            flex: 1;
+        }
+
+        .layers-list li .layer-visibility {
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+        .layers-list li .layer-visibility:hover {
+            opacity: 1;
+        }
+
+        /* Templates */
+        .template-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .template-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .template-card .template-preview {
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .template-card .template-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        /* Undo/Redo counter */
+        .history-info {
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 0 8px;
+        }
+
+        /* Page Settings */
+        .page-settings {
+            padding: 16px;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .switch-container label {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .switch {
+            width: 40px;
+            height: 22px;
+            background: var(--border);
+            border-radius: 11px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .switch.active {
+            background: var(--primary);
+        }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+
+        .switch.active::after {
+            transform: translateX(18px);
+        }
+
+        /* Zoom controls */
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--card-bg);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .zoom-controls button {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .zoom-controls button:hover {
+            background: var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+            CRM Page Builder
+        </div>
+
+        <div class="navbar-actions">
+            <div class="viewport-btns">
+                <button class="btn-icon active" onclick="setViewport('desktop')" title="Desktop">🖥️</button>
+                <button class="btn-icon" onclick="setViewport('tablet')" title="Tablet">📱</button>
+                <button class="btn-icon" onclick="setViewport('mobile')" title="Mobile">📲</button>
+            </div>
+
+            <div class="zoom-controls">
+                <button onclick="zoomCanvas(-10)">−</button>
+                <span id="zoomLevel">100%</span>
+                <button onclick="zoomCanvas(10)">+</button>
+            </div>
+
+            <button class="btn-icon" onclick="undo()" title="Undo (Ctrl+Z)">↩️</button>
+            <button class="btn-icon" onclick="redo()" title="Redo (Ctrl+Y)">↪️</button>
+
+            <button class="btn btn-outline" onclick="clearCanvas()">🗑️ Clear</button>
+            <button class="btn btn-outline" onclick="previewPage()">👁️ Preview</button>
+            <button class="btn btn-outline" onclick="exportHTML()">📄 Export</button>
+            <button class="btn btn-primary" onclick="savePage()">💾 Save</button>
+            <button class="btn btn-success" onclick="publishPage()">🚀 Publish</button>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+
+        <!-- Left Sidebar -->
+        <div class="sidebar-left" id="sidebarLeft">
+            <div class="tabs">
+                <div class="tab active" onclick="switchLeftTab('components')">Components</div>
+                <div class="tab" onclick="switchLeftTab('templates')">Templates</div>
+                <div class="tab" onclick="switchLeftTab('layers')">Layers</div>
+            </div>
+
+            <!-- Components Tab -->
+            <div class="tab-content active" id="tab-components">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Layout</div>
+                    <div class="component-grid">
+                        <div class="component-item" draggable="true" data-type="header">
+                            <span class="icon">📌</span>
+                            <span class="label">Header</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="hero">
+                            <span class="icon">🎯</span>
+                            <span class="label">Hero</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="spacer">
+                            <span class="icon">↕️</span>
+                            <span class="label">Spacer</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="divider">
+                            <span class="icon">➖</span>
+                            <span class="label">Divider</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Content</div>
+                    <div class="component-grid">
+                        <div class="component-item" draggable="true" data-type="text">
+                            <span class="icon">📝</span>
+                            <span class="label">Text Block</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="image">
+                            <span class="icon">🖼️</span>
+                            <span class="label">Image</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="video">
+                            <span class="icon">🎬</span>
+                            <span class="label">Video</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="features">
+                            <span class="icon">⭐</span>
+                            <span class="label">Features</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">CRM Elements</div>
+                    <div class="component-grid">
+                        <div class="component-item" draggable="true" data-type="form">
+                            <span class="icon">📋</span>
+                            <span class="label">Lead Form</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="cta">
+                            <span class="icon">🔔</span>
+                            <span class="label">CTA Section</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="testimonials">
+                            <span class="icon">💬</span>
+                            <span class="label">Testimonials</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="pricing">
+                            <span class="icon">💰</span>
+                            <span class="label">Pricing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Advanced</div>
+                    <div class="component-grid">
+                        <div class="component-item" draggable="true" data-type="stats">
+                            <span class="icon">📊</span>
+                            <span class="label">Stats</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="faq">
+                            <span class="icon">❓</span>
+                            <span class="label">FAQ</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="countdown">
+                            <span class="icon">⏰</span>
+                            <span class="label">Countdown</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="footer">
+                            <span class="icon">📎</span>
+                            <span class="label">Footer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Templates Tab -->
+            <div class="tab-content" id="tab-templates">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Starter Templates</div>
+                    <div class="template-grid">
+                        <div class="template-card" onclick="loadTemplate('saas')">
+                            <div class="template-preview">🚀</div>
+                            <div class="template-name">SaaS Landing</div>
+                        </div>
+                        <div class="template-card" onclick="loadTemplate('lead')">
+                            <div class="template-preview" style="background: linear-gradient(135deg, #f093fb, #f5576c)">📋</div>
+                            <div class="template-name">Lead Capture</div>
+                        </div>
+                        <div class="template-card" onclick="loadTemplate('product')">
+                            <div class="template-preview" style="background: linear-gradient(135deg, #4facfe, #00f2fe)">🛍️</div>
+                            <div class="template-name">Product Launch</div>
+                        </div>
+                        <div class="template-card" onclick="loadTemplate('webinar')">
+                            <div class="template-preview" style="background: linear-gradient(135deg, #43e97b, #38f9d7)">🎓</div>
+                            <div class="template-name">Webinar Signup</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layers Tab -->
+            <div class="tab-content" id="tab-layers">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Page Layers</div>
+                    <ul class="layers-list" id="layersList"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas -->
+        <div class="canvas-wrapper" id="canvasWrapper">
+            <div class="canvas-container" id="canvasContainer">
+                <div class="device-frame desktop" id="deviceFrame">
+                    <div class="canvas" id="canvas">
+                        <div class="canvas-empty" id="canvasEmpty">
+                            <div class="icon">🎨</div>
+                            <h3>Start Building Your Page</h3>
+                            <p>Drag components from the left panel or choose a template</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="sidebar-right" id="sidebarRight">
+            <div class="tabs">
+                <div class="tab active" onclick="switchRightTab('properties')">Properties</div>
+                <div class="tab" onclick="switchRightTab('settings')">Page Settings</div>
+            </div>
+
+            <div class="tab-content active" id="tab-properties">
+                <div class="no-selection" id="noSelection">
+                    <div class="icon">🖱️</div>
+                    <p>Click on any element on the canvas to edit its properties</p>
+                </div>
+                <div class="properties-panel" id="propertiesPanel" style="display:none;"></div>
+            </div>
+
+            <div class="tab-content" id="tab-settings">
+                <div class="page-settings">
+                    <div class="prop-group">
+                        <div class="prop-group-title">Page Meta</div>
+                        <div class="prop-field">
+                            <label>Page Title</label>
+                            <input type="text" id="pageTitle" value="My Landing Page" placeholder="Page title">
+                        </div>
+                        <div class="prop-field">
+                            <label>Meta Description</label>
+                            <textarea id="pageMeta" placeholder="SEO description..."></textarea>
+                        </div>
+                        <div class="prop-field">
+                            <label>Favicon URL</label>
+                            <input type="url" id="pageFavicon" placeholder="https://...">
+                        </div>
+                    </div>
+                    <div class="prop-group">
+                        <div class="prop-group-title">Tracking</div>
+                        <div class="prop-field">
+                            <label>Google Analytics ID</label>
+                            <input type="text" id="gaId" placeholder="G-XXXXXXXXXX">
+                        </div>
+                        <div class="prop-field">
+                            <label>Facebook Pixel ID</label>
+                            <input type="text" id="fbPixel" placeholder="Pixel ID">
+                        </div>
+                    </div>
+                    <div class="prop-group">
+                        <div class="prop-group-title">CRM Integration</div>
+                        <div class="prop-field">
+                            <label>Form Webhook URL</label>
+                            <input type="url" id="webhookUrl" placeholder="https://api.yourcrm.com/leads">
+                        </div>
+                        <div class="prop-field">
+                            <label>Lead Tag</label>
+                            <input type="text" id="leadTag" placeholder="landing-page-v1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal-overlay" id="exportModal">
+        <div class="modal">
+            <h2>📄 Export HTML</h2>
+            <pre id="exportCode"></pre>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeModal('exportModal')">Close</button>
+                <button class="btn btn-primary" onclick="copyExport()">📋 Copy to Clipboard</button>
+                <button class="btn btn-success" onclick="downloadHTML()">⬇️ Download HTML</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal-overlay" id="previewModal">
+        <div class="modal" style="max-width:95%; width:95%; height:85vh; padding:0; overflow:hidden;">
+            <div style="padding:12px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border);">
+                <h2 style="margin:0; font-size:16px;">👁️ Page Preview</h2>
+                <button class="btn btn-outline btn-sm" onclick="closeModal('previewModal')">✕ Close</button>
+            </div>
+            <iframe id="previewFrame" style="width:100%; height:calc(100% - 50px); border:none; background:white;"></iframe>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // State
+        let elements = [];
+        let selectedId = null;
+        let draggedType = null;
+        let history = [];
+        let historyIndex = -1;
+        let zoomLevel = 100;
+        let elementIdCounter = 0;
+
+        // Component Templates
+        const componentTemplates = {
+            header: {
+                name: 'Header',
+                icon: '📌',
+                html: `<div class="lp-header">
+                    <div class="logo">YourBrand</div>
+                    <nav>
+                        <a href="#">Features</a>
+                        <a href="#">Pricing</a>
+                        <a href="#">About</a>
+                        <a href="#">Contact</a>
+                    </nav>
+                    <a href="#" class="header-cta">Get Started</a>
+                </div>`,
+                props: {
+                    logoText: { label: 'Logo Text', type: 'text', value: 'YourBrand' },
+                    bgColor: { label: 'Background', type: 'color', value: '#ffffff' },
+                    ctaText: { label: 'CTA Text', type: 'text', value: 'Get Started' },
+                    ctaColor: { label: 'CTA Color', type: 'color', value: '#4f46e5' }
+                }
+            },
+            hero: {
+                name: 'Hero Section',
+                icon: '🎯',
+                html: `<div class="lp-hero">
+                    <h1>Grow Your Business 10x Faster</h1>
+                    <p>The all-in-one CRM platform that helps you capture, nurture, and convert leads into loyal customers.</p>
+                    <a href="#" class="cta-btn">Start Free Trial</a>
+                </div>`,
+                props: {
+                    heading: { label: 'Heading', type: 'text', value: 'Grow Your Business 10x Faster' },
+                    subheading: { label: 'Subheading', type: 'textarea', value: 'The all-in-one CRM platform that helps you capture, nurture, and convert leads into loyal customers.' },
+                    ctaText: { label: 'CTA Text', type: 'text', value: 'Start Free Trial' },
+                    ctaLink: { label: 'CTA Link', type: 'text', value: '#' },
+                    bgGradient1: { label: 'Gradient Start', type: 'color', value: '#667eea' },
+                    bgGradient2: { label: 'Gradient End', type: 'color', value: '#764ba2' },
+                    textAlign: { label: 'Text Align', type: 'select', value: 'center', options: ['left', 'center', 'right'] },
+                    paddingY: { label: 'Vertical Padding', type: 'range', value: 80, min: 20, max: 200 }
+                }
+            },
+            text: {
+                name: 'Text Block',
+                icon: '📝',
+                html: `<div class="lp-text-block">
+                    <h2>About Our Solution</h2>
+                    <p>We provide cutting-edge tools that help businesses streamline their operations, improve customer relationships, and drive sustainable growth. Our platform is trusted by over 10,000 companies worldwide.</p>
+                </div>`,
+                props: {
+                    heading: { label: 'Heading', type: 'text', value: 'About Our Solution' },
+                    content: { label: 'Content', type: 'textarea', value: 'We provide cutting-edge tools that help businesses streamline their operations, improve customer relationships, and drive sustainable growth.' },
+                    bgColor: { label: 'Background', type: 'color', value: '#ffffff' },
+                    textColor: { label: 'Text Color', type: 'color', value: '#1f2937' },
+                    paddingY: { label: 'Vertical Padding', type: 'range', value: 40, min: 10, max: 120 }
+                }
+            },
+            image: {
+                name: 'Image',
+                icon: '🖼️',
+                html: `<div class="lp-image-block">
+                    <div class="placeholder-img">🖼️</div>
+                </div>`,
+                props: {
+                    imageUrl: { label: 'Image URL', type: 'url', value: '' },
+                    altText: { label: 'Alt Text', type: 'text', value: 'Image' },
+                    borderRadius: { label: 'Border Radius', type: 'range', value: 0, min: 0, max: 30 },
+                    padding: { label: 'Padding', type: 'range', value: 0, min: 0, max: 60 }
+                }
+            },
+            video: {
+                name: 'Video',
+                icon: '🎬',
+                html: `<div class="lp-video-block">
+                    <div class="video-placeholder">▶️</div>
+                </div>`,
+                props: {
+                    videoUrl: { label: 'YouTube/Vimeo URL', type: 'url', value: '' },
+                    bgColor: { label: 'Background', type: 'color', value: '#ffffff' }
+                }
+            },
+            features: {
+                name: 'Features',
+                icon: '⭐',
+                html: `<div class="lp-features">
+                    <h2>Why Choose Us?</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🚀</div>
+                            <h3>Lightning Fast</h3>
+                            <p>Optimized performance that keeps your workflow moving at top speed.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔒</div>
+                            <h3>Enterprise Security</h3>
+                            <p>Bank-grade encryption and security protocols to protect your data.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📊</div>
+                            <h3>Smart Analytics</h3>
+                            <p>AI-powered insights that help you make better business decisions.</p>
+                        </div>
+                    </div>
+                </div>`,
+                props: {
+                    heading: { label: 'Heading', type: 'text', value: 'Why Choose Us?' },
+                    bgColor: { label: 'Background', type: 'color', value: '#ffffff' },
+                    columns: { label: 'Columns', type: 'select', value: '3', options: ['2', '3', '4'] }
+                }
+            },
+            form: {
+                name: 'Lead Form',
+                icon: '📋',
+                html: `<div class="lp-form-section">
+                    <h2>Get Started Today</h2>
+                    <div class="lp-form">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" placeholder="john@company.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Company</label>
+                            <input type="text" placeholder="Your Company">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" placeholder="+1 (555) 000-0000">
+                        </div>
+                        <button class="submit-btn">Submit</button>
+                    </div>
+                </div>`,
+                props: {
+                    heading: { label: 'Heading', type: 'text', value: 'Get Started Today' },
+                    submitText: { label: 'Button Text', type: 'text', value: 'Submit' },
+                    submitColor: { label: 'Button Color', type: 'color', value: '#4f46e5' },
+                    bgColor: { label: 'Background', type: 'color', value: '#f9fafb' },
+                    showPhone: { label: 'Show Phone Field', type: 'select', value: 'yes', options: ['yes', 'no'] },
+                    showCompany: { label: 'Show Company Field', type: 'select', value: 'yes', options: ['yes', 'no'] }
+                }
+            },
+            cta: {
+                name: 'CTA Section',
+                icon: '🔔',
+                html: `<div class="lp-cta-section">
+                    <h2>Ready to Transform Your Business?</h2>
+                    <p>Join 10,000+ companies already using our platform to grow faster.</p>
+                    <a href="#" class="cta-btn">Start Free Trial</a>
+                </div>`,
+                props: {
+                    heading: { label: 'Heading', type: 'text', value: 'Ready to Transform Your Business?' },
+                    subheading: { label: 'Subheading', type: 'text', value: 'Join 10,000+ companies already using our platform.' },
+                    ctaText: { label: 'CTA Text', type: 'text', value: 'Start Free Trial' },
+                    ctaLink: { label: 'CTA Link', type: 'text', value: '#' },
+                    bgGradient1: { label: 'Gradient Start', type: 'color', value: '#f093fb' },
+                    bgGradient2: { label: 'Gradient End', type: 'color', value: '#f5576c' }
+                }
+            },
+            testimonials: {
+                name: 'Testimonials',
+                icon: '💬',
+                html: `<div class="lp-testimonials">
+                    <h2>What Our Customers Say</h2>
+                    <div class="testimonials-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">★★★★★</div>
+                            <div class="quote">"This platform completely transformed how we manage customer relationships. Our sales increased by 40% in just 3 months."</div>
+                            <div class="author">
+                                <div class="avatar">S</div>
+                                <div class="author-info">
+                                    <div class="name">Sarah Johnson</div>
+                                    <div class="role">CEO, TechStart</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">★★★★★</div>
+                            <div class="quote">"The best CRM we've ever used. Simple, powerful, and the support team is incredible."</div>
+                            <div class="author">
+                                <div class="avatar">M</div>
+                                <div class="author-info">
+                                    <div class="name">Mike Chen</div>
+                                    <div class="role">VP Sales, DataFlow</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">★★★★★</div>
+                            <div class="quote">"Switching to this CRM was the best decision we made. The ROI has been phenomenal."</div>
+                            <div class="author">
+                                <div class="avatar">E</div>
+                                <div class="author-info">
+                                    <div class="name">Emily Rodriguez</div>
+                                    <div class="role">Director, GrowthCo</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+                props: {
+                    heading: { label: 'Heading', type: 'text', value: 'What Our Customers Say' },
+                    bgColor: { label: 'Background', type: 'color', value: '#ffffff' }
+                }
+            },
+            pricing: {
+                name: 'Pricing',
+                icon: '💰',
+                html: `<div class="lp-pricing">
+                    <h2>Simple, Transparent Pricing</h2>
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <div class="plan-name">Starter</div>
+                            <div class="price">$29<span>/mo</span></div>
+                            <ul class="plan-features">
+                                <li>Up to 1,000 contacts</li>
+                                <li>Email campaigns</li>
+                                <li>Basic analytics</li>
+                                <li>Email support</li>
+                            </ul>
+                            <a href="#" class="plan-btn">Get Started</a>
+                        </div>
+                        <div class="pricing-card featured">
+                            <div class="plan-name">Professional</div>
+                            <div class="price">$79<span>/mo</span></div>
+                            <ul class="plan-features">
+                                <li>Up to 10,000 contacts</li>
+                                <li>Advanced automation</li>
+                                <li>Custom reports</li>
+                                <li>Priority support</li>
+                                <li>API access</li>
+                            </ul>
+                            <a href="#" class="plan-btn">Get Started</a>
+                        </div>
+                        <div class="pricing-card">
+                            <div class="plan-name">Enterprise</div>
+                            <div class="price">$199<span>/mo</span></div>
+                            <ul class="plan-features">
+                                <li>Unlimited contacts</li>
+                                <li>AI-powered insights</li>
+                                <li>White-label option</li>
+                                <li>Dedicated manager</li>
+                                <li>Custom integrations</li>
+                            </ul>
+                            <a href="#" class="plan-btn">Contact Sales</a>
+                        </div>
+                    </div>
+                </div>`,
+                props: {
+                    heading: { label: 'Heading', type: 'text', value: 'Simple, Transparent Pricing' },
+                    bgColor: { label: 'Background', type: 'color', value: '#f9fafb' }
+                }
+            },
+            stats: {
+                name: 'Stats',
+                icon: '📊',
+                html: `<div class="lp-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">10K+</div>
+                            <div class="stat-label">Active Users</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">95%</div>
+                            <div class="stat-label">Satisfaction Rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">50M+</div>
+                            <div class="stat-label">Leads Captured</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Support Available</div>
+                        </div>
+                    </div>
+                </div>`,
+                props: {
+                    bgColor: { label: 'Background', type: 'color', value: '#4f46e5' },
+                    textColor: { label: 'Text Color', type: 'color', value: '#ffffff' }
+                }
+            },
+            faq: {
+                name: 'FAQ',
+                icon: '❓',
+                html: `<div class="lp-faq">
+                    <h2>Frequently Asked Questions</h2>
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <div class="faq-q">How long is the free trial?</div>
+                            <div class="faq-a">Our free trial lasts 14 days with full access to all features. No credit card required.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-q">Can I cancel anytime?</div>
+                            <div class="faq-a">Yes, you can cancel your subscription at any time. There are no long-term contracts or cancellation fees.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-q">Do you offer custom integrations?</div>
+                            <div class="faq-a">Yes! Our Enterprise plan includes custom integrations. We also have a robust API for developers.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-q">Is my data secure?</div>
+                            <div class="faq-a">Absolutely. We use bank-grade encryption and are SOC 2 Type II certified. Your data is always safe with us.</div>
+                        </div>
+                    </div>
+                </div>`,
+                props: {
+                    heading: { label: 'Heading', type: 'text', value: 'Frequently Asked Questions' },
+                    bgColor: { label: 'Background', type: 'color', value: '#ffffff' }
+                }
+            },
+            countdown: {
+                name: 'Countdown',
+                icon: '⏰',
+                html: `<div class="lp-countdown">
+                    <h3>🔥 Limited Time Offer - Ends Soon!</h3>
+                    <div class="countdown-timer">
+                        <div class="timer-box"><div class="number">02</div><div class="unit">Days</div></div>
+                        <div class="timer-box"><div class="number">14</div><div class="unit">Hours</div></div>
+                        <div class="timer-box"><div class="number">36</div><div class="unit">Minutes</div></div>
+                        <div class="timer-box"><div class="number">52</div><div class="unit">Seconds</div></div>
+                    </div>
+                </div>`,
+                props: {
+                    heading: { label: 'Heading', type: 'text', value: '🔥 Limited Time Offer - Ends Soon!' },
+                    bgGradient1: { label: 'Gradient Start', type: 'color', value: '#f5576c' },
+                    bgGradient2: { label: 'Gradient End', type: 'color', value: '#ff6f61' }
+                }
+            },
+            footer: {
+                name: 'Footer',
+                icon: '📎',
+                html: `<div class="lp-footer">
+                    <div class="footer-grid">
+                        <div>
+                            <h4>YourBrand</h4>
+                            <p>Empowering businesses with intelligent CRM solutions since 2020.</p>
+                        </div>
+                        <div>
+                            <h4>Product</h4>
+                            <ul>
+                                <li><a href="#">Features</a></li>
+                                <li><a href="#">Pricing</a></li>
+                                <li><a href="#">Integrations</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Company</h4>
+                            <ul>
+                                <li><a href="#">About</a></li>
+                                <li><a href="#">Blog</a></li>
+                                <li><a href="#">Careers</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Support</h4>
+                            <ul>
+                                <li><a href="#">Help Center</a></li>
+                                <li><a href="#">Contact</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>`,
+                props: {
+                    brandName: { label: 'Brand Name', type: 'text', value: 'YourBrand' },
+                    bgColor: { label: 'Background', type: 'color', value: '#1f2937' }
+                }
+            },
+            divider: {
+                name: 'Divider',
+                icon: '➖',
+                html: `<div class="lp-divider"><hr></div>`,
+                props: {
+                    color: { label: 'Line Color', type: 'color', value: '#e5e7eb' },
+                    thickness: { label: 'Thickness', type: 'range', value: 2, min: 1, max: 10 },
+                    paddingY: { label: 'Vertical Padding', type: 'range', value: 20, min: 5, max: 60 }
+                }
+            },
+            spacer: {
+                name: 'Spacer',
+                icon: '↕️',
+                html: `<div class="lp-spacer" style="height:60px;background:white;"></div>`,
+                props: {
+                    height: { label: 'Height', type: 'range', value: 60, min: 10, max: 200 },
+                    bgColor: { label: 'Background', type: 'color', value: '#ffffff' }
+                }
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', init);
+
+        function init() {
+            setupDragAndDrop();
+            setupKeyboard();
+            loadFromStorage();
+        }
+
+        // Drag and Drop
+        function setupDragAndDrop() {
+            // Component items
+            document.querySelectorAll('.component-item').forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    draggedType = item.dataset.type;
+                    e.dataTransfer.effectAllowed = 'copy';
+                    item.style.opacity = '0.5';
+                });
+                item.addEventListener('dragend', (e) => {
+                    item.style.opacity = '1';
+                    draggedType = null;
+                    removeDragIndicators();
+                });
+            });
+
+            const canvas = document.getElementById('canvas');
+
+            canvas.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                canvas.classList.add('drag-over');
+                showDropIndicator(e);
+            });
+
+            canvas.addEventListener('dragleave', (e) => {
+                if (!canvas.contains(e.relatedTarget)) {
+                    canvas.classList.remove('drag-over');
+                    removeDragIndicators();
+                }
+            });
+
+            canvas.addEventListener('drop', (e) => {
+                e.preventDefault();
+                canvas.classList.remove('drag-over');
+                removeDragIndicators();
+
+                if (draggedType) {
+                    const dropIndex = getDropIndex(e);
+                    addElement(draggedType, dropIndex);
+                    draggedType = null;
+                }
+            });
+
+            canvas.addEventListener('click', (e) => {
+                if (e.target === canvas || e.target.id === 'canvasEmpty' || e.target.closest('.canvas-empty')) {
+                    deselectAll();
+                }
+            });
+        }
+
+        function showDropIndicator(e) {
+            removeDragIndicators();
+            const canvas = document.getElementById('canvas');
+            const droppedElements = canvas.querySelectorAll('.dropped-element');
+            
+            if (droppedElements.length === 0) return;
+
+            let insertBefore = null;
+            for (const el of droppedElements) {
+                const rect = el.getBoundingClientRect();
+                const midY = rect.top + rect.height / 2;
+                if (e.clientY < midY) {
+                    insertBefore = el;
+                    break;
+                }
+            }
+
+            const indicator = document.createElement('div');
+            indicator.className = 'drop-indicator';
+
+            if (insertBefore) {
+                canvas.insertBefore(indicator, insertBefore);
+            } else {
+                canvas.appendChild(indicator);
+            }
+        }
+
+        function removeDragIndicators() {
+            document.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+        }
+
+        function getDropIndex(e) {
+            const canvas = document.getElementById('canvas');
+            const droppedElements = canvas.querySelectorAll('.dropped-element');
+            
+            for (let i = 0; i < droppedElements.length; i++) {
+                const rect = droppedElements[i].getBoundingClientRect();
+                const midY = rect.top + rect.height / 2;
+                if (e.clientY < midY) {
+                    return i;
+                }
+            }
+            return elements.length;
+        }
+
+        // Element Management
+        function addElement(type, index = elements.length) {
+            const template = componentTemplates[type];
+            if (!template) return;
+
+            const id = 'el-' + (++elementIdCounter);
+            const props = {};
+            for (const [key, prop] of Object.entries(template.props)) {
+                props[key] = { ...prop };
+            }
+
+            const element = {
+                id,
+                type,
+                name: template.name,
+                icon: template.icon,
+                html: template.html,
+                props,
+                visible: true
+            };
+
+            elements.splice(index, 0, element);
+            saveHistory();
+            renderCanvas();
+            selectElement(id);
+            showToast(`${template.icon} ${template.name} added`);
+        }
+
+        function removeElement(id) {
+            elements = elements.filter(el => el.id !== id);
+            if (selectedId === id) {
+                deselectAll();
+            }
+            saveHistory();
+            renderCanvas();
+            showToast('🗑️ Element removed');
+        }
+
+        function cloneElement(id) {
+            const el = elements.find(e => e.id === id);
+            if (!el) return;
+
+            const newId = 'el-' + (++elementIdCounter);
+            const clone = JSON.parse(JSON.stringify(el));
+            clone.id = newId;
+
+            const idx = elements.findIndex(e => e.id === id);
+            elements.splice(idx + 1, 0, clone);
+            saveHistory();
+            renderCanvas();
+            selectElement(newId);
+            showToast('📋 Element duplicated');
+        }
+
+        function moveElement(id, direction) {
+            const idx = elements.findIndex(e => e.id === id);
+            if (idx === -1) return;
+
+            const newIdx = idx + direction;
+            if (newIdx < 0 || newIdx >= elements.length) return;
+
+            [elements[idx], elements[newIdx]] = [elements[newIdx], elements[idx]];
+            saveHistory();
+            renderCanvas();
+            selectElement(id);
+        }
+
+        // Rendering
+        function renderCanvas() {
+            const canvas = document.getElementById('canvas');
+            const empty = document.getElementById('canvasEmpty');
+
+            if (elements.length === 0) {
+                canvas.innerHTML = '';
+                canvas.appendChild(empty);
+                empty.style.display = 'flex';
+            } else {
+                empty.style.display = 'none';
+                canvas.innerHTML = '';
+
+                elements.forEach((el, index) => {
+                    if (!el.visible) return;
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'dropped-element' + (el.id === selectedId ? ' selected' : '');
+                    wrapper.id = el.id;
+                    wrapper.innerHTML = `
+                        <div class="element-actions">
+                            <button class="up-btn" onclick="event.stopPropagation(); moveElement('${el.id}', -1)" title="Move Up">↑</button>
+                            <button class="down-btn" onclick="event.stopPropagation(); moveElement('${el.id}', 1)" title="Move Down">↓</button>
+                            <button class="move-btn" title="Drag to reorder">⠿</button>
+                            <button class="clone-btn" onclick="event.stopPropagation(); cloneElement('${el.id}')" title="Duplicate">📋</button>
+                            <button class="delete-btn" onclick="event.stopPropagation(); removeElement('${el.id}')" title="Delete">🗑️</button>
+                        </div>
+                        ${generateElementHTML(el)}
+                    `;
+
+                    wrapper.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        selectElement(el.id);
+                    });
+
+                    // Make elements sortable via drag within canvas
+                    const moveBtn = wrapper.querySelector('.move-btn');
+                    if (moveBtn) {
+                        moveBtn.addEventListener('mousedown', (e) => {
+                            startInternalDrag(el.id, e);
+                        });
+                    }
+
+                    canvas.appendChild(wrapper);
+                });
+            }
+
+            updateLayersPanel();
+            saveToStorage();
+        }
+
+        function generateElementHTML(el) {
+            const type = el.type;
+            const p = {};
+            for (const [key, prop] of Object.entries(el.props)) {
+                p[key] = prop.value;
+            }
+
+            switch (type) {
+                case 'header':
+                    return `<div class="lp-header" style="background:${p.bgColor}">
+                        <div class="logo">${p.logoText}</div>
+                        <nav><a href="#">Features</a><a href="#">Pricing</a><a href="#">About</a><a href="#">Contact</a></nav>
+                        <a href="#" class="header-cta" style="background:${p.ctaColor}">${p.ctaText}</a>
+                    </div>`;
+
+                case 'hero':
+                    return `<div class="lp-hero" style="background:linear-gradient(135deg,${p.bgGradient1},${p.bgGradient2});padding:${p.paddingY}px 40px;text-align:${p.textAlign}">
+                        <h1>${p.heading}</h1>
+                        <p>${p.subheading}</p>
+                        <a href="${p.ctaLink}" class="cta-btn">${p.ctaText}</a>
+                    </div>`;
+
+                case 'text':
+                    return `<div class="lp-text-block" style="background:${p.bgColor};padding:${p.paddingY}px 40px">
+                        <h2 style="color:${p.textColor}">${p.heading}</h2>
+                        <p>${p.content}</p>
+                    </div>`;
+
+                case 'image':
+                    const imgContent = p.imageUrl
+                        ? `<img src="${p.imageUrl}" alt="${p.altText}" style="border-radius:${p.borderRadius}px;width:100%;display:block;">`
+                        : `<div class="placeholder-img" style="border-radius:${p.borderRadius}px">🖼️</div>`;
+                    return `<div class="lp-image-block" style="padding:${p.padding}px">${imgContent}</div>`;
+
+                case 'video':
+                    let videoContent;
+                    if (p.videoUrl) {
+                        let embedUrl = p.videoUrl;
+                        if (p.videoUrl.includes('youtube.com/watch')) {
+                            const vid = new URL(p.videoUrl).searchParams.get('v');
+                            embedUrl = `https://www.youtube.com/embed/${vid}`;
+                        } else if (p.videoUrl.includes('youtu.be/')) {
+                            const vid = p.videoUrl.split('youtu.be/')[1];
+                            embedUrl = `https://www.youtube.com/embed/${vid}`;
+                        }
+                        videoContent = `<iframe src="${embedUrl}" style="max-width:800px;width:100%;aspect-ratio:16/9;border:none;border-radius:12px;margin:0 auto;display:block;" allowfullscreen></iframe>`;
+                    } else {
+                        videoContent = `<div class="video-placeholder">▶️</div>`;
+                    }
+                    return `<div class="lp-video-block" style="background:${p.bgColor}">${videoContent}</div>`;
+
+                case 'features':
+                    return `<div class="lp-features" style="background:${p.bgColor}">
+                        <h2>${p.heading}</h2>
+                        <div class="features-grid" style="grid-template-columns:repeat(${p.columns},1fr)">
+                            <div class="feature-card"><div class="feature-icon">🚀</div><h3>Lightning Fast</h3><p>Optimized performance that keeps your workflow moving at top speed.</p></div>
+                            <div class="feature-card"><div class="feature-icon">🔒</div><h3>Enterprise Security</h3><p>Bank-grade encryption and security protocols to protect your data.</p></div>
+                            <div class="feature-card"><div class="feature-icon">📊</div><h3>Smart Analytics</h3><p>AI-powered insights that help you make better business decisions.</p></div>
+                        </div>
+                    </div>`;
+
+                case 'form':
+                    const phoneField = p.showPhone === 'yes' ? `<div class="form-group"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000"></div>` : '';
+                    const companyField = p.showCompany === 'yes' ? `<div class="form-group"><label>Company</label><input type="text" placeholder="Your Company"></div>` : '';
+                    return `<div class="lp-form-section" style="background:${p.bgColor}">
+                        <h2>${p.heading}</h2>
+                        <div class="lp-form">
+                            <div class="form-group"><label>Full Name</label><input type="text" placeholder="John Doe"></div>
+                            <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@company.com"></div>
+                            ${companyField}${phoneField}
+                            <button class="submit-btn" style="background:${p.submitColor}">${p.submitText}</button>
+                        </div>
+                    </div>`;
+
+                case 'cta':
+                    return `<div class="lp-cta-section" style="background:linear-gradient(135deg,${p.bgGradient1},${p.bgGradient2})">
+                        <h2>${p.heading}</h2>
+                        <p>${p.subheading}</p>
+                        <a href="${p.ctaLink}" class="cta-btn">${p.ctaText}</a>
+                    </div>`;
+
+                case 'testimonials':
+                    return componentTemplates.testimonials.html.replace('<div class="lp-testimonials">', `<div class="lp-testimonials" style="background:${p.bgColor}">`)
+                        .replace('What Our Customers Say', p.heading);
+
+                case 'pricing':
+                    return componentTemplates.pricing.html.replace('<div class="lp-pricing">', `<div class="lp-pricing" style="background:${p.bgColor}">`)
+                        .replace('Simple, Transparent Pricing', p.heading);
+
+                case 'stats':
+                    return `<div class="lp-stats" style="background:${p.bgColor};color:${p.textColor}">
+                        <div class="stats-grid">
+                            <div class="stat-item"><div class="stat-number">10K+</div><div class="stat-label">Active Users</div></div>
+                            <div class="stat-item"><div class="stat-number">95%</div><div class="stat-label">Satisfaction Rate</div></div>
+                            <div class="stat-item"><div class="stat-number">50M+</div><div class="stat-label">Leads Captured</div></div>
+                            <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">Support</div></div>
+                        </div>
+                    </div>`;
+
+                case 'faq':
+                    return componentTemplates.faq.html.replace('<div class="lp-faq">', `<div class="lp-faq" style="background:${p.bgColor}">`)
+                        .replace('Frequently Asked Questions', p.heading);
+
+                case 'countdown':
+                    return `<div class="lp-countdown" style="background:linear-gradient(135deg,${p.bgGradient1},${p.bgGradient2})">
+                        <h3>${p.heading}</h3>
+                        <div class="countdown-timer">
+                            <div class="timer-box"><div class="number">02</div><div class="unit">Days</div></div>
+                            <div class="timer-box"><div class="number">14</div><div class="unit">Hours</div></div>
+                            <div class="timer-box"><div class="number">36</div><div class="unit">Minutes</div></div>
+                            <div class="timer-box"><div class="number">52</div><div class="unit">Seconds</div></div>
+                        </div>
+                    </div>`;
+
+                case 'footer':
+                    return componentTemplates.footer.html
+                        .replace('<div class="lp-footer">', `<div class="lp-footer" style="background:${p.bgColor}">`)
+                        .replace('YourBrand', p.brandName);
+
+                case 'divider':
+                    return `<div class="lp-divider" style="padding:${p.paddingY}px 40px"><hr style="border-top:${p.thickness}px solid ${p.color}"></div>`;
+
+                case 'spacer':
+                    return `<div class="lp-spacer" style="height:${p.height}px;background:${p.bgColor}"></div>`;
+
+                default:
+                    return el.html;
+            }
+        }
+
+        // Selection & Properties
+        function selectElement(id) {
+            selectedId = id;
+            document.querySelectorAll('.dropped-element').forEach(el => el.classList.remove('selected'));
+            const el = document.getElementById(id);
+            if (el) el.classList.add('selected');
+            showProperties(id);
+            updateLayersPanel();
+        }
+
+        function deselectAll() {
+            selectedId = null;
+            document.querySelectorAll('.dropped-element').forEach(el => el.classList.remove('selected'));
+            document.getElementById('noSelection').style.display = 'flex';
+            document.getElementById('propertiesPanel').style.display = 'none';
+            updateLayersPanel();
+        }
+
+        function showProperties(id) {
+            const el = elements.find(e => e.id === id);
+            if (!el) return;
+
+            document.getElementById('noSelection').style.display = 'none';
+            const panel = document.getElementById('propertiesPanel');
+            panel.style.display = 'block';
+
+            let html = `<div class="properties-title">${el.icon} ${el.name}</div>`;
+
+            html += `<div class="prop-group"><div class="prop-group-title">Properties</div>`;
+
+            for (const [key, prop] of Object.entries(el.props)) {
+                html += `<div class="prop-field">`;
+                html += `<label>${prop.label}</label>`;
+
+                switch (prop.type) {
+                    case 'text':
+                    case 'url':
+                    case 'email':
+                        html += `<input type="${prop.type}" value="${escapeAttr(prop.value)}" onchange="updateProp('${id}','${key}',this.value)">`;
+                        break;
+                    case 'textarea':
+                        html += `<textarea onchange="updateProp('${id}','${key}',this.value)">${escapeHTML(prop.value)}</textarea>`;
+                        break;
+                    case 'color':
+                        html += `<div class="color-row">
+                            <input type="color" value="${prop.value}" onchange="updateProp('${id}','${key}',this.value); this.nextElementSibling.value=this.value;">
+                            <input type="text" value="${prop.value}" onchange="updateProp('${id}','${key}',this.value); this.previousElementSibling.value=this.value;">
+                        </div>`;
+                        break;
+                    case 'select':
+                        html += `<select onchange="updateProp('${id}','${key}',this.value)">`;
+                        prop.options.forEach(opt => {
+                            html += `<option value="${opt}" ${opt === prop.value ? 'selected' : ''}>${opt}</option>`;
+                        });
+                        html += `</select>`;
+                        break;
+                    case 'range':
+                        html += `<input type="range" min="${prop.min}" max="${prop.max}" value="${prop.value}" 
+                            oninput="updateProp('${id}','${key}',parseInt(this.value)); this.nextElementSibling.textContent=this.value+'px';">
+                            <div class="range-value">${prop.value}px</div>`;
+                        break;
+                }
+
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+
+            html += `<div class="prop-group">
+                <div class="prop-group-title">Actions</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button class="btn btn-outline btn-sm" onclick="cloneElement('${id}')">📋 Duplicate</button>
+                    <button class="btn btn-outline btn-sm" onclick="moveElement('${id}',-1)">↑ Move Up</button>
+                    <button class="btn btn-outline btn-sm" onclick="moveElement('${id}',1)">↓ Move Down</button>
+                    <button class="btn btn-danger btn-sm" onclick="removeElement('${id}')">🗑️ Delete</button>
+                </div>
+            </div>`;
+
+            panel.innerHTML = html;
+        }
+
+        function updateProp(id, key, value) {
+            const el = elements.find(e => e.id === id);
+            if (!el) return;
+            el.props[key].value = value;
+            saveHistory();
+            renderCanvas();
+            // Re-select to keep properties panel in sync
+            if (selectedId === id) {
+                const domEl = document.getElementById(id);
+                if (domEl) domEl.classList.add('selected');
+            }
+        }
+
+        // Internal Drag (Reorder)
+        function startInternalDrag(id, startEvent) {
+            startEvent.preventDefault();
+            const canvas = document.getElementById('canvas');
+            const el = document.getElementById(id);
+            if (!el) return;
+
+            const rect = el.getBoundingClientRect();
+            const clone = el.cloneNode(true);
+            clone.style.position = 'fixed';
+            clone.style.width = rect.width + 'px';
+            clone.style.opacity = '0.7';
+            clone.style.zIndex = '9999';
+            clone.style.pointerEvents = 'none';
+            clone.style.transform = 'rotate(1deg)';
+            document.body.appendChild(clone);
+
+            el.style.opacity = '0.3';
+
+            function onMove(e) {
+                clone.style.left = (e.clientX - rect.width / 2) + 'px';
+                clone.style.top = (e.clientY - 20) + 'px';
+
+                // Show indicator
+                removeDragIndicators();
+                const droppedElements = canvas.querySelectorAll('.dropped-element');
+                let insertBefore = null;
+                for (const item of droppedElements) {
+                    if (item.id === id) continue;
+                    const r = item.getBoundingClientRect();
+                    if (e.clientY < r.top + r.height / 2) {
+                        insertBefore = item;
+                        break;
+                    }
+                }
+                const indicator = document.createElement('div');
+                indicator.className = 'drop-indicator';
+                if (insertBefore) {
+                    canvas.insertBefore(indicator, insertBefore);
+                } else {
+                    canvas.appendChild(indicator);
+                }
+            }
+
+            function onUp(e) {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+                clone.remove();
+                el.style.opacity = '1';
+                removeDragIndicators();
+
+                // Calculate new index
+                const droppedElements = [...canvas.querySelectorAll('.dropped-element')];
+                let newIndex = elements.length - 1;
+                for (let i = 0; i < droppedElements.length; i++) {
+                    if (droppedElements[i].id === id) continue;
+                    const r = droppedElements[i].getBoundingClientRect();
+                    if (e.clientY < r.top + r.height / 2) {
+                        // Find the element's index in elements array
+                        newIndex = elements.findIndex(el => el.id === droppedElements[i].id);
+                        break;
+                    }
+                }
+
+                const oldIndex = elements.findIndex(el => el.id === id);
+                if (oldIndex !== newIndex && oldIndex !== -1) {
+                    const [removed] = elements.splice(oldIndex, 1);
+                    if (newIndex > oldIndex) newIndex--;
+                    elements.splice(newIndex, 0, removed);
+                    saveHistory();
+                    renderCanvas();
+                    selectElement(id);
+                }
+            }
+
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        }
+
+        // Layers Panel
+        function updateLayersPanel() {
+            const list = document.getElementById('layersList');
+            if (!list) return;
+
+            if (elements.length === 0) {
+                list.innerHTML = '<li style="color:var(--text-muted);border:none;background:none;justify-content:center;font-size:12px;">No elements yet</li>';
+                return;
+            }
+
+            list.innerHTML = elements.map((el, i) => `
+                <li class="${el.id === selectedId ? 'active' : ''}" onclick="selectElement('${el.id}')">
+                    <span class="layer-icon">${el.icon}</span>
+                    <span class="layer-name">${el.name}</span>
+                    <span class="layer-visibility" onclick="event.stopPropagation(); toggleVisibility('${el.id}')">${el.visible ? '👁️' : '🚫'}</span>
+                </li>
+            `).join('');
+        }
+
+        function toggleVisibility(id) {
+            const el = elements.find(e => e.id === id);
+            if (el) {
+                el.visible = !el.visible;
+                renderCanvas();
+            }
+        }
+
+        // History (Undo/Redo)
+        function saveHistory() {
+            history = history.slice(0, historyIndex + 1);
+            history.push(JSON.stringify(elements));
+            historyIndex = history.length - 1;
+            // Keep max 50 history entries
+            if (history.length > 50) {
+                history.shift();
+                historyIndex--;
+            }
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                elements = JSON.parse(history[historyIndex]);
+                renderCanvas();
+                deselectAll();
+                showToast('↩️ Undo');
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                elements = JSON.parse(history[historyIndex]);
+                renderCanvas();
+                deselectAll();
+                showToast('↪️ Redo');
+            }
+        }
+
+        // Keyboard Shortcuts
+        function setupKeyboard() {
+            document.addEventListener('keydown', (e) => {
+                // Don't fire shortcuts when typing in inputs
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+
+                if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                    e.preventDefault();
+                    if (e.shiftKey) redo();
+                    else undo();
+                }
+                if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+                    e.preventDefault();
+                    redo();
+                }
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    savePage();
+                }
+                if (e.key === 'Delete' || e.key === 'Backspace') {
+                    if (selectedId) {
+                        e.preventDefault();
+                        removeElement(selectedId);
+                    }
+                }
+                if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+                    if (selectedId) {
+                        e.preventDefault();
+                        cloneElement(selectedId);
+                    }
+                }
+            });
+        }
+
+        // Viewport
+        function setViewport(mode) {
+            const frame = document.getElementById('deviceFrame');
+            frame.className = 'device-frame ' + mode;
+            document.querySelectorAll('.viewport-btns .btn-icon').forEach(b => b.classList.remove('active'));
+            event.target.closest('.btn-icon').classList.add('active');
+        }
+
+        // Zoom
+        function zoomCanvas(delta) {
+            zoomLevel = Math.max(25, Math.min(200, zoomLevel + delta));
+            document.getElementById('canvasContainer').style.transform = `scale(${zoomLevel / 100})`;
+            document.getElementById('canvasContainer').style.transformOrigin = 'top center';
+            document.getElementById('zoomLevel').textContent = zoomLevel + '%';
+        }
+
+        // Tab Switching
+        function switchLeftTab(tab) {
+            document.querySelectorAll('.sidebar-left .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.sidebar-left .tab-content').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+
+        function switchRightTab(tab) {
+            document.querySelectorAll('.sidebar-right .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.sidebar-right .tab-content').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+
+        // Templates
+        function loadTemplate(templateName) {
+            if (elements.length > 0) {
+                if (!confirm('This will replace your current design. Continue?')) return;
+            }
+
+            elements = [];
+            elementIdCounter = 0;
+
+            switch (templateName) {
+                case 'saas':
+                    addElementSilent('header');
+                    addElementSilent('hero');
+                    addElementSilent('features');
+                    addElementSilent('stats');
+                    addElementSilent('testimonials');
+                    addElementSilent('pricing');
+                    addElementSilent('cta');
+                    addElementSilent('faq');
+                    addElementSilent('footer');
+                    break;
+                case 'lead':
+                    addElementSilent('header');
+                    addElementSilent('hero');
+                    addElementSilent('form');
+                    addElementSilent('testimonials');
+                    addElementSilent('footer');
+                    break;
+                case 'product':
+                    addElementSilent('header');
+                    addElementSilent('hero');
+                    addElementSilent('countdown');
+                    addElementSilent('features');
+                    addElementSilent('cta');
+                    addElementSilent('footer');
+                    break;
+                case 'webinar':
+                    addElementSilent('header');
+                    addElementSilent('hero');
+                    addElementSilent('video');
+                    addElementSilent('form');
+                    addElementSilent('faq');
+                    addElementSilent('footer');
+                    break;
+            }
+
+            saveHistory();
+            renderCanvas();
+            showToast('🎨 Template loaded!');
+        }
+
+        function addElementSilent(type) {
+            const template = componentTemplates[type];
+            if (!template) return;
+
+            const id = 'el-' + (++elementIdCounter);
+            const props = {};
+            for (const [key, prop] of Object.entries(template.props)) {
+                props[key] = { ...prop };
+            }
+
+            elements.push({
+                id, type,
+                name: template.name,
+                icon: template.icon,
+                html: template.html,
+                props,
+                visible: true
+            });
+        }
+
+        // Clear Canvas
+        function clearCanvas() {
+            if (elements.length === 0) return;
+            if (!confirm('Are you sure you want to clear the entire page?')) return;
+            elements = [];
+            selectedId = null;
+            saveHistory();
+            renderCanvas();
+            deselectAll();
+            showToast('🗑️ Canvas cleared');
+        }
+
+        // Export
+        function exportHTML() {
+            const html = generateFullHTML();
+            document.getElementById('exportCode').textContent = html;
+            document.getElementById('exportModal').classList.add('active');
+        }
+
+        function generateFullHTML() {
+            const title = document.getElementById('pageTitle').value || 'Landing Page';
+            const meta = document.getElementById('pageMeta').value || '';
+            const gaId = document.getElementById('gaId').value;
+            const fbPixel = document.getElementById('fbPixel').value;
+            const webhookUrl = document.getElementById('webhookUrl').value;
+
+            let gaScript = '';
+            if (gaId) {
+                gaScript = `
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"><\/script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${gaId}');
+    <\/script>`;
+            }
+
+            let fbScript = '';
+            if (fbPixel) {
+                fbScript = `
+    <!-- Facebook Pixel -->
+    <script>
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+        s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init','${fbPixel}');fbq('track','PageView');
+    <\/script>`;
+            }
+
+            let formScript = '';
+            if (webhookUrl) {
+                formScript = `
+    <script>
+        document.querySelectorAll('.lp-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const data = new FormData(this);
+                fetch('${webhookUrl}', { method: 'POST', body: data })
+                    .then(() => alert('Thank you! We will be in touch.'))
+                    .catch(() => alert('Something went wrong. Please try again.'));
+            });
+        });
+    <\/script>`;
+            }
+
+            let bodyContent = '';
+            elements.forEach(el => {
+                if (el.visible) {
+                    bodyContent += generateElementHTML(el) + '\n';
+                }
+            });
+
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <meta name="description" content="${meta}">
+    ${gaScript}${fbScript}
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+        ${getComponentStyles()}
+    </style>
+</head>
+<body>
+${bodyContent}
+${formScript}
+</body>
+</html>`;
+        }
+
+        function getComponentStyles() {
+            // Return all the lp- styles
+            const styles = [];
+            document.querySelectorAll('style').forEach(s => {
+                const text = s.textContent;
+                const regex = /\.lp-[^{]+\{[^}]+\}/g;
+                let match;
+                while ((match = regex.exec(text)) !== null) {
+                    styles.push(match[0]);
+                }
+                // Also get grids, cards, etc.
+                const additionalRegex = /\.(features-grid|feature-card|testimonials-grid|testimonial-card|pricing-grid|pricing-card|stats-grid|stat-item|faq-list|faq-item|footer-grid|countdown-timer|timer-box)[^{]*\{[^}]+\}/g;
+                while ((match = additionalRegex.exec(text)) !== null) {
+                    styles.push(match[0]);
+                }
+            });
+            return [...new Set(styles)].join('\n        ');
+        }
+
+        function copyExport() {
+            const code = document.getElementById('exportCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('📋 Copied to clipboard!');
+            });
+        }
+
+        function downloadHTML() {
+            const html = generateFullHTML();
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'landing-page.html';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('⬇️ Downloaded!');
+        }
+
+        // Preview
+        function previewPage() {
+            const html = generateFullHTML();
+            document.getElementById('previewModal').classList.add('active');
+            const iframe = document.getElementById('previewFrame');
+            iframe.srcdoc = html;
+        }
+
+        // Save / Load
+        function savePage() {
+            saveToStorage();
+            showToast('💾 Page saved successfully!');
+        }
+
+        function publishPage() {
+            showToast('🚀 Page published! (Demo mode)');
+        }
+
+        function saveToStorage() {
+            const data = {
+                elements,
+                elementIdCounter,
+                pageTitle: document.getElementById('pageTitle').value,
+                pageMeta: document.getElementById('pageMeta').value,
+                gaId: document.getElementById('gaId').value,
+                fbPixel: document.getElementById('fbPixel').value,
+                webhookUrl: document.getElementById('webhookUrl').value,
+                leadTag: document.getElementById('leadTag').value
+            };
+            localStorage.setItem('crm-page-builder', JSON.stringify(data));
+        }
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem('crm-page-builder');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    elements = data.elements || [];
+                    elementIdCounter = data.elementIdCounter || 0;
+                    if (data.pageTitle) document.getElementById('pageTitle').value = data.pageTitle;
+                    if (data.pageMeta) document.getElementById('pageMeta').value = data.pageMeta;
+                    if (data.gaId) document.getElementById('gaId').value = data.gaId;
+                    if (data.fbPixel) document.getElementById('fbPixel').value = data.fbPixel;
+                    if (data.webhookUrl) document.getElementById('webhookUrl').value = data.webhookUrl;
+                    if (data.leadTag) document.getElementById('leadTag').value = data.leadTag;
+                    saveHistory();
+                    renderCanvas();
+                } catch (e) {
+                    console.error('Failed to load saved data', e);
+                }
+            } else {
+                saveHistory();
+            }
+        }
+
+        // Modal
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // Click outside modal to close
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Toast
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                toast.style.transition = 'all 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // Utility
+        function escapeHTML(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function escapeAttr(str) {
+            return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+    </script>
+</body>
+</html>
