@@ -108,7 +108,7 @@ class _EmailsScreenState extends State<EmailsScreen> {
                           fontWeight: FontWeight.w500,
                           color: isDark ? AppColors.darkText : AppColors.lightText),
                           overflow: TextOverflow.ellipsis)),
-                      DataCell(Text(e.toEmail, style: GoogleFonts.inter(fontSize: 12,
+                      DataCell(Text(e.toEmail ?? '—', style: GoogleFonts.inter(fontSize: 12,
                           color: isDark ? AppColors.darkTextSub : AppColors.lightTextSub),
                           overflow: TextOverflow.ellipsis)),
                       DataCell(_badge(e.status, _statusColor(e.status))),

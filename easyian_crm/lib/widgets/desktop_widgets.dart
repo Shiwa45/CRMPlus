@@ -182,7 +182,7 @@ class PriorityBadge extends StatelessWidget {
 
 // ─── Table Toolbar ────────────────────────────────────────────────────────────
 class TableToolbar extends StatelessWidget {
-  final TextEditingController searchCtrl;
+  final TextEditingController? searchCtrl;
   final String searchHint;
   final List<Widget> filters;
   final List<Widget> actions;
@@ -224,21 +224,23 @@ class TableToolbar extends StatelessWidget {
             const SizedBox(width: 8),
             ...bulkActions,
           ] else ...[
-            // Search
-            SizedBox(
-              width: 260,
-              height: 34,
-              child: TextField(
-                controller: searchCtrl,
-                style: GoogleFonts.inter(fontSize: 13),
-                decoration: InputDecoration(
-                  hintText: searchHint,
-                  prefixIcon: const Icon(Icons.search_rounded, size: 16),
-                  contentPadding: EdgeInsets.zero,
+            if (searchCtrl != null) ...[
+              // Search
+              SizedBox(
+                width: 260,
+                height: 34,
+                child: TextField(
+                  controller: searchCtrl,
+                  style: GoogleFonts.inter(fontSize: 13),
+                  decoration: InputDecoration(
+                    hintText: searchHint,
+                    prefixIcon: const Icon(Icons.search_rounded, size: 16),
+                    contentPadding: EdgeInsets.zero,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 8),
+              const SizedBox(width: 8),
+            ],
             ...filters,
           ],
           const Spacer(),
@@ -254,10 +256,12 @@ class EmptyState extends StatelessWidget {
   final IconData icon;
   final String title, subtitle;
   final Widget? action;
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   const EmptyState({
     super.key, required this.icon, required this.title,
-    required this.subtitle, this.action,
+    required this.subtitle, this.action, this.actionLabel, this.onAction,
   });
 
   @override
@@ -275,7 +279,17 @@ class EmptyState extends StatelessWidget {
         Text(subtitle, style: GoogleFonts.inter(
             fontSize: 13, color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted),
             textAlign: TextAlign.center),
-        if (action != null) ...[const SizedBox(height: 20), action!],
+        if (action != null) ...[
+          const SizedBox(height: 20),
+          action!,
+        ] else if (actionLabel != null && onAction != null) ...[
+          const SizedBox(height: 20),
+          ElevatedButton.icon(
+            onPressed: onAction,
+            icon: const Icon(Icons.add_rounded, size: 18),
+            label: Text(actionLabel!),
+          ),
+        ],
       ]),
     );
   }

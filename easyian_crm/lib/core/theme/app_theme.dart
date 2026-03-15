@@ -44,6 +44,7 @@ class AppColors {
   static const Color lightTextSub     = Color(0xFF374151);
   static const Color lightTextMuted   = Color(0xFF6B7280);
   static const Color lightTextFaint   = Color(0xFF9CA3AF);
+  static const Color lightTextSecondary = Color(0xFF4B5563);
 
   // Dark surface
   static const Color darkBg          = Color(0xFF0D1117);
@@ -55,6 +56,7 @@ class AppColors {
   static const Color darkTextSub     = Color(0xFFCDD9E5);
   static const Color darkTextMuted   = Color(0xFF848D97);
   static const Color darkTextFaint   = Color(0xFF636E7B);
+  static const Color darkTextSecondary = Color(0xFFA7B0BA);
 
   // Sidebar
   static const Color sidebarLight    = Color(0xFF1E293B);

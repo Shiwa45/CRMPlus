@@ -1,7 +1,6 @@
 import '../core/constants/app_constants.dart';
 import '../core/utils/api_client.dart';
-import '../models/dashboard_stats_model.dart';
-import '../models/email_model.dart';
+import '../models/models.dart';
 
 int _asInt(dynamic v, {int fallback = 0}) {
   if (v == null) return fallback;
@@ -24,7 +23,7 @@ class DashboardService {
   Future<DashboardStats> getDashboardStats({String dateRange = 'month'}) async {
     final response = await ApiClient.instance.get(
       AppConstants.dashboardStatsEndpoint,
-      queryParams: {'date_range': dateRange},
+      q: {'date_range': dateRange},
     );
     return DashboardStats.fromJson(response);
   }
