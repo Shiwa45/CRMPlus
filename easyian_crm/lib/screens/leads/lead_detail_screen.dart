@@ -1,506 +1,689 @@
+// screens/leads/lead_detail_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../core/theme/app_theme.dart';
-import '../../models/lead_model.dart';
-import '../../services/leads_service.dart';
-import '../../widgets/app_loader.dart';
-import 'lead_form_screen.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
+import '../../widgets/desktop_widgets.dart';
+
+import '../../widgets/dialogs/whatsapp_send_dialog.dart';
+import '../../widgets/dialogs/quick_email_dialog.dart';
 
 class LeadDetailScreen extends StatefulWidget {
-  final LeadModel lead;
-  const LeadDetailScreen({super.key, required this.lead});
+  final int leadId;
+  const LeadDetailScreen({super.key, required this.leadId});
 
   @override
   State<LeadDetailScreen> createState() => _LeadDetailScreenState();
 }
 
-class _LeadDetailScreenState extends State<LeadDetailScreen> with SingleTickerProviderStateMixin {
-  late LeadModel _lead;
+class _LeadDetailScreenState extends State<LeadDetailScreen>
+    with SingleTickerProviderStateMixin {
+  LeadModel? _lead;
   List<LeadActivityModel> _activities = [];
-  bool _loadingActivities = true;
-  late TabController _tabCtrl;
+  bool _loading = true;
+  late TabController _tabs;
+
+  final _curr = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 0);
 
   @override
   void initState() {
     super.initState();
-    _lead = widget.lead;
-    _tabCtrl = TabController(length: 2, vsync: this);
-    _loadActivities();
+    _tabs = TabController(length: 3, vsync: this);
+    _load();
   }
 
   @override
-  void dispose() {
-    _tabCtrl.dispose();
-    super.dispose();
-  }
+  void dispose() { _tabs.dispose(); super.dispose(); }
 
-  Future<void> _loadActivities() async {
-    setState(() => _loadingActivities = true);
+  Future<void> _load() async {
+    setState(() => _loading = true);
     try {
-      final list = await LeadsService.instance.getLeadActivities(_lead.id);
-      setState(() => _activities = list);
-    } catch (_) {}
-    setState(() => _loadingActivities = false);
-  }
-
-  Future<void> _deleteLead() async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Delete Lead'),
-        content: Text('Are you sure you want to delete ${_lead.fullName}? This cannot be undone.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-    if (confirm != true) return;
-    try {
-      await LeadsService.instance.deleteLead(_lead.id);
-      if (mounted) Navigator.pop(context, true);
+      final lead = await LeadsService.instance.getLead(widget.leadId);
+      final acts = await LeadsService.instance.getActivities(widget.leadId);
+      if (mounted) setState(() { _lead = lead; _activities = acts; _loading = false; });
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error),
-      );
+      if (mounted) setState(() => _loading = false);
     }
-  }
-
-  void _addActivity() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) => _AddActivitySheet(
-        leadId: _lead.id,
-        onAdded: () { _loadActivities(); },
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final statusColor = _statusColor(_lead.status);
+    if (_loading) return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (_lead == null) return const Scaffold(body: Center(child: Text('Lead not found')));
+
+    final lead = _lead!;
+    final statusColor = _statusColor(lead.status);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_lead.fullName, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 16)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_rounded),
-            onPressed: () async {
-              final result = await Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => LeadFormScreen(lead: _lead)));
-              if (result == true && mounted) {
-                // Reload
-                try {
-                  final updated = await LeadsService.instance.getLead(_lead.id);
-                  setState(() => _lead = updated);
-                } catch (_) {}
-              }
-            },
-          ),
-          PopupMenuButton(
-            itemBuilder: (_) => [
-              const PopupMenuItem(value: 'delete', child: Row(children: [
-                Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 18),
-                SizedBox(width: 8),
-                Text('Delete Lead', style: TextStyle(color: AppColors.error)),
-              ])),
-            ],
-            onSelected: (v) { if (v == 'delete') _deleteLead(); },
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabCtrl,
-          tabs: const [
-            Tab(text: 'Details'),
-            Tab(text: 'Activities'),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _addActivity,
-        icon: const Icon(Icons.add),
-        label: const Text('Add Activity'),
-      ),
-      body: TabBarView(
-        controller: _tabCtrl,
-        children: [
-          _buildDetails(isDark, statusColor),
-          _buildActivities(isDark),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetails(bool isDark, Color statusColor) {
-    final currencyFmt = NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 0);
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        // Status & priority header
+      backgroundColor: isDark ? AppColors.darkBg : const Color(0xFFF0F4FF),
+      body: Column(children: [
+        // ── Hero Header ────────────────────────────────────────────────────
+        _buildHero(lead, statusColor, isDark),
+        // ── Tab Bar ────────────────────────────────────────────────────────
         Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: statusColor.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: statusColor.withOpacity(0.2)),
+          color: isDark ? AppColors.darkSurface : Colors.white,
+          child: TabBar(
+            controller: _tabs,
+            labelColor: AppColors.primary,
+            unselectedLabelColor: isDark ? AppColors.darkTextSub : AppColors.lightTextSub,
+            indicatorColor: AppColors.primary,
+            indicatorWeight: 3,
+            tabs: const [
+              Tab(icon: Icon(Icons.info_outline, size: 16), text: 'Overview'),
+              Tab(icon: Icon(Icons.timeline, size: 16), text: 'Activity'),
+              Tab(icon: Icon(Icons.task_alt, size: 16), text: 'Tasks'),
+            ],
           ),
-          child: Row(children: [
-            CircleAvatar(
-              radius: 28,
-              backgroundColor: statusColor.withOpacity(0.15),
-              child: Text(_lead.fullName.isNotEmpty ? _lead.fullName[0].toUpperCase() : '?',
-                  style: GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.w700, color: statusColor)),
-            ),
-            const SizedBox(width: 14),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(_lead.fullName, style: GoogleFonts.inter(fontSize: 17, fontWeight: FontWeight.w700)),
-              if (_lead.jobTitle != null) Text(_lead.jobTitle!,
-                  style: GoogleFonts.inter(fontSize: 13, color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted)),
-              if (_lead.company != null) Text(_lead.company!,
-                  style: GoogleFonts.inter(fontSize: 13, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
-            ])),
-            Column(children: [
-              _statusBadge(_lead.status, statusColor),
-              const SizedBox(height: 6),
-              _priorityBadge(_lead.priority),
-            ]),
+        ),
+        Expanded(
+          child: TabBarView(controller: _tabs, children: [
+            _OverviewTab(lead: lead, curr: _curr, isDark: isDark, onRefresh: _load),
+            _ActivityTab(activities: _activities, leadId: lead.id, onRefresh: _load, isDark: isDark),
+            _TasksTab(leadId: lead.id, isDark: isDark),
           ]),
         ),
-        const SizedBox(height: 16),
-
-        // Status change quick actions
-        Text('Quick Status Update', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 8),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost', 'on_hold']
-                .map((s) => Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: ActionChip(
-                    label: Text(s.replaceAll('_', ' ').split(' ')
-                        .map((w) => '${w[0].toUpperCase()}${w.substring(1)}').join(' '),
-                        style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w500)),
-                    backgroundColor: _lead.status == s
-                        ? _statusColor(s).withOpacity(0.15) : null,
-                    side: _lead.status == s
-                        ? BorderSide(color: _statusColor(s)) : null,
-                    onPressed: () async {
-                      try {
-                        final updated = await LeadsService.instance.updateLead(_lead.id, {'status': s});
-                        setState(() => _lead = updated);
-                      } catch (e) {
-                        if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error));
-                      }
-                    },
-                  ),
-                ))
-                .toList(),
-          ),
-        ),
-        const SizedBox(height: 16),
-
-        // Contact Info
-        _infoSection('Contact Information', [
-          _infoRow(Icons.email_outlined, 'Email', _lead.email),
-          if (_lead.phone != null) _infoRow(Icons.phone_outlined, 'Phone', _lead.phone!),
-          if (_lead.company != null) _infoRow(Icons.business_outlined, 'Company', _lead.company!),
-          if (_lead.jobTitle != null) _infoRow(Icons.work_outline_rounded, 'Job Title', _lead.jobTitle!),
-        ], isDark),
-        const SizedBox(height: 12),
-
-        // Address
-        if (_lead.address != null || _lead.city != null)
-          _infoSection('Address', [
-            if (_lead.address != null) _infoRow(Icons.location_on_outlined, 'Address', _lead.address!),
-            if (_lead.city != null) _infoRow(Icons.location_city_outlined, 'City', _lead.city!),
-            if (_lead.state != null) _infoRow(Icons.map_outlined, 'State', _lead.state!),
-            _infoRow(Icons.flag_outlined, 'Country', _lead.country ?? 'India'),
-            if (_lead.postalCode != null) _infoRow(Icons.pin_outlined, 'Postal Code', _lead.postalCode!),
-          ], isDark),
-        const SizedBox(height: 12),
-
-        // Deal Info
-        _infoSection('Deal Information', [
-          if (_lead.budget != null)
-            _infoRow(Icons.currency_rupee_rounded, 'Budget',
-                currencyFmt.format(_lead.budget)),
-          if (_lead.requirements != null && _lead.requirements!.isNotEmpty)
-            _infoRow(Icons.list_alt_rounded, 'Requirements', _lead.requirements!),
-          if (_lead.notes != null && _lead.notes!.isNotEmpty)
-            _infoRow(Icons.notes_rounded, 'Notes', _lead.notes!),
-        ], isDark),
-        const SizedBox(height: 12),
-
-        // Meta
-        _infoSection('Lead Meta', [
-          if (_lead.sourceName != null) _infoRow(Icons.source_rounded, 'Source', _lead.sourceName!),
-          if (_lead.assignedToName != null) _infoRow(Icons.person_outline_rounded, 'Assigned To', _lead.assignedToName!),
-          _infoRow(Icons.calendar_today_outlined, 'Created', _formatDate(_lead.createdAt)),
-          if (_lead.lastContacted != null) _infoRow(Icons.access_time_rounded, 'Last Contacted', _formatDate(_lead.lastContacted!)),
-        ], isDark),
-        const SizedBox(height: 80),
-      ],
-    );
-  }
-
-  Widget _buildActivities(bool isDark) {
-    if (_loadingActivities) return const Center(child: AppLoader());
-    if (_activities.isEmpty) {
-      return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(Icons.history_toggle_off_rounded, size: 56, color: Colors.grey.withOpacity(0.3)),
-        const SizedBox(height: 12),
-        Text('No activities yet', style: GoogleFonts.inter(fontSize: 15, color: Colors.grey)),
-        const SizedBox(height: 8),
-        Text('Tap "Add Activity" to log a call, email, or meeting',
-            style: GoogleFonts.inter(fontSize: 12, color: Colors.grey), textAlign: TextAlign.center),
-      ]));
-    }
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: _activities.length,
-      itemBuilder: (_, i) => _ActivityTile(activity: _activities[i], isDark: isDark),
-    );
-  }
-
-  Widget _infoSection(String title, List<Widget> rows, bool isDark) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600,
-              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted)),
-          const SizedBox(height: 10),
-          ...rows,
-        ],
-      ),
-    );
-  }
-
-  Widget _infoRow(IconData icon, String label, String value) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Icon(icon, size: 16, color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted),
-        const SizedBox(width: 10),
-        SizedBox(width: 90, child: Text(label, style: GoogleFonts.inter(fontSize: 12,
-            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted))),
-        Expanded(child: Text(value, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500))),
       ]),
     );
   }
 
-  Widget _statusBadge(String status, Color color) {
-    final label = status.replaceAll('_', ' ');
+  Widget _buildHero(LeadModel lead, Color statusColor, bool isDark) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(20)),
-      child: Text('${label[0].toUpperCase()}${label.substring(1)}',
-          style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [const Color(0xFF1A1F3A), const Color(0xFF0F1628)]
+              : [const Color(0xFF4F46E5), const Color(0xFF7C3AED)],
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            // Back + actions row
+            Row(children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const Spacer(),
+              _heroAction(Icons.edit_outlined, 'Edit', () => _editLead()),
+              const SizedBox(width: 8),
+              _heroAction(Icons.more_vert, 'More', () => _showMoreMenu()),
+            ]),
+            const SizedBox(height: 16),
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              // Avatar
+              Container(
+                width: 64, height: 64,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                ),
+                child: Center(
+                  child: Text(
+                    (lead.fullName.isNotEmpty ? lead.fullName[0] : '?').toUpperCase(),
+                    style: GoogleFonts.inter(
+                        fontSize: 28, fontWeight: FontWeight.w800, color: Colors.white),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(lead.fullName,
+                    style: GoogleFonts.inter(
+                        fontSize: 22, fontWeight: FontWeight.w800, color: Colors.white)),
+                if (lead.jobTitle != null && lead.jobTitle!.isNotEmpty)
+                  Text(lead.jobTitle!,
+                      style: GoogleFonts.inter(
+                          fontSize: 13, color: Colors.white.withOpacity(0.8))),
+                if (lead.company != null && lead.company!.isNotEmpty)
+                  Row(children: [
+                    Icon(Icons.business, color: Colors.white.withOpacity(0.7), size: 13),
+                    const SizedBox(width: 4),
+                    Text(lead.company!,
+                        style: GoogleFonts.inter(
+                            fontSize: 13, color: Colors.white.withOpacity(0.8))),
+                  ]),
+                const SizedBox(height: 8),
+                Row(children: [
+                  _statusChip(lead.status, statusColor),
+                  const SizedBox(width: 8),
+                  _priorityChip(lead.priority),
+                ]),
+              ])),
+            ]),
+            const SizedBox(height: 20),
+            // Quick action buttons
+            Row(children: [
+              Expanded(child: _quickActionBtn(
+                icon: Icons.chat, label: 'WhatsApp',
+                color: const Color(0xFF25D366),
+                onTap: () => _sendWhatsApp(),
+              )),
+              const SizedBox(width: 10),
+              Expanded(child: _quickActionBtn(
+                icon: Icons.email_outlined, label: 'Email',
+                color: Colors.blue.shade300,
+                onTap: () => _sendEmail(),
+              )),
+              const SizedBox(width: 10),
+              Expanded(child: _quickActionBtn(
+                icon: Icons.phone_outlined, label: 'Call',
+                color: Colors.green.shade300,
+                onTap: () => _callLead(),
+              )),
+              const SizedBox(width: 10),
+              Expanded(child: _quickActionBtn(
+                icon: Icons.star_outline, label: 'Convert',
+                color: Colors.amber.shade300,
+                onTap: () => _convertLead(),
+              )),
+            ]),
+          ]),
+        ),
+      ),
     );
   }
 
-  Widget _priorityBadge(String priority) {
-    final color = priority == 'hot' ? AppColors.priorityHot
-        : priority == 'warm' ? AppColors.priorityWarm : AppColors.priorityCold;
+  Widget _heroAction(IconData icon, String tooltip, VoidCallback onTap) =>
+      Tooltip(
+        message: tooltip,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, color: Colors.white, size: 18),
+          ),
+        ),
+      );
+
+  Widget _quickActionBtn({
+    required IconData icon, required String label,
+    required Color color, required VoidCallback onTap,
+  }) =>
+      InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withOpacity(0.2)),
+          ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(height: 4),
+            Text(label,
+                style: GoogleFonts.inter(fontSize: 11, color: Colors.white,
+                    fontWeight: FontWeight.w500)),
+          ]),
+        ),
+      );
+
+  Widget _statusChip(String status, Color color) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    decoration: BoxDecoration(
+      color: color.withOpacity(0.2),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: color.withOpacity(0.5)),
+    ),
+    child: Text(status.toUpperCase(),
+        style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: color)),
+  );
+
+  Widget _priorityChip(String priority) {
+    final colors = {'hot': Colors.red, 'warm': Colors.orange, 'cold': Colors.blue};
+    final c = colors[priority] ?? Colors.grey;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(20)),
-      child: Text('${priority[0].toUpperCase()}${priority.substring(1)}',
-          style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: c.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: c.withOpacity(0.4)),
+      ),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Icon(Icons.local_fire_department, size: 11, color: c),
+        const SizedBox(width: 3),
+        Text(priority.toUpperCase(),
+            style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: c)),
+      ]),
     );
   }
 
   Color _statusColor(String s) {
-    switch (s) {
-      case 'new': return AppColors.statusNew;
-      case 'contacted': return AppColors.statusContacted;
-      case 'qualified': return AppColors.statusQualified;
-      case 'proposal': return AppColors.statusProposal;
-      case 'won': return AppColors.statusWon;
-      case 'lost': return AppColors.statusLost;
-      case 'on_hold': return AppColors.statusOnHold;
-      default: return AppColors.statusNew;
+    const m = {
+      'new': Color(0xFF6366F1), 'contacted': Colors.blue, 'qualified': Color(0xFF10B981),
+      'proposal': Colors.orange, 'negotiation': Colors.purple,
+      'won': Color(0xFF22C55E), 'lost': Color(0xFFEF4444),
+    };
+    return m[s] ?? Colors.grey;
+  }
+
+  void _editLead() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edit coming soon')));
+  }
+
+  void _sendWhatsApp() {
+    showDialog(
+      context: context,
+      builder: (_) => WhatsAppSendDialog(
+        lead: _lead!,
+        onSent: () => ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('WhatsApp sent!'))),
+      ),
+    );
+  }
+
+  void _sendEmail() {
+    showDialog(
+      context: context,
+      builder: (_) => QuickEmailDialog(
+        toEmail: _lead!.email,
+        toName: _lead!.fullName,
+        leadId: _lead!.id,
+        onSent: () => ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Email sent!'))),
+      ),
+    );
+  }
+
+  void _callLead() {
+    if (_lead?.phone != null) {
+      Clipboard.setData(ClipboardData(text: _lead!.phone!));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Phone ${_lead!.phone} copied')));
     }
   }
 
-  String _formatDate(String dt) {
+  void _convertLead() {
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Convert to Deal — coming soon')));
+  }
+
+  void _showMoreMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => _MoreActionsSheet(lead: _lead!, onAction: (a) {
+        Navigator.pop(context);
+        if (a == 'delete') Navigator.pop(context);
+      }),
+    );
+  }
+}
+
+// ── Overview Tab ──────────────────────────────────────────────────────────────
+class _OverviewTab extends StatelessWidget {
+  final LeadModel lead;
+  final NumberFormat curr;
+  final bool isDark;
+  final VoidCallback onRefresh;
+
+  const _OverviewTab({
+    required this.lead, required this.curr,
+    required this.isDark, required this.onRefresh,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(children: [
+        // Stats row
+        Row(children: [
+          _statCard('Budget', lead.budget != null ? curr.format(lead.budget) : '—',
+              Icons.currency_rupee, Colors.green, isDark),
+          const SizedBox(width: 12),
+          _statCard('Source', lead.sourceName ?? 'Direct',
+              Icons.source, Colors.blue, isDark),
+          const SizedBox(width: 12),
+          _statCard('Assigned', lead.assignedToName ?? 'Unassigned',
+              Icons.person_outline, Colors.purple, isDark),
+        ]),
+        const SizedBox(height: 16),
+        _infoCard('Contact Information', [
+          _infoRow(Icons.email_outlined, 'Email', lead.email),
+          if (lead.phone != null) _infoRow(Icons.phone_outlined, 'Phone', lead.phone!),
+          if (lead.city != null || lead.state != null)
+            _infoRow(Icons.location_on_outlined, 'Location',
+                [lead.city, lead.state, lead.country].where((e) => e != null && e!.isNotEmpty).join(', ')),
+        ], isDark),
+        const SizedBox(height: 12),
+        if (lead.requirements != null && lead.requirements!.isNotEmpty)
+          _infoCard('Requirements', [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Text(lead.requirements!,
+                  style: GoogleFonts.inter(fontSize: 14,
+                      color: isDark ? AppColors.darkTextSub : AppColors.lightTextSub)),
+            ),
+          ], isDark),
+        const SizedBox(height: 12),
+        _infoCard('Timeline', [
+          _infoRow(Icons.add_circle_outline, 'Created', _fmt(lead.createdAt)),
+          if (lead.lastContacted != null)
+            _infoRow(Icons.access_time, 'Last contacted', _fmt(lead.lastContacted!)),
+        ], isDark),
+      ]),
+    );
+  }
+
+  String _fmt(String dt) {
     try {
       return DateFormat('dd MMM yyyy, hh:mm a').format(DateTime.parse(dt).toLocal());
     } catch (_) { return dt; }
+  }
+
+  Widget _statCard(String label, String value, IconData icon, Color color, bool isDark) =>
+      Expanded(child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkCard : Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(height: 8),
+          Text(value, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700,
+              color: isDark ? AppColors.darkText : AppColors.lightText),
+              maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(label, style: GoogleFonts.inter(fontSize: 11,
+              color: isDark ? AppColors.darkTextFaint : AppColors.lightTextFaint)),
+        ]),
+      ));
+
+  Widget _infoCard(String title, List<Widget> children, bool isDark) => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: isDark ? AppColors.darkCard : Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+    ),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(title, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w700,
+          color: isDark ? AppColors.darkTextSub : AppColors.lightTextSub)),
+      const SizedBox(height: 12),
+      ...children,
+    ]),
+  );
+
+  Widget _infoRow(IconData icon, String label, String value) =>
+      Padding(padding: const EdgeInsets.only(bottom: 10), child: Row(children: [
+        Icon(icon, size: 16, color: AppColors.primary.withOpacity(0.7)),
+        const SizedBox(width: 10),
+        Text('$label: ', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
+        Expanded(child: Text(value, style: GoogleFonts.inter(fontSize: 13),
+            overflow: TextOverflow.ellipsis)),
+      ]));
+}
+
+// ── Activity Tab ──────────────────────────────────────────────────────────────
+class _ActivityTab extends StatefulWidget {
+  final List<LeadActivityModel> activities;
+  final int leadId;
+  final VoidCallback onRefresh;
+  final bool isDark;
+
+  const _ActivityTab({
+    required this.activities, required this.leadId,
+    required this.onRefresh, required this.isDark,
+  });
+
+  @override
+  State<_ActivityTab> createState() => _ActivityTabState();
+}
+
+class _ActivityTabState extends State<_ActivityTab> {
+  final _ctrl = TextEditingController();
+  String _type = 'call';
+  bool _saving = false;
+
+  @override
+  void dispose() { _ctrl.dispose(); super.dispose(); }
+
+  Future<void> _log() async {
+    if (_ctrl.text.trim().isEmpty) return;
+    setState(() => _saving = true);
+    await LeadsService.instance.createActivity({
+      'lead': widget.leadId, 'activity_type': _type, 'subject': _ctrl.text.trim(),
+    });
+    _ctrl.clear();
+    widget.onRefresh();
+    if (mounted) setState(() => _saving = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = widget.isDark;
+    return Column(children: [
+      // Log activity bar
+      Container(
+        padding: const EdgeInsets.all(16),
+        color: isDark ? AppColors.darkSurface : Colors.white,
+        child: Row(children: [
+          _typeChip('call', Icons.phone),
+          const SizedBox(width: 6),
+          _typeChip('email', Icons.email),
+          const SizedBox(width: 6),
+          _typeChip('note', Icons.note),
+          const SizedBox(width: 6),
+          _typeChip('meeting', Icons.people),
+          const SizedBox(width: 12),
+          Expanded(child: TextField(
+            controller: _ctrl,
+            style: GoogleFonts.inter(fontSize: 13),
+            decoration: InputDecoration(
+              hintText: 'Log an activity...',
+              hintStyle: GoogleFonts.inter(fontSize: 13),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              isDense: true,
+            ),
+          )),
+          const SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: _saving ? null : _log,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: _saving
+                ? const SizedBox(width: 16, height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                : const Icon(Icons.send, color: Colors.white, size: 16),
+          ),
+        ]),
+      ),
+      // Timeline
+      Expanded(child: widget.activities.isEmpty
+          ? Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Icon(Icons.timeline, size: 48, color: isDark ? AppColors.darkTextFaint : Colors.grey.shade300),
+              const SizedBox(height: 12),
+              Text('No activities yet', style: GoogleFonts.inter(color: AppColors.darkTextFaint)),
+            ]))
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: widget.activities.length,
+              itemBuilder: (_, i) => _ActivityTile(
+                activity: widget.activities[i], isDark: isDark,
+                isLast: i == widget.activities.length - 1,
+              ),
+            )),
+    ]);
+  }
+
+  Widget _typeChip(String type, IconData icon) {
+    final sel = _type == type;
+    return GestureDetector(
+      onTap: () => setState(() => _type = type),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: sel ? AppColors.primary : Colors.transparent,
+          border: Border.all(color: sel ? AppColors.primary : Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, size: 16, color: sel ? Colors.white : Colors.grey),
+      ),
+    );
   }
 }
 
 class _ActivityTile extends StatelessWidget {
   final LeadActivityModel activity;
-  final bool isDark;
-  const _ActivityTile({required this.activity, required this.isDark});
+  final bool isDark, isLast;
+
+  const _ActivityTile({
+    required this.activity, required this.isDark, required this.isLast,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final color = _activityColor(activity.activityType);
-    final icon = _activityIcon(activity.activityType);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-      ),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    final icons = {
+      'call': Icons.phone, 'email': Icons.email, 'note': Icons.note,
+      'meeting': Icons.people, 'whatsapp': Icons.chat,
+    };
+    final colors = {
+      'call': Colors.green, 'email': Colors.blue, 'note': Colors.orange,
+      'meeting': Colors.purple, 'whatsapp': const Color(0xFF25D366),
+    };
+    final icon = icons[activity.activityType] ?? Icons.circle;
+    final color = colors[activity.activityType] ?? Colors.grey;
+
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Column(children: [
         Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(8)),
+          width: 36, height: 36,
+          decoration: BoxDecoration(color: color.withOpacity(0.15), shape: BoxShape.circle),
           child: Icon(icon, size: 18, color: color),
         ),
-        const SizedBox(width: 12),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(activity.subject, style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
-          if (activity.description != null && activity.description!.isNotEmpty) ...[
-            const SizedBox(height: 3),
-            Text(activity.description!, style: GoogleFonts.inter(fontSize: 12,
-                color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted)),
-          ],
-          const SizedBox(height: 4),
+        if (!isLast) Container(width: 2, height: 40, color: Colors.grey.withOpacity(0.2)),
+      ]),
+      const SizedBox(width: 14),
+      Expanded(child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkCard : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6)],
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
-              child: Text(activity.activityType.replaceAll('_', ' '),
-                  style: GoogleFonts.inter(fontSize: 10, color: color, fontWeight: FontWeight.w500)),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(activity.activityType.toUpperCase(),
+                  style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w700, color: color)),
             ),
-            const SizedBox(width: 8),
-            Text(_formatDate(activity.createdAt),
+            const Spacer(),
+            Text(_ago(activity.createdAt),
                 style: GoogleFonts.inter(fontSize: 11,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted)),
+                    color: isDark ? AppColors.darkTextFaint : AppColors.lightTextFaint)),
           ]),
-        ])),
-      ]),
-    );
+          const SizedBox(height: 6),
+          Text(activity.subject,
+              style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600,
+                  color: isDark ? AppColors.darkText : AppColors.lightText)),
+        ]),
+      )),
+    ]);
   }
 
-  Color _activityColor(String type) {
-    switch (type) {
-      case 'call': return AppColors.success;
-      case 'email': return AppColors.info;
-      case 'meeting': return AppColors.accent;
-      case 'note': return AppColors.warning;
-      default: return AppColors.primary;
-    }
-  }
-
-  IconData _activityIcon(String type) {
-    switch (type) {
-      case 'call': return Icons.phone_rounded;
-      case 'email': return Icons.email_rounded;
-      case 'meeting': return Icons.groups_rounded;
-      case 'note': return Icons.note_rounded;
-      case 'status_change': return Icons.swap_horiz_rounded;
-      case 'assignment': return Icons.assignment_ind_rounded;
-      default: return Icons.circle_rounded;
-    }
-  }
-
-  String _formatDate(String dt) {
+  String _ago(String dt) {
     try {
-      return DateFormat('dd MMM, hh:mm a').format(DateTime.parse(dt).toLocal());
+      final d = DateTime.parse(dt).toLocal();
+      final diff = DateTime.now().difference(d);
+      if (diff.inDays > 1) return DateFormat('dd MMM').format(d);
+      if (diff.inHours >= 1) return '${diff.inHours}h ago';
+      if (diff.inMinutes >= 1) return '${diff.inMinutes}m ago';
+      return 'just now';
     } catch (_) { return dt; }
   }
 }
 
-class _AddActivitySheet extends StatefulWidget {
+// ── Tasks Tab ─────────────────────────────────────────────────────────────────
+class _TasksTab extends StatelessWidget {
   final int leadId;
-  final VoidCallback onAdded;
-  const _AddActivitySheet({required this.leadId, required this.onAdded});
-
-  @override
-  State<_AddActivitySheet> createState() => _AddActivitySheetState();
-}
-
-class _AddActivitySheetState extends State<_AddActivitySheet> {
-  final _subjectCtrl = TextEditingController();
-  final _descCtrl = TextEditingController();
-  String _type = 'call';
-  bool _saving = false;
-
-  @override
-  void dispose() {
-    _subjectCtrl.dispose();
-    _descCtrl.dispose();
-    super.dispose();
-  }
-
-  Future<void> _save() async {
-    if (_subjectCtrl.text.trim().isEmpty) return;
-    setState(() => _saving = true);
-    try {
-      await LeadsService.instance.addActivity({
-        'lead': widget.leadId,
-        'activity_type': _type,
-        'subject': _subjectCtrl.text.trim(),
-        'description': _descCtrl.text.trim(),
-      });
-      widget.onAdded();
-      if (mounted) Navigator.pop(context);
-    } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error));
-    } finally {
-      if (mounted) setState(() => _saving = false);
-    }
-  }
+  final bool isDark;
+  const _TasksTab({required this.leadId, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(context).viewInsets.bottom + 24),
-      child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Add Activity', style: GoogleFonts.inter(fontSize: 17, fontWeight: FontWeight.w700)),
-        const SizedBox(height: 16),
-        Text('Type', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500)),
-        const SizedBox(height: 6),
-        Wrap(spacing: 8, children: ['call', 'email', 'meeting', 'note'].map((t) =>
-          ChoiceChip(label: Text(t), selected: _type == t, onSelected: (_) => setState(() => _type = t))
-        ).toList()),
-        const SizedBox(height: 14),
-        TextField(
-          controller: _subjectCtrl,
-          decoration: const InputDecoration(labelText: 'Subject *', hintText: 'e.g. Called to follow up'),
-        ),
+    return Center(
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Icon(Icons.task_alt, size: 48,
+            color: isDark ? AppColors.darkTextFaint : Colors.grey.shade300),
         const SizedBox(height: 12),
-        TextField(
-          controller: _descCtrl,
-          maxLines: 3,
-          decoration: const InputDecoration(labelText: 'Description', hintText: 'Optional details...'),
-        ),
+        Text('Tasks for this lead',
+            style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        Text('Tasks linked to this lead will appear here',
+            style: GoogleFonts.inter(
+                color: isDark ? AppColors.darkTextFaint : AppColors.lightTextFaint)),
         const SizedBox(height: 20),
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: _saving ? null : _save,
-            child: _saving ? const AppLoader(color: Colors.white, size: 20) : const Text('Save Activity'),
-          ),
+        ElevatedButton.icon(
+          onPressed: () {},
+          icon: const Icon(Icons.add),
+          label: const Text('Add Task'),
+          style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
         ),
       ]),
     );
+  }
+}
+
+// ── More Actions Sheet ────────────────────────────────────────────────────────
+class _MoreActionsSheet extends StatelessWidget {
+  final LeadModel lead;
+  final void Function(String) onAction;
+  const _MoreActionsSheet({required this.lead, required this.onAction});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
+      ListTile(
+        leading: const Icon(Icons.copy, color: Colors.blue),
+        title: const Text('Copy Email'),
+        onTap: () {
+          Clipboard.setData(ClipboardData(text: lead.email));
+          onAction('copy_email');
+        },
+      ),
+      ListTile(
+        leading: const Icon(Icons.swap_horiz, color: Colors.orange),
+        title: const Text('Change Status'),
+        onTap: () => onAction('status'),
+      ),
+      ListTile(
+        leading: const Icon(Icons.person_add_outlined, color: Colors.green),
+        title: const Text('Reassign Lead'),
+        onTap: () => onAction('reassign'),
+      ),
+      ListTile(
+        leading: const Icon(Icons.delete_outline, color: Colors.red),
+        title: const Text('Delete Lead'),
+        onTap: () => onAction('delete'),
+      ),
+    ]));
   }
 }

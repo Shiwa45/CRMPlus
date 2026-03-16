@@ -23,7 +23,7 @@ class DashboardService {
   Future<DashboardStats> getDashboardStats({String dateRange = 'month'}) async {
     final response = await ApiClient.instance.get(
       AppConstants.dashboardStatsEndpoint,
-      q: {'date_range': dateRange},
+      queryParams: {'date_range': dateRange},
     );
     return DashboardStats.fromJson(response);
   }

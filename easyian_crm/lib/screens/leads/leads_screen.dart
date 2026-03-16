@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/num_utils.dart';
 import '../../models/models.dart';
+import '../../providers/app_provider.dart';
 import '../../services/services.dart';
 import '../../widgets/desktop_widgets.dart';
+import 'lead_detail_screen.dart';
 
 class LeadsScreen extends StatefulWidget {
   const LeadsScreen({super.key});
@@ -274,9 +277,13 @@ class _LeadsScreenState extends State<LeadsScreen> {
             if (v == true) _selected.add(lead.id);
             else _selected.remove(lead.id);
           }),
-          onTap: () => setState(() {
-            _detailLead = lead; _showForm = false;
-          }),
+          onTap: () {
+            final appProvider = Provider.of<AppProvider>(context, listen: false);
+            AppProvider.shellNavigatorKey.currentState?.push(
+              MaterialPageRoute(builder: (_) => LeadDetailScreen(leadId: lead.id))
+            );
+          },
+
           color: MaterialStateProperty.resolveWith((s) {
             if (s.contains(MaterialState.selected))
               return AppColors.primary.withOpacity(0.06);

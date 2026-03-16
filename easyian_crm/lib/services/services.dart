@@ -30,6 +30,7 @@ class AuthService {
     final prefs  = await SharedPreferences.getInstance();
     await prefs.setString(AppConstants.tokenKey, token.toString());
     await prefs.setInt(AppConstants.userIdKey, userId);
+    ApiClient.instance.setToken(token.toString());
   }
 
   Future<void> logout() async {
@@ -67,7 +68,7 @@ class LeadsService {
   Future<Map<String, dynamic>> getLeads({int page = 1, int pageSize = 50,
       String? search, String? status, String? priority,
       int? sourceId, int? assignedTo, String? ordering}) async {
-    final data = await ApiClient.instance.get(AppConstants.leadsEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.leadsEndpoint, queryParams: {
       'page': page, 'page_size': pageSize,
       if (search != null && search.isNotEmpty) 'search': search,
       if (status != null)    'status': status,
@@ -96,6 +97,11 @@ class LeadsService {
     return LeadModel.fromJson(data);
   }
 
+  Future<LeadModel> getLead(int id) async {
+    final data = await ApiClient.instance.get('${AppConstants.leadsEndpoint}$id/');
+    return LeadModel.fromJson(data);
+  }
+
   Future<void> deleteLead(int id) =>
       ApiClient.instance.delete('${AppConstants.leadsEndpoint}$id/');
 
@@ -117,7 +123,7 @@ class LeadsService {
   }
 
   Future<List<LeadActivityModel>> getActivities(int leadId) async {
-    final data = await ApiClient.instance.get(AppConstants.leadActivitiesEndpoint, q: {'lead': leadId});
+    final data = await ApiClient.instance.get(AppConstants.leadActivitiesEndpoint, queryParams: {'lead': leadId});
     final list = data is List ? data : (data is Map ? (data['results'] as List? ?? []) : []);
     return _mapList(list, LeadActivityModel.fromJson);
   }
@@ -135,7 +141,7 @@ class ContactsService {
 
   Future<Map<String, dynamic>> getContacts({int page = 1, int pageSize = 50,
       String? search, int? companyId, bool? dnd, String? ordering}) async {
-    final data = await ApiClient.instance.get(AppConstants.contactsEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.contactsEndpoint, queryParams: {
       'page': page, 'page_size': pageSize,
       if (search != null && search.isNotEmpty) 'search': search,
       if (companyId != null) 'company': companyId,
@@ -182,7 +188,7 @@ class ContactsService {
 
   // ── Companies ──────────────────────────────────────────────────────────────
   Future<Map<String, dynamic>> getCompanies({int page = 1, String? search, String? industry}) async {
-    final data = await ApiClient.instance.get(AppConstants.companiesEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.companiesEndpoint, queryParams: {
       'page': page,
       if (search != null && search.isNotEmpty) 'search': search,
       if (industry != null) 'industry': industry,
@@ -235,7 +241,7 @@ class DealsService {
 
   Future<Map<String, dynamic>> getDeals({int page = 1, int? pipelineId, String? status,
       String? priority, int? ownerId, String? ordering}) async {
-    final data = await ApiClient.instance.get(AppConstants.dealsEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.dealsEndpoint, queryParams: {
       'page': page,
       if (pipelineId != null) 'pipeline': pipelineId,
       if (status != null)     'status': status,
@@ -251,6 +257,11 @@ class DealsService {
       'results': _mapList(data['results'], DealModel.fromJson),
       'count': _asInt(data['count']),
     };
+  }
+
+  Future<DealModel> getDeal(int id) async {
+    final data = await ApiClient.instance.get('${AppConstants.dealsEndpoint}$id/');
+    return DealModel.fromJson(data);
   }
 
   Future<DealModel> createDeal(Map<String, dynamic> body) async {
@@ -292,7 +303,7 @@ class QuotesService {
 
   Future<List<ProductModel>> getProducts({String? search}) async {
     final data = await ApiClient.instance.get(AppConstants.productsEndpoint,
-        q: {if (search != null) 'search': search});
+        queryParams: {if (search != null) 'search': search});
     final list = data is List ? data : (data is Map ? (data['results'] as List? ?? []) : []);
     return _mapList(list, ProductModel.fromJson);
   }
@@ -312,7 +323,7 @@ class QuotesService {
 
   // ── Quotes ─────────────────────────────────────────────────────────────────
   Future<Map<String, dynamic>> getQuotes({int page = 1, String? status}) async {
-    final data = await ApiClient.instance.get(AppConstants.quotesEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.quotesEndpoint, queryParams: {
       'page': page, if (status != null) 'status': status,
     });
     if (data is List) {
@@ -356,7 +367,7 @@ class QuotesService {
 
   // ── Invoices ───────────────────────────────────────────────────────────────
   Future<Map<String, dynamic>> getInvoices({int page = 1, String? status, bool? overdue}) async {
-    final data = await ApiClient.instance.get(AppConstants.invoicesEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.invoicesEndpoint, queryParams: {
       'page': page,
       if (status != null) 'status': status,
       if (overdue == true) 'overdue': 'true',
@@ -407,7 +418,7 @@ class TicketsService {
   Future<Map<String, dynamic>> getTickets({int page = 1, String? status,
       String? priority, int? assignedTo, bool? overdue,
       bool? unassigned, bool? myTickets}) async {
-    final data = await ApiClient.instance.get(AppConstants.ticketsEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.ticketsEndpoint, queryParams: {
       'page': page,
       if (status != null)       'status': status,
       if (priority != null)     'priority': priority,
@@ -473,7 +484,7 @@ class TasksService {
 
   Future<Map<String, dynamic>> getTasks({int page = 1, String? status,
       bool? myTasks, bool? overdue, int? leadId, int? dealId}) async {
-    final data = await ApiClient.instance.get(AppConstants.tasksEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.tasksEndpoint, queryParams: {
       'page': page,
       if (status != null)    'status': status,
       if (myTasks == true)   'my_tasks': 'true',
@@ -545,7 +556,7 @@ class WorkflowsService {
 
   Future<List<WorkflowModel>> getWorkflows({bool? active}) async {
     final data = await ApiClient.instance.get(AppConstants.workflowsEndpoint,
-        q: {if (active == true) 'active': 'true'});
+        queryParams: {if (active == true) 'active': 'true'});
     final list = data is List ? data : (data is Map ? (data['results'] as List? ?? []) : []);
     return _mapList(list, WorkflowModel.fromJson);
   }
@@ -583,7 +594,7 @@ class DashboardService {
   Future<DashboardStats> getStats({String? dateRange}) async {
     try {
       final data = await ApiClient.instance.get(AppConstants.dashboardStatsEndpoint,
-          q: {if (dateRange != null) 'date_range': dateRange});
+          queryParams: {if (dateRange != null) 'date_range': dateRange});
       final raw = (data is Map && data['results'] is Map)
           ? data['results']
           : (data is Map && data['results'] is List && (data['results'] as List).isNotEmpty)
@@ -612,7 +623,7 @@ class CommsService {
   CommsService._();
 
   Future<Map<String, dynamic>> getEmails({int page = 1, String? status, String? search}) async {
-    final data = await ApiClient.instance.get(AppConstants.emailsEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.emailsEndpoint, queryParams: {
       'page': page, if (status != null) 'status': status,
       if (search != null && search.isNotEmpty) 'search': search,
     });
@@ -640,7 +651,7 @@ class CommsService {
 
   Future<Map<String, dynamic>> getTemplates({int page = 1, String? search}) async {
     final data = await ApiClient.instance.get(AppConstants.emailTemplatesEndpoint,
-        q: {'page': page, if (search != null) 'search': search});
+        queryParams: {'page': page, if (search != null) 'search': search});
     if (data is List) {
       final results = _mapList(data, EmailTemplateModel.fromJson);
       return {'results': results, 'count': results.length};
@@ -661,7 +672,7 @@ class CommsService {
       ApiClient.instance.delete('${AppConstants.emailTemplatesEndpoint}$id/');
 
   Future<Map<String, dynamic>> getCampaigns({int page = 1}) async {
-    final data = await ApiClient.instance.get(AppConstants.emailCampaignsEndpoint, q: {'page': page});
+    final data = await ApiClient.instance.get(AppConstants.emailCampaignsEndpoint, queryParams: {'page': page});
     if (data is List) {
       final results = _mapList(data, EmailCampaignModel.fromJson);
       return {'results': results, 'count': results.length};
@@ -691,7 +702,7 @@ class UsersService {
   UsersService._();
 
   Future<Map<String, dynamic>> getUsers({int page = 1, String? search, String? role}) async {
-    final data = await ApiClient.instance.get(AppConstants.usersEndpoint, q: {
+    final data = await ApiClient.instance.get(AppConstants.usersEndpoint, queryParams: {
       'page': page,
       if (search != null && search.isNotEmpty) 'search': search,
       if (role != null) 'role': role,

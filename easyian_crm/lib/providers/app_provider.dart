@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants/app_constants.dart';
+import '../core/utils/api_client.dart';
 import '../models/models.dart';
 import '../services/services.dart';
 
@@ -23,10 +24,12 @@ enum AppRoute {
   // Communications
   emails, campaigns, templates, sequences,
   // Settings / Admin
-  emailConfig, kpiTargets, users, profile, settings,
+  emailConfig, kpiTargets, users, profile, superAdmin, settings,
 }
 
 class AppProvider extends ChangeNotifier {
+  static final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
+
   ThemeMode _themeMode   = ThemeMode.light;
   UserModel? _user;
   AppRoute _currentRoute = AppRoute.dashboard;
@@ -44,14 +47,22 @@ class AppProvider extends ChangeNotifier {
     final p = await SharedPreferences.getInstance();
     final theme = p.getString(AppConstants.themeKey);
     _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
+    await ApiClient.instance.loadFromPrefs();
     _user = await AuthService.instance.getMe();
-    if (_user != null) _refreshNotifCount();
+    if (_user != null) {
+      await _ensureTenant();
+      _refreshNotifCount();
+    }
     notifyListeners();
   }
 
   void navigate(AppRoute route) {
-    _currentRoute = route;
-    notifyListeners();
+    if (_currentRoute != route) {
+      _currentRoute = route;
+      // When changing sidebar routing, pop all nested views back to the route's main view
+      shellNavigatorKey.currentState?.popUntil((r) => r.isFirst);
+      notifyListeners();
+    }
   }
 
   Future<void> login(String username, String password) async {
@@ -59,6 +70,7 @@ class AppProvider extends ChangeNotifier {
     try {
       await AuthService.instance.login(username, password);
       _user = await AuthService.instance.getMe();
+      await _ensureTenant();
       _refreshNotifCount();
     } finally {
       _loading = false; notifyListeners();
@@ -94,4 +106,28 @@ class AppProvider extends ChangeNotifier {
   }
 
   void clearNotifs() { _unreadNotifs = 0; notifyListeners(); }
+
+  Future<void> _ensureTenant() async {
+    final p = await SharedPreferences.getInstance();
+    final existing = p.getString(AppConstants.tenantIdKey);
+    if (existing != null && existing.isNotEmpty) {
+      ApiClient.instance.setTenantId(existing);
+      return;
+    }
+    try {
+      final data = await ApiClient.instance.get(AppConstants.tenantsEndpoint);
+      final list = data is List ? data : (data['results'] as List? ?? []);
+      if (list.isEmpty) return;
+      final first = list.first as Map;
+      final id = first['id']?.toString();
+      if (id == null || id.isEmpty) return;
+      await p.setString(AppConstants.tenantIdKey, id);
+      if (first['name'] != null) {
+        await p.setString(AppConstants.tenantNameKey, first['name'].toString());
+      }
+      ApiClient.instance.setTenantId(id);
+    } catch (_) {
+      // Ignore; tenant might be optional for some flows
+    }
+  }
 }

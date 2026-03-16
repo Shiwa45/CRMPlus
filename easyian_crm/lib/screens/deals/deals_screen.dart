@@ -7,6 +7,9 @@ import '../../core/theme/app_theme.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
 import '../../widgets/desktop_widgets.dart';
+import '../../providers/app_provider.dart';
+import 'package:provider/provider.dart';
+import 'deal_detail_screen.dart';
 
 class DealsScreen extends StatefulWidget {
   const DealsScreen({super.key});
@@ -137,7 +140,12 @@ class _DealsScreenState extends State<DealsScreen> {
                     DataColumn2(label: Text('Actions'), size: ColumnSize.S, numeric: true),
                   ],
                   rows: _deals.map((d) => DataRow2(
-                    onTap: () => setState(() { _detail = d; _showForm = false; }),
+                    onTap: () {
+                      final appProvider = Provider.of<AppProvider>(context, listen: false);
+                      AppProvider.shellNavigatorKey.currentState?.push(
+                        MaterialPageRoute(builder: (_) => DealDetailScreen(dealId: d.id))
+                      );
+                    },
                     selected: _detail?.id == d.id,
                     cells: [
                       DataCell(Row(children: [

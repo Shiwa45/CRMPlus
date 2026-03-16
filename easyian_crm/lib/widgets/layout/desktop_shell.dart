@@ -19,6 +19,7 @@ import '../../screens/settings/kpi_targets_screen.dart';
 import '../../screens/users/users_screen.dart';
 import '../../screens/profile/profile_screen.dart';
 import '../../screens/settings/settings_screen.dart';
+import '../../screens/super_admin/super_admin_screen.dart'; // NEW
 // New screens
 import '../../screens/contacts/contacts_screen.dart';
 import '../../screens/contacts/companies_screen.dart';
@@ -30,7 +31,7 @@ import '../../screens/quotes/products_screen.dart';
 import '../../screens/tickets/tickets_screen.dart';
 import '../../screens/tasks/tasks_screen.dart';
 import '../../screens/workflows/workflows_screen.dart';
-import '../chat_widget.dart';
+import '../ai_assistant_widget.dart';
 
 class DesktopShell extends StatelessWidget {
   const DesktopShell({super.key});
@@ -48,7 +49,7 @@ class DesktopShell extends StatelessWidget {
                 color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
             Expanded(child: _Body()),
           ]),
-          const ChatWidget(),
+          const Positioned.fill(child: AIAssistantWidget()),
         ],
       ),
     );
@@ -58,31 +59,43 @@ class DesktopShell extends StatelessWidget {
 class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final route = context.watch<AppProvider>().currentRoute;
-    return switch (route) {
-      AppRoute.dashboard  => const DashboardScreen(),
-      AppRoute.leads      => const LeadsScreen(),
-      AppRoute.contacts   => const ContactsScreen(),
-      AppRoute.companies  => const CompaniesScreen(),
-      AppRoute.pipeline   => const PipelineScreen(),
-      AppRoute.deals      => const DealsScreen(),
-      AppRoute.quotes     => const QuotesScreen(),
-      AppRoute.invoices   => const InvoicesScreen(),
-      AppRoute.products   => const ProductsScreen(),
-      AppRoute.tickets    => const TicketsScreen(),
-      AppRoute.tasks      => const TasksScreen(),
-      AppRoute.workflows  => const WorkflowsScreen(),
-      AppRoute.analytics  => const AnalyticsScreen(),
-      AppRoute.emails     => const EmailsScreen(),
-      AppRoute.campaigns  => const CampaignsScreen(),
-      AppRoute.templates  => const TemplatesScreen(),
-      AppRoute.sequences  => const SequencesScreen(),
-      AppRoute.emailConfig => const EmailConfigScreen(),
-      AppRoute.kpiTargets  => const KpiTargetsScreen(),
-      AppRoute.users       => const UsersScreen(),
-      AppRoute.profile     => const ProfileScreen(),
-      AppRoute.settings    => const SettingsScreen(),
-    };
+    return Navigator(
+      key: AppProvider.shellNavigatorKey,
+      onGenerateRoute: (settings) {
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            final route = context.watch<AppProvider>().currentRoute;
+            return switch (route) {
+              AppRoute.dashboard  => const DashboardScreen(),
+              AppRoute.leads      => const LeadsScreen(),
+              AppRoute.contacts   => const ContactsScreen(),
+              AppRoute.companies  => const CompaniesScreen(),
+              AppRoute.pipeline   => const PipelineScreen(),
+              AppRoute.deals      => const DealsScreen(),
+              AppRoute.quotes     => const QuotesScreen(),
+              AppRoute.invoices   => const InvoicesScreen(),
+              AppRoute.products   => const ProductsScreen(),
+              AppRoute.tickets    => const TicketsScreen(),
+              AppRoute.tasks      => const TasksScreen(),
+              AppRoute.workflows  => const WorkflowsScreen(),
+              AppRoute.analytics  => const AnalyticsScreen(),
+              AppRoute.emails     => const EmailsScreen(),
+              AppRoute.campaigns  => const CampaignsScreen(),
+              AppRoute.templates  => const TemplatesScreen(),
+              AppRoute.sequences  => const SequencesScreen(),
+              AppRoute.emailConfig => const EmailConfigScreen(),
+              AppRoute.kpiTargets  => const KpiTargetsScreen(),
+              AppRoute.users       => const UsersScreen(),
+              AppRoute.profile     => const ProfileScreen(),
+              AppRoute.superAdmin  => const SuperAdminScreen(), // NEW
+              AppRoute.settings    => const SettingsScreen(),
+            };
+          },
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        );
+      },
+    );
   }
 }
 
@@ -170,6 +183,9 @@ class _Sidebar extends StatelessWidget {
                 _navItem(context, AppRoute.users,      Icons.manage_accounts_rounded, 'Users'),
                 _navItem(context, AppRoute.emailConfig, Icons.settings_input_composite_rounded, 'Email Config'),
                 _navItem(context, AppRoute.kpiTargets,  Icons.flag_rounded,             'KPI Targets'),
+                if (user?.role == 'superadmin')
+                  _navItem(context, AppRoute.superAdmin, Icons.admin_panel_settings_rounded, 'Super Admin'),
+                _navItem(context, AppRoute.settings, Icons.integration_instructions_rounded, 'Integrations'),
               ],
             ]),
           ),

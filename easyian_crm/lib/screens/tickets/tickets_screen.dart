@@ -6,6 +6,9 @@ import '../../core/theme/app_theme.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
 import '../../widgets/desktop_widgets.dart';
+import '../../providers/app_provider.dart';
+import 'package:provider/provider.dart';
+import 'ticket_detail_screen.dart';
 
 class TicketsScreen extends StatefulWidget {
   const TicketsScreen({super.key});
@@ -133,9 +136,11 @@ class _TicketsScreenState extends State<TicketsScreen> {
                     DataColumn2(label: Text('SLA'), size: ColumnSize.S),
                   ],
                   rows: _tickets.map((t) => DataRow2(
-                    onTap: () async {
-                      final full = await TicketsService.instance.getTicket(t.id).catchError((_) => t);
-                      setState(() { _detail = full; _showForm = false; });
+                    onTap: () {
+                      final appProvider = Provider.of<AppProvider>(context, listen: false);
+                      AppProvider.shellNavigatorKey.currentState?.push(
+                        MaterialPageRoute(builder: (_) => TicketDetailScreen(ticketId: t.id))
+                      );
                     },
                     selected: _detail?.id == t.id,
                     color: t.slaBreached || t.isOverdue

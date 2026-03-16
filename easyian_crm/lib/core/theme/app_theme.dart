@@ -66,6 +66,10 @@ class AppColors {
   static const Color sidebarActive   = Color(0xFF2563EB);
   static const Color sidebarActiveBg = Color(0xFF1E3A5F);
 
+  // Other missing from V3
+  static const Color whatsapp = Color(0xFF25D366);
+  static const Color darkCard = Color(0xFF1E293B);
+
   // Charts
   static const List<Color> chart = [
     Color(0xFF1A56DB), Color(0xFF0891B2), Color(0xFF057A55),

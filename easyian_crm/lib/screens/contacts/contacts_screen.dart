@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/models.dart';
+import '../../providers/app_provider.dart';
 import '../../services/services.dart';
 import '../../widgets/desktop_widgets.dart';
+import 'contact_detail_screen.dart';
 
 class ContactsScreen extends StatefulWidget {
   const ContactsScreen({super.key});
@@ -139,7 +142,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         DataColumn2(label: Text('Actions'), size: ColumnSize.S, numeric: true),
                       ],
                       rows: _contacts.map((c) => DataRow2(
-                        onTap: () => setState(() { _detail = c; _showForm = false; }),
+                        onTap: () {
+                          final appProvider = Provider.of<AppProvider>(context, listen: false);
+                          AppProvider.shellNavigatorKey.currentState?.push(
+                            MaterialPageRoute(builder: (_) => ContactDetailScreen(contactId: c.id))
+                          );
+                        },
                         selected: _detail?.id == c.id,
                         cells: [
                           DataCell(Row(children: [
