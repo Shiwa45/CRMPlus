@@ -34,17 +34,37 @@ class QuoteSerializer(serializers.ModelSerializer):
     contact_name   = serializers.SerializerMethodField()
     company_name   = serializers.CharField(source='company.name', read_only=True)
     tax_profile_name = serializers.CharField(source='tax_profile.name', read_only=True)
-    owner_name     = serializers.CharField(source='owner.get_full_name', read_only=True)
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
 
     class Meta:
         model  = Quote
         fields = '__all__'
-        read_only_fields = ['quote_number', 'created_by', 'subtotal', 'discount_amt',
-                            'taxable_amount', 'cgst_total', 'sgst_total', 'igst_total',
-                            'cess_total', 'round_off', 'grand_total', 'created_at', 'updated_at']
+        read_only_fields = [
+            'quote_number', 'created_by',
+            'subtotal', 'discount_amount', 'tax_amount', 'total',
+            'created_at', 'updated_at',
+        ]
 
     def get_contact_name(self, obj):
-        return obj.contact.full_name if obj.contact else None
+        return obj.contact.get_full_name() if obj.contact else None
+
+    def _recalc_totals(self, quote):
+        subtotal = 0
+        discount_amount = 0
+        tax_amount = 0
+        for item in quote.items.all():
+            line_base = item.quantity * item.unit_price
+            line_discount = line_base * (item.discount_pct / 100)
+            line_subtotal = line_base - line_discount
+            line_tax = line_subtotal * (item.tax_rate / 100)
+            subtotal += line_subtotal
+            discount_amount += line_discount
+            tax_amount += line_tax
+        quote.subtotal = subtotal
+        quote.discount_amount = discount_amount
+        quote.tax_amount = tax_amount
+        quote.total = subtotal + tax_amount
+        quote.save(update_fields=['subtotal', 'discount_amount', 'tax_amount', 'total', 'updated_at'])
 
     def create(self, validated_data):
         items_data = validated_data.pop('items', [])
@@ -52,7 +72,7 @@ class QuoteSerializer(serializers.ModelSerializer):
         quote = Quote.objects.create(**validated_data)
         for item_data in items_data:
             QuoteItem.objects.create(quote=quote, **item_data)
-        quote.calculate_totals()
+        self._recalc_totals(quote)
         return quote
 
     def update(self, instance, validated_data):
@@ -62,22 +82,22 @@ class QuoteSerializer(serializers.ModelSerializer):
             instance.items.all().delete()
             for item_data in items_data:
                 QuoteItem.objects.create(quote=instance, **item_data)
-        instance.calculate_totals()
+        self._recalc_totals(instance)
         return instance
 
 
 class QuoteListSerializer(serializers.ModelSerializer):
     contact_name = serializers.SerializerMethodField()
     company_name = serializers.CharField(source='company.name', read_only=True)
-    owner_name   = serializers.CharField(source='owner.get_full_name', read_only=True)
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
 
     class Meta:
         model  = Quote
         fields = ['id', 'quote_number', 'title', 'status', 'contact_name', 'company_name',
-                  'owner_name', 'quote_date', 'valid_until', 'grand_total', 'currency', 'created_at']
+                  'created_by_name', 'valid_until', 'total', 'created_at']
 
     def get_contact_name(self, obj):
-        return obj.contact.full_name if obj.contact else None
+        return obj.contact.get_full_name() if obj.contact else None
 
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
@@ -88,15 +108,15 @@ class InvoiceItemSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    recorded_by_name = serializers.CharField(source='recorded_by.get_full_name', read_only=True)
+    received_by_name = serializers.CharField(source='received_by.get_full_name', read_only=True)
 
     class Meta:
         model  = Payment
         fields = '__all__'
-        read_only_fields = ['recorded_by', 'created_at']
+        read_only_fields = ['received_by', 'created_at']
 
     def create(self, validated_data):
-        validated_data['recorded_by'] = self.context['request'].user
+        validated_data['received_by'] = self.context['request'].user
         return super().create(validated_data)
 
 
@@ -106,16 +126,37 @@ class InvoiceSerializer(serializers.ModelSerializer):
     contact_name   = serializers.SerializerMethodField()
     company_name   = serializers.CharField(source='company.name', read_only=True)
     tax_profile_name = serializers.CharField(source='tax_profile.name', read_only=True)
-    owner_name     = serializers.CharField(source='owner.get_full_name', read_only=True)
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
 
     class Meta:
         model  = Invoice
         fields = '__all__'
-        read_only_fields = ['invoice_number', 'created_by', 'amount_paid', 'amount_due',
-                            'created_at', 'updated_at']
+        read_only_fields = [
+            'invoice_number', 'created_by',
+            'amount_paid', 'amount_due',
+            'created_at', 'updated_at',
+        ]
 
     def get_contact_name(self, obj):
-        return obj.contact.full_name if obj.contact else None
+        return obj.contact.get_full_name() if obj.contact else None
+
+    def _recalc_totals(self, invoice):
+        subtotal = 0
+        discount_amount = 0
+        tax_amount = 0
+        for item in invoice.items.all():
+            line_base = item.quantity * item.unit_price
+            line_discount = line_base * (item.discount_pct / 100)
+            line_subtotal = line_base - line_discount
+            line_tax = line_subtotal * (item.tax_rate / 100)
+            subtotal += line_subtotal
+            discount_amount += line_discount
+            tax_amount += line_tax
+        invoice.subtotal = subtotal
+        invoice.discount_amount = discount_amount
+        invoice.tax_amount = tax_amount
+        invoice.total = subtotal + tax_amount
+        invoice.save(update_fields=['subtotal', 'discount_amount', 'tax_amount', 'total', 'updated_at'])
 
     def create(self, validated_data):
         items_data = validated_data.pop('items', [])
@@ -123,6 +164,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         invoice = Invoice.objects.create(**validated_data)
         for item_data in items_data:
             InvoiceItem.objects.create(invoice=invoice, **item_data)
+        self._recalc_totals(invoice)
         return invoice
 
     def update(self, instance, validated_data):
@@ -132,19 +174,20 @@ class InvoiceSerializer(serializers.ModelSerializer):
             instance.items.all().delete()
             for item_data in items_data:
                 InvoiceItem.objects.create(invoice=instance, **item_data)
+        self._recalc_totals(instance)
         return instance
 
 
 class InvoiceListSerializer(serializers.ModelSerializer):
     contact_name = serializers.SerializerMethodField()
     company_name = serializers.CharField(source='company.name', read_only=True)
-    owner_name   = serializers.CharField(source='owner.get_full_name', read_only=True)
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
 
     class Meta:
         model  = Invoice
         fields = ['id', 'invoice_number', 'status', 'contact_name', 'company_name',
-                  'owner_name', 'invoice_date', 'due_date', 'grand_total', 'amount_paid',
-                  'amount_due', 'currency', 'is_einvoice', 'created_at']
+                  'created_by_name', 'issue_date', 'due_date', 'total', 'amount_paid',
+                  'amount_due', 'created_at']
 
     def get_contact_name(self, obj):
-        return obj.contact.full_name if obj.contact else None
+        return obj.contact.get_full_name() if obj.contact else None

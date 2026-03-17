@@ -1,0 +1,176 @@
+﻿python : Watching for file changes with StatReloader
+At line:1 char:61
++ ... nv\Scripts\Activate.ps1; python manage.py runserver 8000 2>&1 | Out-F ...
++                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Watching for fi...th StatReloader:String) [], RemoteExc 
+   eption
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File 
+"C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\core\servers\basehttp.py", 
+line 49, in get_internal_wsgi_application
+    return import_string(app_path)
+  File 
+"C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\utils\module_loading.py", line 
+30, in import_string
+    return cached_import(module_path, class_name)
+  File 
+"C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\utils\module_loading.py", line 
+15, in cached_import
+    module = import_module(module_path)
+  File "C:\Users\shiwa\AppData\Local\Python\pythoncore-3.14-64\Lib\importlib\__init__.py", line 88, 
+in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1398, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "C:\Users\shiwa\crmpro-main\crmpro-main\crm_project\wsgi.py", line 16, in <module>
+    application = get_wsgi_application()
+  File "C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\core\wsgi.py", line 13, 
+in get_wsgi_application
+    return WSGIHandler()
+  File "C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\core\handlers\wsgi.py", 
+line 118, in __init__
+    self.load_middleware()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\core\handlers\base.py", 
+line 41, in load_middleware
+    middleware = import_string(middleware_path)
+  File 
+"C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\utils\module_loading.py", line 
+30, in import_string
+    return cached_import(module_path, class_name)
+  File 
+"C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\utils\module_loading.py", line 
+15, in cached_import
+    module = import_module(module_path)
+  File "C:\Users\shiwa\AppData\Local\Python\pythoncore-3.14-64\Lib\importlib\__init__.py", line 88, 
+in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1398, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "C:\Users\shiwa\crmpro-main\crmpro-main\tenants\middleware.py", line 17, in <module>
+    from django_tenants.middleware.base import BaseTenantMiddleware
+ModuleNotFoundError: No module named 'django_tenants.middleware.base'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\shiwa\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1082, in 
+_bootstrap_inner
+    self._context.run(self.run)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\shiwa\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1024, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\utils\autoreload.py", 
+line 64, in wrapper
+    fn(*args, **kwargs)
+    ~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\core\management\commands
+\runserver.py", line 143, in inner_run
+    handler = self.get_handler(*args, **options)
+  File "C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\contrib\staticfiles\mana
+gement\commands\runserver.py", line 31, in get_handler
+    handler = super().get_handler(*args, **options)
+  File "C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\core\management\commands
+\runserver.py", line 73, in get_handler
+    return get_internal_wsgi_application()
+  File 
+"C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\django\core\servers\basehttp.py", 
+line 51, in get_internal_wsgi_application
+    raise ImproperlyConfigured(
+    ...<2 lines>...
+    ) from err
+django.core.exceptions.ImproperlyConfigured: WSGI application 'crm_project.wsgi.application' could 
+not be loaded; Error importing module.
+C:\Users\shiwa\crmpro-main\crmpro-main\communications\api.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+Watching for file changes with StatReloader
+[17/Mar/2026 12:48:39] "GET /api/email-campaigns/?page=1 HTTP/1.1" 200 52
+[17/Mar/2026 12:48:41] "GET /api/email-configs/ HTTP/1.1" 200 52
+C:\Users\shiwa\crmpro-main\crmpro-main\venv\Lib\site-packages\rest_framework\pagination.py:207: 
+UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: 
+<class 'accounts.models.CustomUser'> QuerySet.
+  paginator = self.django_paginator_class(queryset, page_size)
+[17/Mar/2026 12:48:44] "GET /api/users/?page=1 HTTP/1.1" 200 2668
+[17/Mar/2026 12:48:46] "GET /api/workflows/ HTTP/1.1" 200 1046
+[17/Mar/2026 12:51:55] "POST /api/auth/login/ HTTP/1.1" 200 348
+[17/Mar/2026 12:51:55] "GET /api/users/3/ HTTP/1.1" 200 394
+[17/Mar/2026 12:51:55] "GET /api/notifications/unread_count/ HTTP/1.1" 200 11
+[17/Mar/2026 12:51:55] "GET /api/leads/?page=1&page_size=8&ordering=-created_at HTTP/1.1" 200 9629
+[17/Mar/2026 12:51:55] "GET /api/dashboard/stats/?date_range=month HTTP/1.1" 200 3635
+[17/Mar/2026 12:52:02] "GET /api/contacts/?page=1&page_size=50&ordering=-created_at HTTP/1.1" 200 
+4808
+[17/Mar/2026 12:52:08] "GET /api/lead-sources/ HTTP/1.1" 200 1180
+[17/Mar/2026 12:52:08] "GET /api/leads/?page=1&page_size=50&ordering=-created_at HTTP/1.1" 200 9629
+[17/Mar/2026 12:52:09] "GET /api/leads/?page=1&page_size=8&ordering=-created_at HTTP/1.1" 200 9629
+[17/Mar/2026 12:52:09] "GET /api/dashboard/stats/?date_range=month HTTP/1.1" 200 3635
+[17/Mar/2026 12:52:17] "GET /api/users/?page=1 HTTP/1.1" 200 1328
+[17/Mar/2026 12:52:30] "GET /api/integrations/ HTTP/1.1" 200 918
+[17/Mar/2026 12:52:32] "GET /api/wa-templates/ HTTP/1.1" 200 52
+[17/Mar/2026 12:52:38] "GET /api/wa-templates/ HTTP/1.1" 200 52
+[17/Mar/2026 12:52:39] "GET /api/integrations/ HTTP/1.1" 200 918
+Not Found: /api/tenants/
+[17/Mar/2026 12:52:41] "GET /api/tenants/ HTTP/1.1" 404 101320
+Not Found: /api/plans/
+[17/Mar/2026 12:52:44] "GET /api/plans/ HTTP/1.1" 404 101314
+Not Found: /api/plans/
+[17/Mar/2026 12:52:46] "GET /api/plans/ HTTP/1.1" 404 101314
+Not Found: /api/tenants/
+[17/Mar/2026 12:52:47] "GET /api/tenants/ HTTP/1.1" 404 101320
+[17/Mar/2026 12:52:54] "GET /api/leads/?page=1&page_size=8&ordering=-created_at HTTP/1.1" 200 9629
+[17/Mar/2026 12:52:54] "GET /api/dashboard/stats/?date_range=month HTTP/1.1" 200 3635
+[17/Mar/2026 12:55:23] "GET /api/emails/?page=1 HTTP/1.1" 200 52
+C:\Users\shiwa\crmpro-main\crmpro-main\accounts\api.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+March 17, 2026 - 12:48:24
+Django version 6.0.3, using settings 'crm_project.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+Watching for file changes with StatReloader
+[17/Mar/2026 12:55:35] "GET /api/kpi-targets/ HTTP/1.1" 200 52
+[17/Mar/2026 12:55:37] "GET /api/integrations/ HTTP/1.1" 200 918
+Not Found: /api/tenants/
+[17/Mar/2026 12:55:41] "GET /api/tenants/ HTTP/1.1" 404 101320
+[17/Mar/2026 12:55:42] "GET /api/kpi-targets/ HTTP/1.1" 200 52
+[17/Mar/2026 12:56:00] "POST /api/auth/login/ HTTP/1.1" 200 296
+[17/Mar/2026 12:56:00] "GET /api/users/3/ HTTP/1.1" 200 394
+Not Found: /api/notifications/unread_count/
+[17/Mar/2026 12:56:00] "GET /api/notifications/unread_count/ HTTP/1.1" 404 15895
+Not Found: /api/dashboard/stats/
+[17/Mar/2026 12:56:00] "GET /api/dashboard/stats/?date_range=month HTTP/1.1" 404 15879
+Not Found: /api/leads/
+[17/Mar/2026 12:56:00] "GET /api/leads/?page=1&page_size=8&ordering=-created_at HTTP/1.1" 404 15880
+Not Found: /api/leads/
+[17/Mar/2026 12:56:00] "GET /api/leads/?page=1&page_size=8 HTTP/1.1" 404 15855
+Not Found: /api/leads/
+Not Found: /api/lead-sources/
+[17/Mar/2026 12:56:09] "GET /api/lead-sources/ HTTP/1.1" 404 15853
+[17/Mar/2026 12:56:09] "GET /api/leads/?page=1&page_size=50&ordering=-created_at HTTP/1.1" 404 15881
+Not Found: /api/companies/
+[17/Mar/2026 12:56:10] "GET /api/companies/?page=1 HTTP/1.1" 404 15851
+Not Found: /api/dashboard/stats/
+[17/Mar/2026 12:56:11] "GET /api/dashboard/stats/?date_range=month HTTP/1.1" 404 15879
+Not Found: /api/integrations/
+[17/Mar/2026 12:56:15] "GET /api/integrations/ HTTP/1.1" 404 15853
+[17/Mar/2026 12:56:16] "GET /api/tenants/ HTTP/1.1" 200 2019
+Performing system checks...

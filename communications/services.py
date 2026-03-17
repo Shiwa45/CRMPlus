@@ -253,7 +253,6 @@ class EmailTemplateService:
             
             <p>Best regards,<br>{{user_name}}<br>{{user_email}}</p>
             """,
-            is_active=True
         )
         templates.append(welcome_template)
         
@@ -276,7 +275,6 @@ class EmailTemplateService:
             
             <p>Best regards,<br>{{user_name}}<br>{{user_email}}</p>
             """,
-            is_active=True
         )
         templates.append(followup_template)
         

@@ -25,8 +25,5 @@ class DealAdmin(admin.ModelAdmin):
 
 @admin.register(DealActivity)
 class DealActivityAdmin(admin.ModelAdmin):
-    list_display = ['deal', 'activity_type', 'subject', 'status', 'performed_at']
+    list_display = ['deal', 'activity_type', 'subject', 'status', 'completed_at']
     list_filter  = ['activity_type', 'status']
-
-
-# deals/apps.py

@@ -1,0 +1,99 @@
+﻿Migrations for 'contenttypes':
+  venv\Lib\site-packages\django\contrib\contenttypes\migrations\0001_initial.py
+    + Create model ContentType
+Migrations for 'sessions':
+  venv\Lib\site-packages\django\contrib\sessions\migrations\0001_initial.py
+    + Create model Session
+Migrations for 'auth':
+  venv\Lib\site-packages\django\contrib\auth\migrations\0001_initial.py
+    + Create model Permission
+    + Create model Group
+    + Create model User
+Migrations for 'accounts':
+  accounts\migrations\0001_initial.py
+    + Create model CustomUser
+    + Create model UserProfile
+Migrations for 'admin':
+  venv\Lib\site-packages\django\contrib\admin\migrations\0001_initial.py
+    + Create model LogEntry
+Migrations for 'authtoken':
+  venv\Lib\site-packages\rest_framework\authtoken\migrations\0001_initial.py
+    + Create model Token
+    + Create proxy model TokenProxy
+Migrations for 'communications':
+  communications\migrations\0001_initial.py
+    + Create model EmailConfiguration
+    + Create model EmailSequence
+    + Create model EmailTemplate
+    + Create model EmailSequenceStep
+    + Create model EmailCampaign
+    + Create model Email
+    + Create model EmailTracking
+    + Create model EmailSequenceEnrollment
+Migrations for 'contacts':
+  contacts\migrations\0001_initial.py
+    + Create model Company
+    + Create model Contact
+    + Create model ContactActivity
+    + Create model ContactDocument
+Migrations for 'dashboard':
+  dashboard\migrations\0001_initial.py
+    + Create model DashboardPreference
+    + Create model DashboardWidget
+    + Create model KPITarget
+    + Create model NotificationPreference
+Migrations for 'deals':
+  deals\migrations\0001_initial.py
+    + Create model Deal
+    + Create model DealActivity
+    + Create model Pipeline
+    + Add field pipeline to deal
+    + Create model PipelineStage
+    + Create model DealStageHistory
+    + Add field stage to deal
+Migrations for 'integrations':
+  integrations\migrations\0001_initial.py
+    + Create model Integration
+    + Create model WhatsAppTemplate
+    + Create model WALog
+Migrations for 'leads':
+  leads\migrations\0001_initial.py
+    + Create model LeadSource
+    + Create model Lead
+    + Create model LeadActivity
+Migrations for 'quotes':
+  quotes\migrations\0001_initial.py
+    + Create model Invoice
+    + Create model Payment
+    + Create model Product
+    + Create model InvoiceItem
+    + Create model Quote
+    + Add field quote to invoice
+    + Create model QuoteItem
+    + Create model TaxProfile
+    + Add field tax_profile to quote
+    + Add field tax_profile to product
+    + Add field tax_profile to invoice
+Migrations for 'tenants':
+  tenants\migrations\0001_initial.py
+    + Create model Plan
+    + Create model Tenant
+    + Create model Domain
+    + Create model TenantAuditLog
+    + Create model TenantInvitation
+    + Create model TenantUser
+Migrations for 'tickets':
+  tickets\migrations\0001_initial.py
+    + Create model TicketCategory
+    + Create model SLAPolicy
+    + Create model Ticket
+    + Create model TicketActivity
+    + Create model TicketReply
+Migrations for 'workflows':
+  workflows\migrations\0001_initial.py
+    + Create model Notification
+    + Create model Task
+    + Create model Workflow
+    + Create model WorkflowAction
+    + Create model WorkflowCondition
+    + Create model WorkflowExecution

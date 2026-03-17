@@ -69,7 +69,7 @@ class DealSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_by', 'weighted_value', 'won_at', 'lost_at', 'created_at', 'updated_at']
 
     def get_contact_name(self, obj):
-        return obj.contact.full_name if obj.contact else None
+        return obj.contact.get_full_name() if obj.contact else None
 
     def get_stage_history(self, obj):
         return DealStageHistorySerializer(obj.stage_history.all()[:10], many=True).data
@@ -97,7 +97,7 @@ class DealListSerializer(serializers.ModelSerializer):
                   'created_at', 'updated_at']
 
     def get_contact_name(self, obj):
-        return obj.contact.full_name if obj.contact else None
+        return obj.contact.get_full_name() if obj.contact else None
 
 
 class DealStageHistorySerializer(serializers.ModelSerializer):

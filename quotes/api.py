@@ -15,7 +15,7 @@ from .serializers import (
 
 
 class TaxProfileViewSet(viewsets.ModelViewSet):
-    queryset           = TaxProfile.objects.filter(is_active=True)
+    queryset           = TaxProfile.objects.all()
     serializer_class   = TaxProfileSerializer
     permission_classes = [IsAuthenticated]
 
@@ -46,12 +46,10 @@ class QuoteViewSet(viewsets.ModelViewSet):
         return QuoteSerializer
 
     def get_queryset(self):
-        qs = Quote.objects.select_related('contact', 'company', 'owner', 'tax_profile')
+        qs = Quote.objects.select_related('contact', 'company', 'tax_profile', 'created_by')
         p  = self.request.query_params
         if p.get('status'):
             qs = qs.filter(status=p['status'])
-        if p.get('owner'):
-            qs = qs.filter(owner_id=p['owner'])
         return qs
 
     @action(detail=True, methods=['post'])
@@ -62,30 +60,34 @@ class QuoteViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Quote already converted'}, status=status.HTTP_400_BAD_REQUEST)
         from .models import Invoice, InvoiceItem
         invoice = Invoice.objects.create(
-            quote=quote, tax_profile=quote.tax_profile,
-            contact=quote.contact, company=quote.company, deal=quote.deal,
-            supply_type=quote.supply_type,
-            bill_to_name=quote.bill_to_name, bill_to_gstin=quote.bill_to_gstin,
-            bill_to_addr=quote.bill_to_addr, bill_to_city=quote.bill_to_city,
-            bill_to_state=quote.bill_to_state, bill_to_pin=quote.bill_to_pin,
-            subtotal=quote.subtotal, discount_pct=quote.discount_pct,
-            discount_amt=quote.discount_amt, taxable_amount=quote.taxable_amount,
-            cgst_total=quote.cgst_total, sgst_total=quote.sgst_total,
-            igst_total=quote.igst_total, cess_total=quote.cess_total,
-            round_off=quote.round_off, grand_total=quote.grand_total,
-            amount_due=quote.grand_total, currency=quote.currency,
-            terms=quote.terms, notes=quote.notes,
-            owner=quote.owner, created_by=request.user,
+            quote=quote,
+            tax_profile=quote.tax_profile,
+            contact=quote.contact,
+            company=quote.company,
+            title=quote.title,
+            subtotal=quote.subtotal,
+            discount_amount=quote.discount_amount,
+            tax_amount=quote.tax_amount,
+            total=quote.total,
+            amount_due=quote.total,
+            terms=quote.terms,
+            notes=quote.notes,
+            created_by=request.user,
         )
         for qi in quote.items.all():
             InvoiceItem.objects.create(
-                invoice=invoice, product=qi.product, name=qi.name,
-                description=qi.description, hsn_sac_code=qi.hsn_sac_code,
-                quantity=qi.quantity, unit=qi.unit, unit_price=qi.unit_price,
-                discount_pct=qi.discount_pct, gst_rate=qi.gst_rate,
-                cess_rate=qi.cess_rate, amount=qi.amount, order=qi.order,
+                invoice=invoice,
+                product=qi.product,
+                description=qi.description,
+                quantity=qi.quantity,
+                unit_price=qi.unit_price,
+                discount_pct=qi.discount_pct,
+                tax_rate=qi.tax_rate,
+                amount=qi.amount,
+                order=qi.order,
             )
-        quote.status = 'converted'
+        if quote.status != 'accepted':
+            quote.status = 'accepted'
         quote.save()
         return Response(InvoiceSerializer(invoice, context={'request': request}).data,
                         status=status.HTTP_201_CREATED)
@@ -115,7 +117,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
         return InvoiceSerializer
 
     def get_queryset(self):
-        qs = Invoice.objects.select_related('contact', 'company', 'owner', 'tax_profile')
+        qs = Invoice.objects.select_related('contact', 'company', 'tax_profile', 'created_by')
         p  = self.request.query_params
         if p.get('status'):
             qs = qs.filter(status=p['status'])

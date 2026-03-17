@@ -12,7 +12,7 @@ class EmailConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailConfiguration
         fields = '__all__'
-        read_only_fields = ['user']
+        read_only_fields = ['created_by']
 
 class EmailTemplateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,7 +24,7 @@ class EmailCampaignSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailCampaign
         fields = '__all__'
-        read_only_fields = ['user']
+        read_only_fields = ['created_by']
 
 class EmailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,10 +57,10 @@ class EmailConfigurationViewSet(viewsets.ModelViewSet):
     serializer_class = EmailConfigurationSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        return self.queryset.filter(created_by=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(created_by=self.request.user)
 
     @action(detail=True, methods=['post'])
     def test(self, request, pk=None):
@@ -94,10 +94,10 @@ class EmailCampaignViewSet(viewsets.ModelViewSet):
     serializer_class = EmailCampaignSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        return self.queryset.filter(created_by=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(created_by=self.request.user)
 
     @action(detail=True, methods=['post'])
     def start(self, request, pk=None):

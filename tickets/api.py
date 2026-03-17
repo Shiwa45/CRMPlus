@@ -5,11 +5,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Sum, Count, Avg, Q
 from django.utils import timezone
-from .models import TicketCategory, SLAPolicy, Ticket, TicketReply, TicketAttachment, TicketActivity
+from .models import TicketCategory, SLAPolicy, Ticket, TicketReply, TicketActivity
 from .serializers import (
     TicketCategorySerializer, SLAPolicySerializer,
     TicketSerializer, TicketListSerializer,
-    TicketReplySerializer, TicketAttachmentSerializer,
+    TicketReplySerializer,
     TicketActivitySerializer,
 )
 
