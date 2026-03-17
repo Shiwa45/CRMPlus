@@ -73,4 +73,5 @@ jobs:
         with:
           app-name: 'easyian'
           slot-name: 'Production'
+          package: .
           
