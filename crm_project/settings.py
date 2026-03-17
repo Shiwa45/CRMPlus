@@ -101,8 +101,8 @@ DATABASES = {
         'ENGINE':   'django_tenants.postgresql_backend',
         'NAME':     config('DB_NAME',     default='crm_pro'),
         'USER':     config('DB_USER',     default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default='password'),
-        'HOST':     config('DB_HOST',     default='localhost'),
+        'PASSWORD': config('DB_PASSWORD', default='Shiwansh@123'),
+        'HOST':     config('DB_HOST',     default='easyian.postgres.database.azure.com'),
         'PORT':     config('DB_PORT',     default='5432'),
     }
 }
