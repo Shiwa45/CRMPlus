@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "transport:dashboard" %}">Transport</a></li><li class="breadcrumb-item active">Student Allocation</li>{% endblock %}
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap">
+    <select name="route_id" class="form-select" style="max-width:200px;" onchange="this.form.submit()">
+      <option value="">All Routes</option>
+      {% for route in routes %}<option value="{{ route.pk }}">{{ route.name }}</option>{% endfor %}
+    </select>
+  </form>
+</div>
+<div class="card table-card">
+  <div class="card-header"><i class="bi bi-people-fill text-primary me-2"></i><h6 class="mb-0">Student Transport Allocations ({{ allocations|length }})</h6></div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Student</th><th>Route</th><th>Stop</th><th>Pickup</th><th>Dropoff</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for a in allocations %}
+        <tr>
+          <td><a href="{% url "students:detail" a.student.pk %}" class="text-decoration-none fw-600" style="font-size:13.5px;">{{ a.student.full_name }}</a></td>
+          <td><span class="badge bg-primary-subtle text-primary">{{ a.route.name }}</span></td>
+          <td style="font-size:13px;">{{ a.stop.stop_name }}</td>
+          <td>{% if a.pickup_required %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-x-circle-fill text-danger"></i>{% endif %}</td>
+          <td>{% if a.dropoff_required %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-x-circle-fill text-danger"></i>{% endif %}</td>
+          <td>{% if a.is_active %}<span class="badge bg-success-subtle text-success">Active</span>{% else %}<span class="badge bg-secondary-subtle text-secondary">Inactive</span>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-5">No transport allocations yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Homework</li>
+{% endblock %}
+
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap w-100">
+    <select name="section_id" class="form-select" style="max-width:200px;" onchange="this.form.submit()">
+      <option value="">All Sections</option>
+      {% for sec in sections %}
+      <option value="{{ sec.pk }}">{{ sec }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#addHomeworkModal">
+      <i class="bi bi-plus me-1"></i>Assign Homework
+    </button>
+  </form>
+</div>
+
+<div class="row g-3">
+  {% for hw in homeworks %}
+  <div class="col-md-6">
+    <div class="card h-100 {% if hw.status == 'closed' %}opacity-75{% endif %}">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded d-flex align-items-center justify-content-center flex-shrink-0"
+                 style="width:38px;height:38px;background:#e8f0ff;">
+              <i class="bi bi-journal-text text-primary" style="font-size:16px;"></i>
+            </div>
+            <div>
+              <h6 class="fw-700 mb-0" style="font-size:13.5px;">{{ hw.title }}</h6>
+              <p class="mb-0 text-muted" style="font-size:11px;">
+                {{ hw.subject.name }} &nbsp;·&nbsp; {{ hw.section }}
+              </p>
+            </div>
+          </div>
+          {% if hw.status == 'active' %}
+          <span class="badge bg-success-subtle text-success">Active</span>
+          {% else %}
+          <span class="badge bg-secondary-subtle text-secondary">Closed</span>
+          {% endif %}
+        </div>
+        <p class="text-muted mb-3" style="font-size:13px;">{{ hw.description|truncatewords:25 }}</p>
+        <div class="d-flex align-items-center justify-content-between" style="font-size:12px;color:#94a3b8;">
+          <span><i class="bi bi-calendar me-1"></i>Due: <strong class="text-dark">{{ hw.due_date }}</strong></span>
+          <span><i class="bi bi-person me-1"></i>{{ hw.assigned_by.get_full_name|default:"Teacher" }}</span>
+          {% if hw.attachment %}
+          <a href="{{ hw.attachment.url }}" class="text-primary text-decoration-none">
+            <i class="bi bi-paperclip"></i>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="card p-5 text-center text-muted">
+      <i class="bi bi-journal-text" style="font-size:40px;opacity:.2;"></i>
+      <p class="mt-3">No homework assigned yet.</p>
+      <button class="btn btn-primary btn-sm mx-auto" data-bs-toggle="modal" data-bs-target="#addHomeworkModal">
+        <i class="bi bi-plus me-1"></i>Assign First Homework
+      </button>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<nav class="mt-4 d-flex justify-content-center">
+  <ul class="pagination pagination-sm gap-1">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link rounded" href="?page={{ page_obj.previous_page_number }}"><i class="bi bi-chevron-left"></i></a></li>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+      <a class="page-link rounded" href="?page={{ num }}">{{ num }}</a>
+    </li>
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link rounded" href="?page={{ page_obj.next_page_number }}"><i class="bi bi-chevron-right"></i></a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+<!-- Add Homework Modal -->
+<div class="modal fade" id="addHomeworkModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-700">Assign Homework</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" action="#" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Title</label>
+              <input type="text" name="title" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Subject</label>
+              <select name="subject" class="form-select"></select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Section</label>
+              <select name="section" class="form-select">
+                {% for sec in sections %}
+                <option value="{{ sec.pk }}">{{ sec }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Description</label>
+              <textarea name="description" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Due Date</label>
+              <input type="date" name="due_date" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Attachment</label>
+              <input type="file" name="attachment" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-journal-plus me-1"></i>Assign</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

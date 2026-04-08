@@ -20,6 +20,9 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, serializers, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from django_tenants.utils import schema_context, get_public_schema_name
 
 from .models import Plan, Tenant, Domain, TenantUser, TenantInvitation, TenantAuditLog
 
@@ -75,6 +78,7 @@ class TenantSerializer(serializers.ModelSerializer):
             'gstin', 'pan', 'email', 'phone',
             'address', 'city', 'state', 'pincode', 'country',
             'timezone_name', 'currency', 'date_format',
+            'logo',
             'user_count', 'is_active_subscription',
             'created_at', 'updated_at',
         ]
@@ -125,6 +129,34 @@ class TenantViewSet(viewsets.ModelViewSet):
         tenant.plan = plan
         tenant.save(update_fields=['plan'])
         return Response({'detail': f'Plan changed to {plan.name}.'})
+
+
+class TenantMeView(APIView):
+    """
+    Tenant self profile (tenant admins / superadmin).
+    Uses request.tenant from middleware and writes to public schema.
+    """
+    permission_classes = [IsSuperAdminOrTenantAdmin]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get(self, request):
+        tenant = request.tenant
+        data = TenantSerializer(tenant, context={'request': request}).data
+        return Response(data)
+
+    def patch(self, request):
+        tenant = request.tenant
+        with schema_context(get_public_schema_name()):
+            tenant = Tenant.objects.get(pk=tenant.pk)
+            serializer = TenantSerializer(
+                tenant,
+                data=request.data,
+                partial=True,
+                context={'request': request},
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
 
 
 # ── TenantUser ─────────────────────────────────────────────────────────────────

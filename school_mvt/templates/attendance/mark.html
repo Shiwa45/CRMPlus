@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'attendance:mark' %}">Attendance</a></li>
+<li class="breadcrumb-item active">Mark Attendance</li>
+{% endblock %}
+
+{% block content %}
+<!-- Filter Bar -->
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap w-100">
+    <select name="section_id" class="form-select" style="max-width:200px;" onchange="this.form.submit()">
+      <option value="">Select Section…</option>
+      {% for sec in sections %}
+      <option value="{{ sec.pk }}" {% if selected_section and selected_section.pk == sec.pk %}selected{% endif %}>
+        {{ sec }}
+      </option>
+      {% endfor %}
+    </select>
+    <input type="date" name="date" class="form-control" style="max-width:180px;"
+           value="{{ selected_date|date:'Y-m-d' }}" onchange="this.form.submit()">
+    {% if selected_section %}
+    <span class="badge bg-primary px-3 py-2">{{ students.count }} Students</span>
+    {% endif %}
+    {% if is_holiday %}
+    <span class="badge bg-warning text-dark px-3 py-2"><i class="bi bi-star-fill me-1"></i>Holiday</span>
+    {% endif %}
+  </form>
+</div>
+
+{% if selected_section and students %}
+<form method="post" action="{% url 'attendance:mark' %}">
+  {% csrf_token %}
+  <input type="hidden" name="section_id" value="{{ selected_section.pk }}">
+  <input type="hidden" name="date" value="{{ selected_date|date:'Y-m-d' }}">
+
+  <!-- Bulk Actions -->
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <span style="font-size:13px; font-weight:600;">Mark All As:</span>
+    <button type="button" class="btn btn-sm btn-success" onclick="markAll('present')">
+      <i class="bi bi-check-all me-1"></i>Present
+    </button>
+    <button type="button" class="btn btn-sm btn-danger" onclick="markAll('absent')">
+      <i class="bi bi-x-lg me-1"></i>Absent
+    </button>
+    <button type="button" class="btn btn-sm btn-warning" onclick="markAll('late')">
+      <i class="bi bi-clock me-1"></i>Late
+    </button>
+    <span class="ms-auto text-muted" style="font-size:13px;">
+      {{ selected_date|date:"l, d F Y" }}
+    </span>
+  </div>
+
+  <div class="card table-card">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th style="width:40px;">#</th>
+            <th>Student</th>
+            <th style="width:60px;">Roll</th>
+            <th>
+              <div class="d-flex gap-4">
+                <span>Present</span><span>Absent</span><span>Late</span>
+                <span>Half Day</span><span>Leave</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          {% with current_status=existing_records|default_if_none:"present" %}
+          <tr id="row-{{ student.pk }}"
+              class="{% if existing_records|default_if_none:'' %}{% if existing_records.student.pk == student.pk %}{% endif %}{% endif %}">
+            <td class="text-muted" style="font-size:12px;">{{ forloop.counter }}</td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="avatar" style="width:30px;height:30px;font-size:11px;">
+                  {{ student.first_name.0 }}{{ student.last_name.0 }}
+                </div>
+                <div>
+                  <div style="font-size:13.5px; font-weight:600;">{{ student.full_name }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge bg-secondary-subtle text-secondary">
+                {{ student.roll_number|default:"—" }}
+              </span>
+            </td>
+            <td>
+              <div class="d-flex gap-2" role="group">
+                {% for status, label in status_choices %}
+                <div class="form-check form-check-inline me-1">
+                  <input class="form-check-input att-radio" type="radio"
+                         name="status_{{ student.pk }}"
+                         id="att_{{ student.pk }}_{{ status }}"
+                         value="{{ status }}"
+                         data-row="{{ student.pk }}"
+                         data-status="{{ status }}"
+                         {% if existing_records|default_if_none:'' %}
+                           {% if existing_records|default_if_none:'' == status %}checked{% endif %}
+                         {% elif status == 'present' %}checked{% endif %}>
+                  <label class="form-check-label" for="att_{{ student.pk }}_{{ status }}"
+                         style="font-size:12.5px;">
+                    {{ label }}
+                  </label>
+                </div>
+                {% endfor %}
+              </div>
+            </td>
+          </tr>
+          {% endwith %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <div class="mt-3 d-flex gap-2">
+    <button type="submit" class="btn btn-primary px-5">
+      <i class="bi bi-save me-2"></i>Save Attendance
+    </button>
+    <a href="{% url 'attendance:report' %}" class="btn btn-outline-secondary">
+      <i class="bi bi-bar-chart me-2"></i>View Report
+    </a>
+  </div>
+</form>
+
+{% elif selected_section and not students %}
+<div class="card p-5 text-center text-muted">
+  <i class="bi bi-people" style="font-size:40px; opacity:.2;"></i>
+  <p class="mt-3">No active students in this section.</p>
+</div>
+
+{% else %}
+<div class="card p-5 text-center">
+  <i class="bi bi-calendar-check" style="font-size:52px; color:#e2e8f0;"></i>
+  <h5 class="mt-3 text-muted fw-600">Select a Section to Mark Attendance</h5>
+  <p class="text-muted" style="font-size:13.5px;">Choose a class section and date from the filter above.</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function markAll(status) {
+  document.querySelectorAll(`input[type="radio"][value="${status}"]`).forEach(r => {
+    r.checked = true;
+    highlightRow(r.dataset.row, status);
+  });
+}
+
+document.querySelectorAll('.att-radio').forEach(radio => {
+  radio.addEventListener('change', function() {
+    highlightRow(this.dataset.row, this.dataset.status);
+  });
+  // Init highlight on page load
+  if (radio.checked) highlightRow(radio.dataset.row, radio.dataset.status);
+});
+
+function highlightRow(rowId, status) {
+  const row = document.getElementById(`row-${rowId}`);
+  if (!row) return;
+  row.style.background = '';
+  const colorMap = {
+    present: '#f0fdf4',
+    absent: '#fef2f2',
+    late: '#fffbeb',
+    half_day: '#f0f9ff',
+    leave: '#f5f3ff',
+    holiday: '#fdf4ff',
+  };
+  row.style.background = colorMap[status] || '';
+}
+</script>
+{% endblock %}

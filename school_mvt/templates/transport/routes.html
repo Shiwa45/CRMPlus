@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "transport:dashboard" %}">Transport</a></li><li class="breadcrumb-item active">Routes</li>{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h5 class="fw-700 mb-0">All Routes</h5>
+  <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRouteModal"><i class="bi bi-plus me-1"></i>Add Route</button>
+</div>
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Code</th><th>Route Name</th><th>Vehicle</th><th>Distance</th><th>Morning Departure</th><th>Monthly Fee</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for route in routes %}
+        <tr>
+          <td><code style="font-size:12px;">{{ route.code }}</code></td>
+          <td><div class="fw-600" style="font-size:13.5px;">{{ route.name }}</div><div style="font-size:11px;color:#64748b;">{{ route.start_point }} → {{ route.end_point }}</div></td>
+          <td style="font-size:13px;">{{ route.vehicle|default:"—" }}</td>
+          <td style="font-size:13px;">{{ route.total_distance_km }} km</td>
+          <td style="font-size:13px;">{{ route.morning_departure }}</td>
+          <td><strong>₹{{ route.monthly_fee }}</strong></td>
+          <td>{% if route.is_active %}<span class="badge bg-success-subtle text-success">Active</span>{% else %}<span class="badge bg-secondary-subtle text-secondary">Inactive</span>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-5">No routes added yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

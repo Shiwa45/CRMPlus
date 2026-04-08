@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Alumni</li>{% endblock %}
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap w-100">
+    <div class="input-group" style="max-width:240px;"><span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span><input type="text" name="q" class="form-control border-start-0" placeholder="Name, company…" value="{{ q }}"></div>
+    <select name="year" class="form-select" style="max-width:140px;" onchange="this.form.submit()">
+      <option value="">All Years</option>
+      {% for yr in years %}<option value="{{ yr }}">{{ yr }}</option>{% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Search</button>
+    <span class="ms-auto badge bg-primary px-3 py-2">{{ total }} Total Alumni</span>
+  </form>
+</div>
+<div class="row g-3">
+  {% for alum in alumni_list %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="avatar" style="width:48px;height:48px;font-size:18px;">{{ alum.first_name.0 }}{{ alum.last_name.0 }}</div>
+          <div>
+            <h6 class="fw-700 mb-0" style="font-size:14px;">{{ alum.first_name }} {{ alum.last_name }}</h6>
+            <div style="font-size:12px;color:#64748b;">Batch {{ alum.graduation_year }} · {{ alum.passed_class }}</div>
+          </div>
+        </div>
+        {% if alum.occupation %}<div class="mb-1" style="font-size:13px;"><i class="bi bi-briefcase me-2 text-muted"></i>{{ alum.occupation }}{% if alum.company %} at {{ alum.company }}{% endif %}</div>{% endif %}
+        {% if alum.current_city %}<div class="mb-1" style="font-size:13px;"><i class="bi bi-geo-alt me-2 text-muted"></i>{{ alum.current_city }}</div>{% endif %}
+        {% if alum.higher_education %}<div style="font-size:13px;"><i class="bi bi-mortarboard me-2 text-muted"></i>{{ alum.higher_education }}</div>{% endif %}
+        <div class="mt-2 d-flex gap-2">
+          {% if alum.wants_to_mentor %}<span class="badge bg-success-subtle text-success">Mentor</span>{% endif %}
+          {% if alum.is_verified %}<span class="badge bg-primary-subtle text-primary">Verified</span>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><div class="card p-5 text-center text-muted"><i class="bi bi-mortarboard" style="font-size:40px;opacity:.2;"></i><p class="mt-3">No alumni records found.</p></div></div>
+  {% endfor %}
+</div>
+{% endblock %}

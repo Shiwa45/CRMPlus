@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'fees:list' %}">Fee Management</a></li>
+<li class="breadcrumb-item active">Defaulters</li>
+{% endblock %}
+
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2">
+    <select name="class_id" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      <option value="">All Classes</option>
+      {% for cls in classes %}
+      <option value="{{ cls.pk }}" {% if selected_class == cls.pk|stringformat:"s" %}selected{% endif %}>{{ cls.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary"><i class="bi bi-funnel me-1"></i>Filter</button>
+    <button class="btn btn-outline-secondary ms-auto" onclick="window.print()"><i class="bi bi-printer me-1"></i>Print</button>
+  </form>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-value text-danger">{{ defaulters|length }}</div>
+      <div class="stat-label">Students with Outstanding Fee</div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fff7ed;color:#d97706;"><i class="bi bi-cash-coin"></i></div>
+      <div class="stat-value text-warning">₹{{ total_outstanding|floatformat:0|intcomma }}</div>
+      <div class="stat-label">Total Outstanding Amount</div>
+    </div>
+  </div>
+</div>
+
+<div class="card table-card">
+  <div class="card-header">
+    <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+    <h6 class="mb-0">Fee Defaulters List</h6>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr><th>#</th><th>Student</th><th>Class</th><th>Total Due</th><th>Paid</th><th>Outstanding</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for d in defaulters %}
+        <tr>
+          <td style="font-size:12px; color:#64748b;">{{ forloop.counter }}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar" style="width:30px;height:30px;font-size:11px;background:#fee2e2;">
+                <span style="color:#dc2626;">{{ d.student.first_name.0 }}{{ d.student.last_name.0 }}</span>
+              </div>
+              <div>
+                <a href="{% url 'students:detail' d.student.pk %}" class="text-decoration-none fw-600 text-dark" style="font-size:13.5px;">{{ d.student.full_name }}</a>
+                <div style="font-size:11px;color:#64748b;">{{ d.student.admission_number }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{% if d.student.current_class %}<span class="badge bg-primary-subtle text-primary">{{ d.student.current_class }}</span>{% endif %}</td>
+          <td style="font-size:13px;">₹{{ d.total_due|floatformat:0|intcomma }}</td>
+          <td class="text-success" style="font-size:13px;">₹{{ d.total_paid|floatformat:0|intcomma }}</td>
+          <td><strong class="text-danger" style="font-size:14px;">₹{{ d.outstanding|floatformat:0|intcomma }}</strong></td>
+          <td>
+            <a href="{% url 'fees:collect' %}?student_id={{ d.student.pk }}" class="btn btn-sm btn-warning">
+              <i class="bi bi-cash me-1"></i>Collect
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center py-5">
+          <i class="bi bi-check-circle text-success" style="font-size:40px;"></i>
+          <p class="mt-3 text-muted">No fee defaulters! All dues are cleared.</p>
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

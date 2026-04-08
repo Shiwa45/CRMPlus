@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "reports:dashboard" %}">Reports</a></li><li class="breadcrumb-item active">Fee Reports</li>{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-6"><div class="stat-card"><div class="stat-icon" style="background:#ecfdf5;color:#059669;"><i class="bi bi-cash-coin"></i></div><div class="stat-value">₹{{ total_collected|floatformat:0|intcomma }}</div><div class="stat-label">Total Collected (All Time)</div></div></div>
+  <div class="col-md-6"><div class="stat-card"><div class="stat-icon" style="background:#e8f0ff;color:#1a56db;"><i class="bi bi-calendar-day"></i></div><div class="stat-value">₹{{ today_collected|floatformat:0|intcomma }}</div><div class="stat-label">Collected Today</div></div></div>
+</div>
+<div class="card">
+  <div class="card-header"><i class="bi bi-bar-chart-fill text-primary me-2"></i><h6 class="mb-0">Monthly Fee Collection (Last 12 Months)</h6></div>
+  <div class="card-body"><canvas id="feeChart" height="80"></canvas></div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+const monthlyData = {{ monthly|safe }};
+new Chart(document.getElementById("feeChart"), {
+  type: "bar",
+  data: { labels: monthlyData.map(d => d.month), datasets: [{ label: "Collection (₹)", data: monthlyData.map(d => d.total), backgroundColor: "rgba(26,86,219,0.12)", borderColor: "#1a56db", borderWidth: 2, borderRadius: 5 }] },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => "₹" + (v/1000).toFixed(0) + "K" } } } }
+});
+</script>
+{% endblock %}

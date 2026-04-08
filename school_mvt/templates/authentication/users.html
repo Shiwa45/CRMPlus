@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">User Management</li>
+{% endblock %}
+
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap w-100">
+    <div class="input-group" style="max-width:240px;">
+      <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+      <input type="text" name="search" class="form-control border-start-0"
+             placeholder="Search users…" value="{{ search }}">
+    </div>
+    <select name="role" class="form-select" style="max-width:200px;" onchange="this.form.submit()">
+      <option value="">All Roles</option>
+      {% for val, label in role_choices %}
+      <option value="{{ val }}" {% if selected_role == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Search</button>
+    <span class="ms-auto badge bg-primary px-3 py-2">{{ total_users }} Users</span>
+  </form>
+</div>
+
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr><th>#</th><th>User</th><th>Username</th><th>Role</th><th>Status</th><th>Last Login</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td style="font-size:12px;color:#64748b;">{{ forloop.counter }}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar" style="width:34px;height:34px;font-size:12px;">
+                {% if u.first_name %}{{ u.first_name.0 }}{{ u.last_name.0 }}
+                {% else %}{{ u.username.0|upper }}{% endif %}
+              </div>
+              <div>
+                <div class="fw-600" style="font-size:13.5px;">{{ u.get_full_name|default:u.username }}</div>
+                <div style="font-size:11px;color:#64748b;">{{ u.email }}</div>
+              </div>
+            </div>
+          </td>
+          <td><code style="font-size:12px;">{{ u.username }}</code></td>
+          <td>
+            <span class="badge
+              {% if u.role == 'super_admin' %}bg-danger
+              {% elif u.role == 'school_admin' %}bg-primary
+              {% elif u.role == 'principal' %}bg-warning text-dark
+              {% elif u.role == 'teacher' %}bg-success
+              {% elif u.role == 'student' %}bg-info
+              {% else %}bg-secondary{% endif %}">
+              {{ u.get_role_display }}
+            </span>
+          </td>
+          <td>
+            {% if u.is_active %}
+            <span class="badge bg-success-subtle text-success">Active</span>
+            {% else %}
+            <span class="badge bg-danger-subtle text-danger">Inactive</span>
+            {% endif %}
+          </td>
+          <td style="font-size:12px;color:#64748b;">
+            {{ u.last_login|date:"d M Y H:i"|default:"Never" }}
+          </td>
+          <td>
+            <div class="d-flex gap-1">
+              <button class="btn btn-sm btn-outline-primary" title="Edit User">
+                <i class="bi bi-pencil"></i>
+              </button>
+              {% if u.pk != request.user.pk %}
+              <button class="btn btn-sm btn-outline-{% if u.is_active %}warning{% else %}success{% endif %}"
+                      title="{% if u.is_active %}Deactivate{% else %}Activate{% endif %}">
+                <i class="bi bi-{% if u.is_active %}person-dash{% else %}person-check{% endif %}"></i>
+              </button>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-5">No users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Classes & Sections</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="stat-card d-inline-flex align-items-center gap-3 py-3 px-4" style="min-width:0;">
+    <div class="stat-icon mb-0" style="background:#e8f0ff;color:#1a56db;margin-bottom:0!important;">
+      <i class="bi bi-mortarboard-fill"></i>
+    </div>
+    <div>
+      <div class="stat-value" style="font-size:22px;">{{ total_classes }}</div>
+      <div class="stat-label">Total Classes</div>
+    </div>
+  </div>
+  <div class="d-flex gap-2">
+    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addClassModal">
+      <i class="bi bi-plus me-1"></i>Add Class
+    </button>
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSectionModal">
+      <i class="bi bi-plus me-1"></i>Add Section
+    </button>
+  </div>
+</div>
+
+<div class="row g-3">
+  {% for cls in classes %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-header d-flex align-items-center">
+        <div class="rounded-circle d-flex align-items-center justify-content-center me-2 flex-shrink-0"
+             style="width:36px;height:36px;background:#e8f0ff;">
+          <i class="bi bi-mortarboard-fill text-primary" style="font-size:16px;"></i>
+        </div>
+        <h6 class="mb-0 fw-700">{{ cls.name }}</h6>
+        {% if cls.stream %}
+        <span class="badge bg-secondary-subtle text-secondary ms-auto">{{ cls.stream|title }}</span>
+        {% endif %}
+      </div>
+      <div class="card-body p-0">
+        {% with cls_sections=cls.sections.all %}
+        {% if cls_sections %}
+        <ul class="list-group list-group-flush">
+          {% for sec in cls_sections %}
+          <li class="list-group-item d-flex align-items-center justify-content-between px-4 py-2">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-primary rounded-circle" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;">{{ sec.name }}</span>
+              <span style="font-size:13px;">Section {{ sec.name }}</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              {% if sec.class_teacher %}
+              <span style="font-size:11px;color:#64748b;">
+                <i class="bi bi-person me-1"></i>{{ sec.class_teacher.get_full_name|truncatechars:15 }}
+              </span>
+              {% endif %}
+              <span class="badge bg-secondary-subtle text-secondary" style="font-size:11px;">
+                {{ sec.students.count }}/{{ sec.max_strength }}
+              </span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="text-center py-3 text-muted" style="font-size:12.5px;">No sections added</div>
+        {% endif %}
+        {% endwith %}
+      </div>
+      <div class="card-footer bg-transparent py-2 px-3">
+        <div class="d-flex justify-content-between align-items-center" style="font-size:12px;color:#64748b;">
+          <span>{{ cls.sections.count }} section{{ cls.sections.count|pluralize }} &nbsp;·&nbsp; {{ cls.students.count }} students</span>
+          <a href="{% url 'academics:timetable' %}?section_id=" class="text-primary text-decoration-none">
+            <i class="bi bi-calendar-week me-1"></i>Timetable
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="card p-5 text-center text-muted">
+      <i class="bi bi-mortarboard" style="font-size:40px;opacity:.2;"></i>
+      <p class="mt-3">No classes created yet.</p>
+      <button class="btn btn-primary btn-sm mx-auto" data-bs-toggle="modal" data-bs-target="#addClassModal">
+        <i class="bi bi-plus me-1"></i>Add First Class
+      </button>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -45,10 +45,12 @@ from workflows.api import (
 # Phase 3 — Integrations & WhatsApp / AI
 from integrations.api import (
     IntegrationViewSet, WATemplateViewSet, WALogViewSet, AIViewSet,
+    LeadImportLogViewSet,
 )
+from integrations.webhooks import IndiaMartWebhookView, MetaLeadWebhookView
 
 # Tenant-level user management (tenant admin can manage their own users)
-from tenants.api import TenantUserViewSet, TenantInviteViewSet, AuditLogViewSet
+from tenants.api import TenantUserViewSet, TenantInviteViewSet, AuditLogViewSet, TenantMeView
 
 router = DefaultRouter()
 
@@ -113,6 +115,7 @@ router.register(r'tasks',              TaskViewSet,                  basename='t
 router.register(r'integrations',        IntegrationViewSet,           basename='integration')
 router.register(r'wa-templates',        WATemplateViewSet,            basename='watemplate')
 router.register(r'wa-logs',             WALogViewSet,                 basename='walog')
+router.register(r'lead-import-logs',    LeadImportLogViewSet,         basename='leadimportlog')
 
 # ── AI ────────────────────────────────────────────────────────────────────────
 router.register(r'ai',                 AIViewSet,                    basename='ai')
@@ -125,5 +128,13 @@ router.register(r'audit-logs',         AuditLogViewSet,              basename='a
 urlpatterns = [
     path('auth/login/',      CustomAuthToken.as_view(), name='api-token-auth'),
     path('dashboard/stats/', DashboardStatsView.as_view(), name='dashboard-stats'),
+    path('tenant/me/',       TenantMeView.as_view(), name='tenant-me'),
+
+    # ── Webhooks (public, no auth — validated by API key / signature) ─────────
+    path('webhooks/indiamart/<slug:tenant_slug>/',
+         IndiaMartWebhookView.as_view(), name='webhook-indiamart'),
+    path('webhooks/meta-leads/<slug:tenant_slug>/',
+         MetaLeadWebhookView.as_view(), name='webhook-meta-leads'),
+
     path('', include(router.urls)),
 ]

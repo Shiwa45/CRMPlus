@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'examinations:list' %}">Examinations</a></li>
+<li class="breadcrumb-item active">Report Cards</li>
+{% endblock %}
+
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap">
+    <select name="exam_id" class="form-select" style="max-width:220px;" onchange="this.form.submit()">
+      <option value="">Select Exam…</option>
+      {% for exam in exams %}
+      <option value="{{ exam.pk }}" {% if selected_exam == exam.pk|stringformat:"s" %}selected{% endif %}>{{ exam.name }}</option>
+      {% endfor %}
+    </select>
+    <select name="section_id" class="form-select" style="max-width:200px;" onchange="this.form.submit()">
+      <option value="">Select Section…</option>
+      {% for sec in sections %}
+      <option value="{{ sec.pk }}" {% if selected_section == sec.pk|stringformat:"s" %}selected{% endif %}>{{ sec }}</option>
+      {% endfor %}
+    </select>
+    {% if students %}
+    <select name="student_id" class="form-select" style="max-width:240px;" onchange="this.form.submit()">
+      <option value="">Select Student…</option>
+      {% for s in students %}
+      <option value="{{ s.pk }}" {% if report_data and report_data.student.pk == s.pk %}selected{% endif %}>
+        {{ s.full_name }}
+      </option>
+      {% endfor %}
+    </select>
+    {% endif %}
+    {% if report_data %}
+    <button type="button" class="btn btn-outline-secondary ms-auto" onclick="window.print()">
+      <i class="bi bi-printer me-1"></i>Print Card
+    </button>
+    {% endif %}
+  </form>
+</div>
+
+{% if report_data %}
+<!-- Report Card -->
+<div class="card" id="report-card">
+  <div class="card-header text-center py-4" style="background:linear-gradient(135deg,#1a56db,#4f46e5); color:#fff; border-radius:12px 12px 0 0;">
+    <h4 class="mb-1 fw-800">{{ SCHOOL_NAME }}</h4>
+    <p class="mb-0 opacity-75" style="font-size:13px;">Academic Year: {{ ACADEMIC_YEAR }}</p>
+    <h5 class="mt-3 mb-0">PROGRESS REPORT CARD</h5>
+  </div>
+  <div class="card-body p-4">
+    <!-- Student Info -->
+    <div class="row g-3 mb-4 p-3 rounded" style="background:#f8fafc;">
+      <div class="col-md-3">
+        <div class="avatar mx-auto" style="width:72px;height:72px;font-size:26px;">
+          {{ report_data.student.first_name.0 }}{{ report_data.student.last_name.0 }}
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="row g-2">
+          {% include "partials/detail_field.html" with label="Student Name" value=report_data.student.full_name %}
+          {% include "partials/detail_field.html" with label="Admission No." value=report_data.student.admission_number %}
+          {% include "partials/detail_field.html" with label="Class" value=report_data.student.current_class %}
+          {% include "partials/detail_field.html" with label="Section" value=report_data.student.current_section %}
+          {% include "partials/detail_field.html" with label="Roll No." value=report_data.student.roll_number %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Marks Table -->
+    <h6 class="fw-700 mb-3">Subject-wise Performance</h6>
+    <div class="table-responsive mb-4">
+      <table class="table table-bordered">
+        <thead style="background:#1a56db;color:#fff;">
+          <tr>
+            <th>Subject</th>
+            <th class="text-center">Theory</th>
+            <th class="text-center">Practical</th>
+            <th class="text-center">Total</th>
+            <th class="text-center">Grade</th>
+            <th class="text-center">Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for mark in report_data.marks %}
+          <tr>
+            <td>{{ mark.subject.name }}</td>
+            <td class="text-center">
+              {% if mark.is_absent %}—{% else %}{{ mark.theory_marks|default:"—" }}{% endif %}
+            </td>
+            <td class="text-center">
+              {% if mark.is_absent %}—{% else %}{{ mark.practical_marks|default:"—" }}{% endif %}
+            </td>
+            <td class="text-center fw-700">
+              {% if mark.is_absent %}<span class="badge bg-danger-subtle text-danger">Absent</span>
+              {% else %}{{ mark.total_marks|default:"—" }}{% endif %}
+            </td>
+            <td class="text-center">
+              {% if not mark.is_absent %}
+              <span class="badge bg-primary">{{ mark.grade }}</span>
+              {% endif %}
+            </td>
+            <td class="text-center" style="font-size:12px;">
+              {% if mark.total_marks and mark.total_marks >= mark.subject.passing_marks %}
+              <span class="text-success"><i class="bi bi-check-circle-fill"></i> Pass</span>
+              {% elif not mark.is_absent %}
+              <span class="text-danger"><i class="bi bi-x-circle-fill"></i> Fail</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot style="background:#f8fafc;">
+          <tr>
+            <td colspan="3" class="text-end fw-700">Total / Grand Total:</td>
+            <td class="text-center fw-800" style="font-size:16px;">{{ report_data.total_obtained|floatformat:0 }} / {{ report_data.total_max }}</td>
+            <td class="text-center fw-800 text-primary" colspan="2" style="font-size:16px;">{{ report_data.percentage }}%</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Grade scale reference -->
+    <div class="row g-1 mb-4">
+      <div class="col-12"><p class="fw-700 mb-2" style="font-size:12px;">Grade Scale:</p></div>
+      {% for label, desc in "A1:91-100,A2:81-90,B1:71-80,B2:61-70,C1:51-60,C2:41-50,D:33-40,E:Below 33"|make_list %}{% endfor %}
+      <div class="col-auto"><span class="badge bg-primary-subtle text-primary">A1: 91-100</span></div>
+      <div class="col-auto"><span class="badge bg-primary-subtle text-primary">A2: 81-90</span></div>
+      <div class="col-auto"><span class="badge bg-success-subtle text-success">B1: 71-80</span></div>
+      <div class="col-auto"><span class="badge bg-success-subtle text-success">B2: 61-70</span></div>
+      <div class="col-auto"><span class="badge bg-warning-subtle text-warning">C1: 51-60</span></div>
+      <div class="col-auto"><span class="badge bg-warning-subtle text-warning">C2: 41-50</span></div>
+      <div class="col-auto"><span class="badge bg-secondary-subtle text-secondary">D: 33-40</span></div>
+      <div class="col-auto"><span class="badge bg-danger-subtle text-danger">E: &lt;33</span></div>
+    </div>
+
+    <!-- Signatures -->
+    <div class="row mt-5 pt-3 border-top">
+      <div class="col-4 text-center">
+        <div style="border-top:2px solid #e2e8f0; padding-top:8px; font-size:12px; color:#64748b;">Class Teacher</div>
+      </div>
+      <div class="col-4 text-center">
+        <div style="border-top:2px solid #e2e8f0; padding-top:8px; font-size:12px; color:#64748b;">Principal</div>
+      </div>
+      <div class="col-4 text-center">
+        <div style="border-top:2px solid #e2e8f0; padding-top:8px; font-size:12px; color:#64748b;">Parent / Guardian</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="card p-5 text-center">
+  <i class="bi bi-file-earmark-person" style="font-size:52px;color:#e2e8f0;"></i>
+  <h5 class="mt-3 text-muted">Select exam, section and student to generate report card</h5>
+</div>
+{% endif %}
+{% endblock %}

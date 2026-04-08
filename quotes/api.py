@@ -65,6 +65,8 @@ class QuoteViewSet(viewsets.ModelViewSet):
             contact=quote.contact,
             company=quote.company,
             title=quote.title,
+            issue_date=timezone.now().date(),
+            due_date=quote.valid_until,
             subtotal=quote.subtotal,
             discount_amount=quote.discount_amount,
             tax_amount=quote.tax_amount,

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Transport</li>{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="stat-card"><div class="stat-icon" style="background:#e8f0ff;color:#1a56db;"><i class="bi bi-bus-front-fill"></i></div><div class="stat-value">{{ total_vehicles }}</div><div class="stat-label">Active Vehicles</div></div></div>
+  <div class="col-md-3"><div class="stat-card"><div class="stat-icon" style="background:#ecfdf5;color:#059669;"><i class="bi bi-signpost-2-fill"></i></div><div class="stat-value">{{ total_routes }}</div><div class="stat-label">Routes</div></div></div>
+  <div class="col-md-3"><div class="stat-card"><div class="stat-icon" style="background:#fff7ed;color:#d97706;"><i class="bi bi-people-fill"></i></div><div class="stat-value">{{ students_using_transport }}</div><div class="stat-label">Students Using Transport</div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-signpost-2-fill text-primary me-2"></i><h6 class="mb-0">Active Routes</h6></div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Route</th><th>Vehicle</th><th>Stops</th><th>Students</th><th>Departure</th></tr></thead>
+          <tbody>
+            {% for route in routes %}
+            <tr>
+              <td><div class="fw-600" style="font-size:13.5px;">{{ route.name }}</div><div style="font-size:11px;color:#64748b;">{{ route.start_point }} → {{ route.end_point }}</div></td>
+              <td style="font-size:13px;">{{ route.vehicle|default:"—" }}</td>
+              <td><span class="badge bg-primary-subtle text-primary">{{ route.stops.count }}</span></td>
+              <td><span class="badge bg-success-subtle text-success">{{ route.students.count }}</span></td>
+              <td style="font-size:12px;">{{ route.morning_departure }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted py-4">No routes configured.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-bus-front-fill text-success me-2"></i><h6 class="mb-0">Vehicles</h6></div>
+      <div class="list-group list-group-flush">
+        {% for vehicle in vehicles %}
+        <div class="list-group-item px-4 py-2">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="fw-600" style="font-size:13.5px;">{{ vehicle.registration_number }}</div>
+              <div style="font-size:11px;color:#64748b;">{{ vehicle.get_vehicle_type_display }} · {{ vehicle.seating_capacity }} seats</div>
+            </div>
+            {% if vehicle.driver %}<span style="font-size:12px;color:#64748b;"><i class="bi bi-person me-1"></i>{{ vehicle.driver.full_name }}</span>{% endif %}
+          </div>
+        </div>
+        {% empty %}
+        <div class="list-group-item text-center text-muted py-3">No vehicles added.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

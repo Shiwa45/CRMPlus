@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "sports:dashboard" %}">Sports</a></li><li class="breadcrumb-item active">Achievements</li>{% endblock %}
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap">
+    <select name="level" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      <option value="">All Levels</option>
+      {% for val, label in level_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+    </select>
+    <select name="type" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      <option value="">All Types</option>
+      {% for val, label in type_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+    </select>
+  </form>
+</div>
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Student</th><th>Achievement</th><th>Level</th><th>Position</th><th>Date</th><th>Certificate</th></tr></thead>
+      <tbody>
+        {% for ach in achievements %}
+        <tr>
+          <td><a href="{% url "students:detail" ach.student.pk %}" class="text-decoration-none fw-600" style="font-size:13.5px;">{{ ach.student.full_name }}</a></td>
+          <td style="font-size:13.5px;">{{ ach.title }}</td>
+          <td><span class="badge {% if ach.level == "national" or ach.level == "international" %}bg-warning text-dark{% else %}bg-primary-subtle text-primary{% endif %}">{{ ach.get_level_display }}</span></td>
+          <td><span class="badge {% if ach.position == "1" %}bg-warning text-dark{% elif ach.position == "2" %}bg-secondary{% elif ach.position == "3" %}bg-light text-dark{% else %}bg-info-subtle text-info{% endif %}">{{ ach.get_position_display }}</span></td>
+          <td style="font-size:13px;">{{ ach.date }}</td>
+          <td>{% if ach.certificate %}<a href="{{ ach.certificate.url }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-download"></i></a>{% else %}<span class="text-muted" style="font-size:12px;">—</span>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-5">No achievements recorded.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

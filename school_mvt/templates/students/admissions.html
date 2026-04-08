@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'students:list' %}">Students</a></li>
+<li class="breadcrumb-item active">Admissions</li>
+{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#e8f0ff;color:#1a56db;"><i class="bi bi-person-plus-fill"></i></div>
+      <div class="stat-value">{{ recent_admissions.count }}</div>
+      <div class="stat-label">Recent Admissions</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#ecfdf5;color:#059669;"><i class="bi bi-check-circle-fill"></i></div>
+      <div class="stat-value">{{ classes.count }}</div>
+      <div class="stat-label">Classes Available</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fff7ed;color:#d97706;"><i class="bi bi-clock-history"></i></div>
+      <div class="stat-value">0</div>
+      <div class="stat-label">Pending Applications</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header d-flex align-items-center">
+        <i class="bi bi-clock-history text-primary me-2"></i>
+        <h6 class="mb-0">Recent Admissions</h6>
+        <a href="{% url 'students:add' %}" class="btn btn-primary btn-sm ms-auto">
+          <i class="bi bi-plus me-1"></i>New Admission
+        </a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Admission No.</th>
+              <th>Class</th>
+              <th>Admission Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in recent_admissions %}
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar" style="width:30px;height:30px;font-size:11px;">{{ student.first_name.0 }}{{ student.last_name.0 }}</div>
+                  <span style="font-size:13.5px;">{{ student.full_name }}</span>
+                </div>
+              </td>
+              <td><code style="font-size:12px;">{{ student.admission_number }}</code></td>
+              <td>{% if student.current_class %}<span class="badge bg-primary-subtle text-primary">{{ student.current_class }}</span>{% endif %}</td>
+              <td style="font-size:13px;">{{ student.admission_date }}</td>
+              <td>
+                <a href="{% url 'students:detail' student.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted py-4">No recent admissions.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-mortarboard-fill text-success me-2"></i><h6 class="mb-0">Admission by Class</h6></div>
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+          {% for cls in classes %}
+          <li class="list-group-item d-flex justify-content-between align-items-center px-4">
+            <span style="font-size:13.5px;">{{ cls.name }}</span>
+            <span class="badge bg-primary rounded-pill">{{ cls.students.count }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

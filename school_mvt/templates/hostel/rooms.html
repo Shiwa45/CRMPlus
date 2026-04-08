@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "hostel:dashboard" %}">Hostel</a></li><li class="breadcrumb-item active">Rooms</li>{% endblock %}
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2">
+    <select name="hostel_id" class="form-select" style="max-width:200px;" onchange="this.form.submit()">
+      <option value="">All Hostels</option>
+      {% for h in hostels %}<option value="{{ h.pk }}">{{ h.name }}</option>{% endfor %}
+    </select>
+  </form>
+</div>
+<div class="row g-3">
+  {% for room in rooms %}
+  <div class="col-sm-6 col-md-4 col-lg-3">
+    <div class="card text-center p-3 {% if not room.is_available %}border-danger-subtle{% endif %}">
+      <div class="mb-2" style="font-size:24px;">{% if room.is_available %}🟢{% else %}🔴{% endif %}</div>
+      <h6 class="fw-700 mb-1">Room {{ room.room_number }}</h6>
+      <p class="mb-1 text-muted" style="font-size:12px;">{{ room.hostel.name }} · Floor {{ room.floor }}</p>
+      <span class="badge {% if room.is_available %}bg-success-subtle text-success{% else %}bg-danger-subtle text-danger{% endif %} mb-2">
+        {{ room.current_occupancy }}/{{ room.capacity }} occupied
+      </span>
+      <div style="font-size:11px;color:#64748b;">
+        {{ room.get_room_type_display }}
+        {% if room.has_ac %} · AC{% endif %}
+        {% if room.has_attached_bathroom %} · Attached Bath{% endif %}
+      </div>
+      <div class="mt-2 fw-600" style="font-size:12px;">₹{{ room.monthly_fee }}/mo</div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><div class="card p-5 text-center text-muted">No rooms found.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

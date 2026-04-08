@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'fees:list' %}">Fee Management</a></li>
+<li class="breadcrumb-item active">Reports</li>
+{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#ecfdf5;color:#059669;"><i class="bi bi-cash-coin"></i></div>
+      <div class="stat-value">₹{{ total_collected|floatformat:0|intcomma }}</div>
+      <div class="stat-label">Total Collected (All Time)</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-bar-chart-fill text-primary me-2"></i><h6 class="mb-0">Monthly Collection (Last 12 Months)</h6></div>
+      <div class="card-body"><canvas id="monthlyChart" height="100"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header"><i class="bi bi-pie-chart-fill text-warning me-2"></i><h6 class="mb-0">By Payment Mode</h6></div>
+      <div class="card-body">
+        <canvas id="modeChart"></canvas>
+        <div class="mt-3">
+          {% for mode in by_mode %}
+          <div class="d-flex justify-content-between mb-1" style="font-size:12.5px;">
+            <span>{{ mode.payment_mode|title }}</span>
+            <strong>₹{{ mode.total|floatformat:0|intcomma }}</strong>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card table-card">
+  <div class="card-header"><i class="bi bi-table text-success me-2"></i><h6 class="mb-0">Collection by Fee Type</h6></div>
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead><tr><th>Fee Type</th><th>Transactions</th><th>Total Collected</th></tr></thead>
+      <tbody>
+        {% for ft in by_type %}
+        <tr>
+          <td style="font-size:13.5px;">{{ ft.fee_type__name|default:"—" }}</td>
+          <td><span class="badge bg-primary-subtle text-primary">{{ ft.count }}</span></td>
+          <td><strong style="color:#059669;">₹{{ ft.total|floatformat:0|intcomma }}</strong></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="text-center text-muted py-4">No data yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const monthlyData = {{ monthly_data|safe }};
+new Chart(document.getElementById('monthlyChart'), {
+  type: 'bar',
+  data: {
+    labels: monthlyData.map(d => d.month),
+    datasets: [{
+      label: 'Collection (₹)',
+      data: monthlyData.map(d => d.total),
+      backgroundColor: 'rgba(26,86,219,0.1)',
+      borderColor: '#1a56db',
+      borderWidth: 2,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => '₹' + (v/1000).toFixed(0) + 'K', font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+const modeData = {{ by_mode|safe }};
+if (modeData.length) {
+  new Chart(document.getElementById('modeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: modeData.map(d => d.payment_mode),
+      datasets: [{
+        data: modeData.map(d => d.total),
+        backgroundColor: ['#1a56db','#0e9f6e','#f59e0b','#f05252','#8b5cf6','#06b6d4'],
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      cutout: '65%',
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }
+    }
+  });
+}
+</script>
+{% endblock %}

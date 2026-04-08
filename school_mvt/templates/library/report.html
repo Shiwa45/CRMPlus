@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url 'library:book_list' %}">Library</a></li><li class="breadcrumb-item active">Reports</li>{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-trophy-fill text-warning me-2"></i><h6 class="mb-0">Most Popular Books</h6></div>
+      <div class="table-responsive">
+        <table class="table mb-0">
+          <thead><tr><th>Rank</th><th>Book</th><th>Author</th><th>Times Issued</th></tr></thead>
+          <tbody>
+            {% for book in popular_books %}
+            <tr>
+              <td><span class="badge {% if forloop.counter == 1 %}bg-warning text-dark{% elif forloop.counter == 2 %}bg-secondary{% else %}bg-light text-dark{% endif %}">{{ forloop.counter }}</span></td>
+              <td style="font-size:13.5px;">{{ book.title }}</td>
+              <td style="font-size:13px;color:#64748b;">{{ book.author }}</td>
+              <td><span class="badge bg-primary-subtle text-primary">{{ book.issue_count }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted py-4">No data yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-pie-chart-fill text-primary me-2"></i><h6 class="mb-0">By Category</h6></div>
+      <div class="list-group list-group-flush">
+        {% for cat in category_stats %}
+        <div class="list-group-item d-flex justify-content-between align-items-center px-4">
+          <span style="font-size:13.5px;">{{ cat.name }}</span>
+          <span class="badge bg-primary rounded-pill">{{ cat.book_count }}</span>
+        </div>
+        {% empty %}
+        <div class="list-group-item text-center text-muted py-3">No categories.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card table-card">
+  <div class="card-header"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i><h6 class="mb-0">Overdue Books</h6></div>
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead><tr><th>Book</th><th>Member</th><th>Due Date</th><th>Fine</th></tr></thead>
+      <tbody>
+        {% for issue in overdue %}
+        <tr>
+          <td style="font-size:13.5px;">{{ issue.book.title }}</td>
+          <td style="font-size:13px;">{{ issue.member }}</td>
+          <td class="text-danger fw-600" style="font-size:13px;">{{ issue.due_date }}</td>
+          <td class="text-danger fw-600">₹{{ issue.fine_amount }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center text-success py-4"><i class="bi bi-check-circle me-2"></i>No overdue books!</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'fees:list' %}">Fee Management</a></li>
+<li class="breadcrumb-item active">Fee Structure</li>
+{% endblock %}
+
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap">
+    <select name="class_id" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      <option value="">All Classes</option>
+      {% for cls in classes %}
+      <option value="{{ cls.pk }}">{{ cls.name }}</option>
+      {% endfor %}
+    </select>
+    <select name="fee_type_id" class="form-select" style="max-width:180px;" onchange="this.form.submit()">
+      <option value="">All Fee Types</option>
+      {% for ft in fee_types %}
+      <option value="{{ ft.pk }}">{{ ft.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<div class="card table-card">
+  <div class="card-header">
+    <i class="bi bi-table text-primary me-2"></i>
+    <h6 class="mb-0">Fee Structure 2024-25</h6>
+    <button class="btn btn-primary btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addStructureModal">
+      <i class="bi bi-plus me-1"></i>Add Structure
+    </button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr><th>Class</th><th>Fee Type</th><th>Amount</th><th>Due Date</th><th>Late Fee/Day</th><th>Installment</th></tr>
+      </thead>
+      <tbody>
+        {% for fs in structures %}
+        <tr>
+          <td><span class="badge bg-primary-subtle text-primary">{{ fs.school_class }}</span></td>
+          <td style="font-size:13.5px;">{{ fs.fee_type.name }}</td>
+          <td><strong style="color:#059669;">₹{{ fs.amount|intcomma }}</strong></td>
+          <td style="font-size:13px;">{{ fs.due_date|default:"—" }}</td>
+          <td style="font-size:13px;">₹{{ fs.late_fee_per_day }}</td>
+          <td>
+            {% if fs.is_installment_allowed %}
+            <span class="badge bg-success-subtle text-success">Yes</span>
+            {% else %}
+            <span class="badge bg-secondary-subtle text-secondary">No</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-5">No fee structures defined. Click "Add Structure" to begin.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -11,7 +11,7 @@ from rest_framework.routers import DefaultRouter
 from accounts.api import UserViewSet, CustomAuthToken
 from tenants.api import (
     PlanViewSet, TenantViewSet, TenantUserViewSet,
-    TenantInviteViewSet, AuditLogViewSet,
+    TenantInviteViewSet, AuditLogViewSet, TenantMeView,
 )
 
 router = DefaultRouter()
@@ -26,5 +26,6 @@ urlpatterns = [
     # Login is available on the public schema so the Flutter app can
     # authenticate before knowing the tenant slug.
     path('auth/login/', CustomAuthToken.as_view(), name='api-token-auth'),
+    path('tenant/me/', TenantMeView.as_view(), name='tenant-me'),
     path('', include(router.urls)),
 ]

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "reports:dashboard" %}">Reports</a></li><li class="breadcrumb-item active">Staff Reports</li>{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#e8f0ff;color:#1a56db;"><i class="bi bi-person-badge-fill"></i></div><div class="stat-value">{{ total_staff }}</div><div class="stat-label">Active Staff</div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><h6 class="mb-0">By Department</h6></div>
+      <div class="table-responsive"><table class="table mb-0"><thead><tr><th>Department</th><th>Staff Count</th></tr></thead><tbody>
+        {% for d in by_department %}<tr><td style="font-size:13.5px;">{{ d.name }}</td><td><span class="badge bg-primary-subtle text-primary">{{ d.staff_count }}</span></td></tr>
+        {% empty %}<tr><td colspan="2" class="text-center text-muted py-4">No departments.</td></tr>{% endfor %}
+      </tbody></table></div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><h6 class="mb-0">By Employment Type</h6></div>
+      <div class="table-responsive"><table class="table mb-0"><thead><tr><th>Type</th><th>Count</th></tr></thead><tbody>
+        {% for t in by_type %}<tr><td style="font-size:13.5px;">{{ t.employment_type|title }}</td><td><span class="badge bg-success-subtle text-success">{{ t.count }}</span></td></tr>
+        {% empty %}<tr><td colspan="2" class="text-center text-muted py-4">No data.</td></tr>{% endfor %}
+      </tbody></table></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

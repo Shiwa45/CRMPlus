@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Health Records</li>{% endblock %}
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 w-100">
+    <select name="student_id" class="form-select" style="max-width:240px;" onchange="this.form.submit()">
+      <option value="">All Students</option>
+      {% for s in students %}<option value="{{ s.pk }}">{{ s.full_name }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-success ms-auto" data-bs-toggle="modal" data-bs-target="#addRecordModal"><i class="bi bi-plus me-1"></i>Add Record</button>
+  </form>
+</div>
+<div class="card table-card">
+  <div class="card-header"><i class="bi bi-heart-pulse-fill text-danger me-2"></i><h6 class="mb-0">Student Health Records</h6>{% if avg_bmi %}<span class="ms-auto text-muted" style="font-size:12px;">Avg BMI: {{ avg_bmi|floatformat:1 }}</span>{% endif %}</div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Student</th><th>Checkup Date</th><th>Height</th><th>Weight</th><th>BMI</th><th>Blood Group</th><th>Doctor</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td><a href="{% url "students:detail" r.student.pk %}" class="text-decoration-none fw-600" style="font-size:13.5px;">{{ r.student.full_name }}</a></td>
+          <td style="font-size:13px;">{{ r.checkup_date }}</td>
+          <td style="font-size:13px;">{% if r.height_cm %}{{ r.height_cm }} cm{% else %}—{% endif %}</td>
+          <td style="font-size:13px;">{% if r.weight_kg %}{{ r.weight_kg }} kg{% else %}—{% endif %}</td>
+          <td>{% if r.bmi %}<span class="badge {% if r.bmi < 18.5 %}bg-warning-subtle text-warning{% elif r.bmi > 25 %}bg-danger-subtle text-danger{% else %}bg-success-subtle text-success{% endif %}">{{ r.bmi|floatformat:1 }}</span>{% else %}—{% endif %}</td>
+          <td><span class="badge bg-primary-subtle text-primary">{{ r.blood_group|default:"—" }}</span></td>
+          <td style="font-size:12px;color:#64748b;">{{ r.doctor_name|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-5">No health records yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

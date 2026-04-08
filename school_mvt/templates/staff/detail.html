@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'staff:list' %}">Staff</a></li>
+<li class="breadcrumb-item active">{{ staff.full_name }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+  <!-- Profile Card -->
+  <div class="col-lg-3">
+    <div class="card text-center p-4 mb-3">
+      <div class="avatar mx-auto mb-3" style="width:72px;height:72px;font-size:26px;">
+        {{ staff.user.first_name.0 }}{{ staff.user.last_name.0 }}
+      </div>
+      <h5 class="fw-700 mb-0">{{ staff.full_name }}</h5>
+      <p class="text-muted mb-1" style="font-size:12px;">{{ staff.employee_id }}</p>
+      {% if staff.designation %}<p class="mb-0" style="font-size:13px;">{{ staff.designation }}</p>{% endif %}
+      {% if staff.department %}<span class="badge bg-primary mb-3">{{ staff.department }}</span>{% endif %}
+      <span class="badge {% if staff.is_active %}bg-success{% else %}bg-danger{% endif %}-subtle
+             {% if staff.is_active %}text-success{% else %}text-danger{% endif %}">
+        {% if staff.is_active %}● Active{% else %}● Inactive{% endif %}
+      </span>
+      <hr>
+      <div class="text-start" style="font-size:13px;">
+        <p class="mb-1"><i class="bi bi-envelope me-2 text-muted"></i>{{ staff.user.email|default:"—" }}</p>
+        <p class="mb-1"><i class="bi bi-telephone me-2 text-muted"></i>{{ staff.phone|default:"—" }}</p>
+        <p class="mb-0"><i class="bi bi-calendar me-2 text-muted"></i>Joined {{ staff.joining_date }}</p>
+      </div>
+    </div>
+
+    <div class="card p-3">
+      <p class="fw-700 mb-2" style="font-size:13px;">Quick Info</p>
+      <div class="d-flex justify-content-between mb-1" style="font-size:12.5px;">
+        <span class="text-muted">Employment</span>
+        <strong>{{ staff.get_employment_type_display }}</strong>
+      </div>
+      <div class="d-flex justify-content-between mb-1" style="font-size:12.5px;">
+        <span class="text-muted">Experience</span>
+        <strong>{{ staff.experience_years }} yrs</strong>
+      </div>
+      <div class="d-flex justify-content-between" style="font-size:12.5px;">
+        <span class="text-muted">Basic Salary</span>
+        <strong>₹{{ staff.basic_salary|intcomma }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="col-lg-9">
+    <div class="card">
+      <div class="card-header p-0 border-0">
+        <ul class="nav nav-tabs border-0 px-4 pt-2">
+          <li class="nav-item">
+            <a class="nav-link active fw-600" data-bs-toggle="tab" href="#info" style="font-size:13px;">
+              <i class="bi bi-person me-1"></i>Personal Info
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-600" data-bs-toggle="tab" href="#leaves" style="font-size:13px;">
+              <i class="bi bi-calendar-x me-1"></i>Leave History
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-600" data-bs-toggle="tab" href="#salary" style="font-size:13px;">
+              <i class="bi bi-wallet2 me-1"></i>Salary
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body tab-content p-4">
+
+        <!-- Personal Info Tab -->
+        <div class="tab-pane fade show active" id="info">
+          <div class="row g-3">
+            {% include "partials/detail_field.html" with label="Full Name" value=staff.full_name %}
+            {% include "partials/detail_field.html" with label="Employee ID" value=staff.employee_id %}
+            {% include "partials/detail_field.html" with label="Department" value=staff.department %}
+            {% include "partials/detail_field.html" with label="Designation" value=staff.designation %}
+            {% include "partials/detail_field.html" with label="Gender" value=staff.get_gender_display %}
+            {% include "partials/detail_field.html" with label="Date of Birth" value=staff.date_of_birth %}
+            {% include "partials/detail_field.html" with label="Joining Date" value=staff.joining_date %}
+            {% include "partials/detail_field.html" with label="Employment Type" value=staff.get_employment_type_display %}
+            {% include "partials/detail_field.html" with label="Aadhar No." value=staff.aadhar_number %}
+            {% include "partials/detail_field.html" with label="PAN No." value=staff.pan_number %}
+            {% include "partials/detail_field.html" with label="Bank Account" value=staff.bank_account %}
+            {% include "partials/detail_field.html" with label="IFSC Code" value=staff.bank_ifsc %}
+            {% include "partials/detail_field.html" with label="Bank Name" value=staff.bank_name %}
+            {% include "partials/detail_field.html" with label="Emergency Contact" value=staff.emergency_contact %}
+            <div class="col-12">
+              <label class="form-label text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;">Qualification</label>
+              <p style="font-size:13.5px;">{{ staff.qualification|default:"—" }}</p>
+            </div>
+            <div class="col-12">
+              <label class="form-label text-muted" style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;">Address</label>
+              <p style="font-size:13.5px;">{{ staff.address|default:"—" }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leave History Tab -->
+        <div class="tab-pane fade" id="leaves">
+          {% if leave_requests %}
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr><th>Leave Type</th><th>From</th><th>To</th><th>Days</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                {% for lr in leave_requests %}
+                <tr>
+                  <td style="font-size:13px;">{{ lr.leave_type.name }}</td>
+                  <td style="font-size:13px;">{{ lr.from_date }}</td>
+                  <td style="font-size:13px;">{{ lr.to_date }}</td>
+                  <td>{{ lr.total_days }}</td>
+                  <td>
+                    {% if lr.status == 'approved' %}<span class="badge bg-success-subtle text-success">Approved</span>
+                    {% elif lr.status == 'pending' %}<span class="badge bg-warning-subtle text-warning">Pending</span>
+                    {% elif lr.status == 'rejected' %}<span class="badge bg-danger-subtle text-danger">Rejected</span>
+                    {% else %}<span class="badge bg-secondary-subtle text-secondary">Cancelled</span>{% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p class="text-muted text-center py-4">No leave history.</p>
+          {% endif %}
+        </div>
+
+        <!-- Salary Tab -->
+        <div class="tab-pane fade" id="salary">
+          {% if salary_slips %}
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr><th>Month/Year</th><th>Gross</th><th>Net Pay</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                {% for slip in salary_slips %}
+                <tr>
+                  <td style="font-size:13px;">{{ slip.month }}/{{ slip.year }}</td>
+                  <td style="font-size:13px;">₹{{ slip.gross|intcomma }}</td>
+                  <td><strong>₹{{ slip.net_pay|intcomma }}</strong></td>
+                  <td>
+                    {% if slip.is_paid %}<span class="badge bg-success-subtle text-success">Paid</span>
+                    {% else %}<span class="badge bg-warning-subtle text-warning">Pending</span>{% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p class="text-muted text-center py-4">No salary slips generated yet.</p>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

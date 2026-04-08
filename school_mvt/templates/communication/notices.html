@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Notice Board</li>
+{% endblock %}
+
+{% block content %}
+<!-- Pinned Notices -->
+{% if pinned %}
+<div class="mb-4">
+  <h6 class="fw-700 mb-3 d-flex align-items-center gap-2">
+    <i class="bi bi-pin-angle-fill text-danger"></i>Pinned Notices
+  </h6>
+  <div class="row g-3">
+    {% for notice in pinned %}
+    <div class="col-md-6">
+      <div class="card border-danger-subtle h-100"
+           style="border-left:4px solid #f05252!important;">
+        <div class="card-body">
+          <div class="d-flex align-items-start justify-content-between mb-2">
+            <h6 class="fw-700 mb-0" style="font-size:14px;">{{ notice.title }}</h6>
+            <span class="badge bg-danger-subtle text-danger ms-2">Pinned</span>
+          </div>
+          <p class="text-muted mb-2" style="font-size:13px;">{{ notice.content|truncatewords:25 }}</p>
+          <div class="d-flex align-items-center gap-2" style="font-size:11px;color:#94a3b8;">
+            <i class="bi bi-clock"></i>{{ notice.created_at|timesince }} ago
+            <span class="badge bg-secondary-subtle text-secondary">{{ notice.get_audience_display }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Filter + Post Button -->
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div class="d-flex gap-2">
+    <select class="form-select form-select-sm" style="max-width:160px;" onchange="filterAudience(this.value)">
+      <option value="">All Audience</option>
+      {% for val, label in audience_choices %}
+      <option value="{{ val }}">{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <a href="{% url 'communication:notice_add' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus me-1"></i>Post Notice
+  </a>
+</div>
+
+<!-- All Notices -->
+<div class="row g-3" id="notices-container">
+  {% for notice in notices %}
+  <div class="col-12 notice-item" data-audience="{{ notice.audience }}">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-start gap-3">
+          <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+               style="width:42px;height:42px;background:#e8f0ff;">
+            <i class="bi bi-megaphone-fill text-primary" style="font-size:16px;"></i>
+          </div>
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center justify-content-between mb-1">
+              <h6 class="fw-700 mb-0" style="font-size:14px;">{{ notice.title }}</h6>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary-subtle text-primary">{{ notice.get_audience_display }}</span>
+                {% if notice.expires_at %}
+                <span class="badge bg-warning-subtle text-warning" style="font-size:10px;">
+                  Expires {{ notice.expires_at }}
+                </span>
+                {% endif %}
+              </div>
+            </div>
+            <p class="mb-2 text-muted" style="font-size:13.5px;">{{ notice.content }}</p>
+            <div class="d-flex align-items-center gap-3" style="font-size:12px;color:#94a3b8;">
+              <span><i class="bi bi-person me-1"></i>{{ notice.published_by.get_full_name|default:"Admin" }}</span>
+              <span><i class="bi bi-clock me-1"></i>{{ notice.created_at|timesince }} ago</span>
+              {% if notice.attachment %}
+              <a href="{{ notice.attachment.url }}" class="text-primary text-decoration-none">
+                <i class="bi bi-paperclip me-1"></i>Attachment
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="card p-5 text-center text-muted">
+      <i class="bi bi-bell-slash" style="font-size:40px;opacity:.2;"></i>
+      <p class="mt-3">No notices published yet.</p>
+      <a href="{% url 'communication:notice_add' %}" class="btn btn-primary btn-sm d-inline-block mx-auto mt-2">
+        <i class="bi bi-plus me-1"></i>Post First Notice
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<nav class="mt-4 d-flex justify-content-center">
+  <ul class="pagination pagination-sm gap-1">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link rounded" href="?page={{ page_obj.previous_page_number }}"><i class="bi bi-chevron-left"></i></a></li>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+      <a class="page-link rounded" href="?page={{ num }}">{{ num }}</a>
+    </li>
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link rounded" href="?page={{ page_obj.next_page_number }}"><i class="bi bi-chevron-right"></i></a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterAudience(value) {
+  document.querySelectorAll('.notice-item').forEach(item => {
+    item.style.display = (!value || item.dataset.audience === value || item.dataset.audience === 'all') ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

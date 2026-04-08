@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "discipline:incidents" %}">Discipline</a></li><li class="breadcrumb-item active">Counselling</li>{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-chat-heart-fill text-primary me-2"></i><h6 class="mb-0">Schedule Session</h6></div>
+      <div class="card-body">
+        <form method="post" action="#">
+          {% csrf_token %}
+          <div class="mb-3"><label class="form-label">Student</label><select name="student_id" class="form-select" required><option value="">Select…</option>{% for s in students %}<option value="{{ s.pk }}">{{ s.full_name }}</option>{% endfor %}</select></div>
+          <div class="mb-3"><label class="form-label">Session Type</label><select name="session_type" class="form-select">{% for val, label in session_types %}<option value="{{ val }}">{{ label }}</option>{% endfor %}</select></div>
+          <div class="mb-3"><label class="form-label">Date</label><input type="date" name="session_date" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Notes (Confidential)</label><textarea name="notes" class="form-control" rows="3"></textarea></div>
+          <div class="form-check mb-3"><input class="form-check-input" type="checkbox" name="follow_up_required" id="follow_up"><label class="form-check-label" for="follow_up">Follow-up required</label></div>
+          <button type="submit" class="btn btn-primary w-100">Schedule</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card table-card">
+      <div class="card-header"><i class="bi bi-clock-history text-primary me-2"></i><h6 class="mb-0">Counselling Sessions</h6></div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Student</th><th>Type</th><th>Date</th><th>Counsellor</th><th>Follow-up</th></tr></thead>
+          <tbody>
+            {% for s in sessions %}<tr><td><a href="{% url "students:detail" s.student.pk %}" class="text-decoration-none fw-600" style="font-size:13.5px;">{{ s.student.full_name }}</a></td><td><span class="badge bg-primary-subtle text-primary">{{ s.get_session_type_display }}</span></td><td style="font-size:13px;">{{ s.session_date }}</td><td style="font-size:13px;">{{ s.counsellor.get_full_name|default:"—" }}</td><td>{% if s.follow_up_required %}<span class="badge bg-warning-subtle text-warning">{{ s.follow_up_date|default:"TBD" }}</span>{% else %}<span class="badge bg-success-subtle text-success">None</span>{% endif %}</td></tr>
+            {% empty %}<tr><td colspan="5" class="text-center text-muted py-4">No sessions recorded.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

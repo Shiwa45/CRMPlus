@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Discipline</li>{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-shield-fill-exclamation"></i></div><div class="stat-value text-danger">{{ open_count }}</div><div class="stat-label">Open Incidents</div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-plus-circle-fill text-danger me-2"></i><h6 class="mb-0">Report Incident</h6></div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3"><label class="form-label">Student</label><select name="student_id" class="form-select" required><option value="">Select student…</option>{% for s in students %}<option value="{{ s.pk }}">{{ s.full_name }}</option>{% endfor %}</select></div>
+          <div class="mb-3"><label class="form-label">Incident Date</label><input type="date" name="incident_date" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Incident Type</label><input type="text" name="incident_type" class="form-control" placeholder="e.g. Bullying, Late coming" required></div>
+          <div class="mb-3"><label class="form-label">Severity</label><select name="severity" class="form-select">{% for val, label in severity_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}</select></div>
+          <div class="mb-3"><label class="form-label">Location</label><input type="text" name="location" class="form-control"></div>
+          <div class="mb-3"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="3" required></textarea></div>
+          <button type="submit" class="btn btn-danger w-100"><i class="bi bi-shield-fill-exclamation me-2"></i>Report</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="filters-bar mb-3">
+      <form method="get" class="d-flex gap-2">
+        <select name="status" class="form-select" style="max-width:140px;" onchange="this.form.submit()">
+          <option value="">All</option>
+          {% for val, label in status_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+        </select>
+        <select name="severity" class="form-select" style="max-width:140px;" onchange="this.form.submit()">
+          <option value="">All Severities</option>
+          {% for val, label in severity_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+        </select>
+      </form>
+    </div>
+    <div class="card table-card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Student</th><th>Type</th><th>Severity</th><th>Date</th><th>Status</th><th>Parent Notified</th></tr></thead>
+          <tbody>
+            {% for inc in incidents %}
+            <tr>
+              <td><a href="{% url "students:detail" inc.student.pk %}" class="text-decoration-none fw-600" style="font-size:13.5px;">{{ inc.student.full_name }}</a></td>
+              <td style="font-size:13px;">{{ inc.incident_type }}</td>
+              <td><span class="badge {% if inc.severity == "critical" %}bg-danger{% elif inc.severity == "major" %}bg-warning text-dark{% elif inc.severity == "moderate" %}bg-info{% else %}bg-secondary{% endif %}">{{ inc.get_severity_display }}</span></td>
+              <td style="font-size:13px;">{{ inc.incident_date }}</td>
+              <td>{% if inc.status == "open" %}<span class="badge bg-danger-subtle text-danger">Open</span>{% elif inc.status == "resolved" %}<span class="badge bg-success-subtle text-success">Resolved</span>{% else %}<span class="badge bg-warning-subtle text-warning">{{ inc.get_status_display }}</span>{% endif %}</td>
+              <td>{% if inc.parent_notified %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-x-circle-fill text-danger"></i>{% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center text-muted py-5">No incidents reported.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

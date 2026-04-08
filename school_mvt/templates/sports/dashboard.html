@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Sports & Activities</li>{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#e8f0ff;color:#1a56db;"><i class="bi bi-trophy-fill"></i></div><div class="stat-value">{{ total_achievements }}</div><div class="stat-label">Total Achievements</div></div></div>
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#ecfdf5;color:#059669;"><i class="bi bi-people-fill"></i></div><div class="stat-value">{{ house_teams.count }}</div><div class="stat-label">House Teams</div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header d-flex align-items-center"><i class="bi bi-star-fill text-warning me-2"></i><h6 class="mb-0">Recent Achievements</h6><a href="{% url "sports:achievements" %}" class="btn btn-sm btn-outline-primary ms-auto">View All</a></div>
+      <div class="list-group list-group-flush">
+        {% for ach in recent_achievements %}
+        <div class="list-group-item px-4 py-3">
+          <div class="d-flex align-items-start gap-3">
+            <div class="rounded d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;background:{% if ach.level == "national" or ach.level == "international" %}#fff7ed{% else %}#e8f0ff{% endif %};">
+              <i class="bi bi-trophy-fill" style="font-size:16px;color:{% if ach.level == "national" or ach.level == "international" %}#d97706{% else %}#1a56db{% endif %};"></i>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <span class="fw-700" style="font-size:13.5px;">{{ ach.title }}</span>
+                <span class="badge bg-primary-subtle text-primary">{{ ach.get_level_display }}</span>
+              </div>
+              <div style="font-size:12px;color:#64748b;">
+                {{ ach.student.full_name }} &nbsp;·&nbsp; {{ ach.date }}
+                &nbsp;·&nbsp; <span class="badge {% if ach.position == "1" %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ ach.get_position_display }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="list-group-item text-center text-muted py-4">No achievements recorded yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card mb-3">
+      <div class="card-header"><i class="bi bi-activity text-primary me-2"></i><h6 class="mb-0">Sports ({{ sports.count }})</h6></div>
+      <div class="list-group list-group-flush">
+        {% for s in sports %}<div class="list-group-item px-4 py-2 d-flex justify-content-between align-items-center"><span style="font-size:13px;">{{ s.name }}</span><span class="badge bg-primary-subtle text-primary">{{ s.get_category_display }}</span></div>{% empty %}<div class="list-group-item text-center text-muted py-3">No sports added.</div>{% endfor %}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="bi bi-music-note-beamed text-success me-2"></i><h6 class="mb-0">Activities ({{ activities.count }})</h6></div>
+      <div class="list-group list-group-flush">
+        {% for a in activities %}<div class="list-group-item px-4 py-2 d-flex justify-content-between align-items-center"><span style="font-size:13px;">{{ a.name }}</span><span class="badge bg-success-subtle text-success">{{ a.get_category_display }}</span></div>{% empty %}<div class="list-group-item text-center text-muted py-3">No activities added.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

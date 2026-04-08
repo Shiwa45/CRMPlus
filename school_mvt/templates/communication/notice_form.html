@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'communication:notices' %}">Notice Board</a></li>
+<li class="breadcrumb-item active">Post Notice</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header">
+        <i class="bi bi-megaphone-fill text-primary me-2"></i>
+        <h6 class="mb-0">Post New Notice</h6>
+      </div>
+      <div class="card-body p-4">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Title <span class="text-danger">*</span></label>
+              <input type="text" name="title" class="form-control" placeholder="Notice title…" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Content <span class="text-danger">*</span></label>
+              <textarea name="content" class="form-control" rows="6"
+                        placeholder="Write your notice here…" required></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Audience</label>
+              <select name="audience" class="form-select">
+                <option value="all">Everyone</option>
+                <option value="staff">Staff Only</option>
+                <option value="students">Students</option>
+                <option value="parents">Parents</option>
+                <option value="teachers">Teachers</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Expiry Date</label>
+              <input type="date" name="expires_at" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Attachment</label>
+              <input type="file" name="attachment" class="form-control">
+            </div>
+            <div class="col-md-6 d-flex align-items-end pb-1">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="is_pinned" id="is_pinned">
+                <label class="form-check-label fw-600" for="is_pinned">
+                  <i class="bi bi-pin-angle text-danger me-1"></i>Pin this notice
+                </label>
+              </div>
+            </div>
+            <div class="col-12 pt-2">
+              <button type="submit" class="btn btn-primary px-5">
+                <i class="bi bi-megaphone me-2"></i>Publish Notice
+              </button>
+              <a href="{% url 'communication:notices' %}" class="btn btn-outline-secondary ms-2 px-4">
+                Cancel
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

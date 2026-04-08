@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "helpdesk:tickets" %}">Help Desk</a></li><li class="breadcrumb-item active">#{{ ticket.ticket_number }}</li>{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card mb-3">
+      <div class="card-header d-flex align-items-center">
+        <span class="badge {% if ticket.priority == "critical" %}bg-danger{% elif ticket.priority == "high" %}bg-warning text-dark{% else %}bg-primary{% endif %} me-2">{{ ticket.get_priority_display }}</span>
+        <h5 class="mb-0 fw-700">{{ ticket.title }}</h5>
+        <code class="ms-auto" style="font-size:13px;">#{{ ticket.ticket_number }}</code>
+      </div>
+      <div class="card-body"><p style="font-size:14px;">{{ ticket.description }}</p><div style="font-size:12px;color:#64748b;"><i class="bi bi-person me-1"></i>{{ ticket.raised_by.get_full_name }} &nbsp;·&nbsp; <i class="bi bi-clock me-1"></i>{{ ticket.created_at|timesince }} ago</div></div>
+    </div>
+    {% for reply in replies %}
+    <div class="card mb-2 {% if reply.is_internal %}border-warning-subtle{% endif %}">
+      <div class="card-body py-3">
+        {% if reply.is_internal %}<span class="badge bg-warning-subtle text-warning mb-2" style="font-size:11px;">Internal Note</span>{% endif %}
+        <div class="d-flex gap-3"><div class="avatar flex-shrink-0" style="width:34px;height:34px;font-size:12px;">{{ reply.replied_by.first_name.0 }}</div><div><div class="fw-600" style="font-size:13px;">{{ reply.replied_by.get_full_name }}</div><p class="mb-0 mt-1" style="font-size:13.5px;">{{ reply.message }}</p><div style="font-size:11px;color:#94a3b8;">{{ reply.created_at|timesince }} ago</div></div></div>
+      </div>
+    </div>
+    {% endfor %}
+    <div class="card">
+      <div class="card-header"><h6 class="mb-0">Add Reply</h6></div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="reply">
+          <div class="mb-3"><textarea name="message" class="form-control" rows="3" placeholder="Type your reply…" required></textarea></div>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="is_internal" id="internal"><label class="form-check-label" for="internal" style="font-size:13px;">Internal note</label></div>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-send me-2"></i>Reply</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header"><h6 class="mb-0">Ticket Details</h6></div>
+      <div class="card-body">
+        {% include "partials/detail_field.html" with label="Status" value=ticket.get_status_display %}
+        {% include "partials/detail_field.html" with label="Priority" value=ticket.get_priority_display %}
+        {% include "partials/detail_field.html" with label="Category" value=ticket.category.name %}
+        {% include "partials/detail_field.html" with label="Assigned To" value=ticket.assigned_to.get_full_name %}
+        {% include "partials/detail_field.html" with label="Created" value=ticket.created_at %}
+        <hr>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="update_status">
+          <label class="form-label">Update Status</label>
+          <select name="status" class="form-select form-select-sm mb-2">{% for val, label in status_choices %}<option value="{{ val }}" {% if ticket.status == val %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+          <input type="text" name="resolution_note" class="form-control form-control-sm mb-2" placeholder="Resolution note (optional)">
+          <button type="submit" class="btn btn-sm btn-outline-primary w-100">Update Status</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

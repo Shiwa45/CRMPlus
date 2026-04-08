@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'staff:list' %}">Staff</a></li>
+<li class="breadcrumb-item active">Payroll</li>
+{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#ecfdf5;color:#059669;"><i class="bi bi-cash-coin"></i></div>
+      <div class="stat-value">₹{{ total_payable|floatformat:0|intcomma }}</div>
+      <div class="stat-label">Payable This Month (Unpaid)</div>
+    </div>
+  </div>
+  <div class="col-md-4 d-flex align-items-center">
+    <div class="filters-bar w-100 mb-0">
+      <form method="get" class="d-flex align-items-center gap-2">
+        <select name="month" class="form-select" style="max-width:130px;">
+          {% for m in months %}
+          <option value="{{ m }}" {% if current_month == m %}selected{% endif %}>
+            {% if m == 1 %}January{% elif m == 2 %}February{% elif m == 3 %}March
+            {% elif m == 4 %}April{% elif m == 5 %}May{% elif m == 6 %}June
+            {% elif m == 7 %}July{% elif m == 8 %}August{% elif m == 9 %}September
+            {% elif m == 10 %}October{% elif m == 11 %}November{% else %}December{% endif %}
+          </option>
+          {% endfor %}
+        </select>
+        <input type="number" name="year" class="form-control" style="max-width:90px;" value="{{ current_year }}">
+        <button type="submit" class="btn btn-primary btn-sm">View</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="card table-card">
+  <div class="card-header d-flex align-items-center">
+    <i class="bi bi-wallet2 text-success me-2"></i>
+    <h6 class="mb-0">Salary Slips — {{ current_month }}/{{ current_year }}</h6>
+    <button class="btn btn-primary btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#generatePayrollModal">
+      <i class="bi bi-lightning me-1"></i>Generate Payroll
+    </button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Staff</th>
+          <th>Month/Year</th>
+          <th>Basic</th>
+          <th>Gross</th>
+          <th>Deductions</th>
+          <th>Net Pay</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for slip in salary_slips %}
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar" style="width:30px;height:30px;font-size:11px;">
+                {{ slip.staff.user.first_name.0 }}{{ slip.staff.user.last_name.0 }}
+              </div>
+              <div>
+                <div class="fw-600" style="font-size:13.5px;">{{ slip.staff.full_name }}</div>
+                <div style="font-size:11px;color:#64748b;">{{ slip.staff.employee_id }}</div>
+              </div>
+            </div>
+          </td>
+          <td style="font-size:13px;">
+            {% if slip.month == 1 %}Jan{% elif slip.month == 2 %}Feb{% elif slip.month == 3 %}Mar
+            {% elif slip.month == 4 %}Apr{% elif slip.month == 5 %}May{% elif slip.month == 6 %}Jun
+            {% elif slip.month == 7 %}Jul{% elif slip.month == 8 %}Aug{% elif slip.month == 9 %}Sep
+            {% elif slip.month == 10 %}Oct{% elif slip.month == 11 %}Nov{% else %}Dec{% endif %}
+            {{ slip.year }}
+          </td>
+          <td style="font-size:13px;">₹{{ slip.basic|intcomma }}</td>
+          <td style="font-size:13px;color:#059669;font-weight:600;">₹{{ slip.gross|intcomma }}</td>
+          <td style="font-size:13px;color:#dc2626;">
+            -₹{{ slip.pf_deduction|add:slip.esi_deduction|add:slip.tds|add:slip.other_deductions|floatformat:0|intcomma }}
+          </td>
+          <td>
+            <strong style="font-size:14px;color:#0f172a;">₹{{ slip.net_pay|intcomma }}</strong>
+          </td>
+          <td>
+            {% if slip.is_paid %}
+            <span class="badge bg-success-subtle text-success">Paid</span>
+            {% else %}
+            <span class="badge bg-warning-subtle text-warning">Pending</span>
+            {% endif %}
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary" onclick="window.print()">
+              <i class="bi bi-printer"></i>
+            </button>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center text-muted py-5">
+          <i class="bi bi-wallet2" style="font-size:40px;opacity:.2;"></i>
+          <p class="mt-3">No salary slips generated yet. Click "Generate Payroll" to begin.</p>
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

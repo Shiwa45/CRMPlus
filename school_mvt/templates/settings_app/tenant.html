@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "settings_app:dashboard" %}">Settings</a></li><li class="breadcrumb-item active">School Profile</li>{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-gear-fill text-primary me-2"></i><h6 class="mb-0">School Configuration — {{ schema }}</h6></div>
+      <div class="card-body p-4">
+        <div class="alert alert-info d-flex gap-2 py-2">
+          <i class="bi bi-info-circle flex-shrink-0"></i>
+          <span>You are configuring school schema: <code>{{ schema }}</code>. Changes apply to this school only.</span>
+        </div>
+        <div class="d-grid gap-2 mt-3">
+          <a href="{% url "settings_app:dashboard" %}" class="btn btn-outline-primary py-3"><i class="bi bi-sliders me-2"></i>Manage Settings Key-Value Store</a>
+          <a href="{% url "auth:users" %}" class="btn btn-outline-success py-3"><i class="bi bi-people me-2"></i>Manage Users & Roles</a>
+          <a href="{% url "academics:classes" %}" class="btn btn-outline-warning py-3"><i class="bi bi-mortarboard me-2"></i>Configure Classes & Sections</a>
+          <a href="{% url "fees:structure" %}" class="btn btn-outline-info py-3"><i class="bi bi-cash-coin me-2"></i>Configure Fee Structure</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "hostel:dashboard" %}">Hostel</a></li><li class="breadcrumb-item active">Allocations</li>{% endblock %}
+{% block content %}
+<div class="card table-card">
+  <div class="card-header d-flex align-items-center">
+    <i class="bi bi-people-fill text-primary me-2"></i><h6 class="mb-0">Current Allocations</h6>
+    <span class="badge bg-primary-subtle text-primary ms-auto">{{ allocations|length }} Students</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Student</th><th>Hostel</th><th>Room</th><th>Allotment Date</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for a in allocations %}
+        <tr>
+          <td><a href="{% url "students:detail" a.student.pk %}" class="text-decoration-none fw-600" style="font-size:13.5px;">{{ a.student.full_name }}</a></td>
+          <td style="font-size:13px;">{{ a.room.hostel.name }}</td>
+          <td><span class="badge bg-primary-subtle text-primary">Room {{ a.room.room_number }}</span></td>
+          <td style="font-size:13px;">{{ a.allotment_date }}</td>
+          <td>{% if a.status == "active" %}<span class="badge bg-success-subtle text-success">Active</span>{% else %}<span class="badge bg-secondary-subtle text-secondary">{{ a.get_status_display }}</span>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center text-muted py-5">No allocations yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

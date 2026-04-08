@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Subjects</li>
+{% endblock %}
+
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap w-100">
+    <select name="class_id" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      <option value="">All Classes</option>
+      {% for cls in classes %}
+      <option value="{{ cls.pk }}" {% if selected_class == cls.pk|stringformat:"s" %}selected{% endif %}>{{ cls.name }}</option>
+      {% endfor %}
+    </select>
+    <a href="#" class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+      <i class="bi bi-plus me-1"></i>Add Subject
+    </a>
+  </form>
+</div>
+
+<div class="row g-3">
+  {% for subject in subjects %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between mb-3">
+          <div class="rounded d-flex align-items-center justify-content-center flex-shrink-0"
+               style="width:44px;height:44px;
+               background:{% if subject.subject_type == 'core' %}#e8f0ff{% elif subject.subject_type == 'elective' %}#ecfdf5{% else %}#fff7ed{% endif %};">
+            <i class="bi bi-book-fill"
+               style="font-size:18px;color:{% if subject.subject_type == 'core' %}#1a56db{% elif subject.subject_type == 'elective' %}#059669{% else %}#d97706{% endif %};"></i>
+          </div>
+          <span class="badge
+            {% if subject.subject_type == 'core' %}bg-primary{% elif subject.subject_type == 'elective' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+            {{ subject.get_subject_type_display }}
+          </span>
+        </div>
+        <h6 class="fw-700 mb-0" style="font-size:14px;">{{ subject.name }}</h6>
+        <p class="text-muted mb-2" style="font-size:12px;">Code: <code>{{ subject.code }}</code></p>
+
+        <div class="d-flex gap-2 flex-wrap mb-2">
+          <span class="badge bg-secondary-subtle text-secondary" style="font-size:11px;">
+            Theory: {{ subject.max_theory_marks }}m
+          </span>
+          {% if subject.has_practical %}
+          <span class="badge bg-info-subtle text-info" style="font-size:11px;">
+            Practical: {{ subject.max_practical_marks }}m
+          </span>
+          {% endif %}
+          <span class="badge bg-warning-subtle text-warning" style="font-size:11px;">
+            Pass: {{ subject.passing_marks }}m
+          </span>
+        </div>
+
+        <div style="font-size:12px;color:#64748b;">
+          <i class="bi bi-mortarboard me-1"></i>
+          {% for cls in subject.classes.all %}{{ cls.name }}{% if not forloop.last %}, {% endif %}{% empty %}No classes{% endfor %}
+        </div>
+      </div>
+      <div class="card-footer bg-transparent py-2 px-3 d-flex align-items-center justify-content-between" style="font-size:12px;">
+        <span class="text-muted">{{ subject.teachers.count }} teacher{{ subject.teachers.count|pluralize }}</span>
+        <button class="btn btn-sm btn-outline-primary btn-sm">Edit</button>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="card p-5 text-center text-muted">
+      <i class="bi bi-book" style="font-size:40px;opacity:.2;"></i>
+      <p class="mt-3">No subjects found.</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

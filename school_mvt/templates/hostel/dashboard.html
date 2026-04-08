@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Hostel</li>{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#e8f0ff;color:#1a56db;"><i class="bi bi-building-fill"></i></div><div class="stat-value">{{ total_rooms }}</div><div class="stat-label">Total Rooms</div></div></div>
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#ecfdf5;color:#059669;"><i class="bi bi-people-fill"></i></div><div class="stat-value">{{ total_students }}</div><div class="stat-label">Students Housed</div></div></div>
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#fff7ed;color:#d97706;"><i class="bi bi-door-open-fill"></i></div><div class="stat-value">{{ available_rooms }}</div><div class="stat-label">Available Rooms</div></div></div>
+</div>
+<div class="row g-3">
+  {% for hostel in hostels %}
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header d-flex align-items-center">
+        <i class="bi bi-building-fill {% if hostel.hostel_type == "boys" %}text-primary{% else %}text-danger{% endif %} me-2"></i>
+        <h6 class="mb-0">{{ hostel.name }}</h6>
+        <span class="badge {% if hostel.hostel_type == "boys" %}bg-primary{% elif hostel.hostel_type == "girls" %}bg-danger{% else %}bg-secondary{% endif %} ms-2">{{ hostel.get_hostel_type_display }}</span>
+        <div class="ms-auto d-flex gap-2">
+          <a href="{% url "hostel:rooms" %}?hostel_id={{ hostel.pk }}" class="btn btn-sm btn-outline-primary">Rooms</a>
+          <a href="{% url "hostel:allocations" %}" class="btn btn-sm btn-outline-success">Allocations</a>
+        </div>
+      </div>
+      <div class="card-body py-3">
+        <div class="row g-2">
+          {% include "partials/detail_field.html" with label="Warden" value=hostel.warden.full_name %}
+          {% include "partials/detail_field.html" with label="Total Rooms" value=hostel.total_rooms %}
+          {% include "partials/detail_field.html" with label="Phone" value=hostel.phone %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><div class="card p-5 text-center text-muted"><i class="bi bi-building" style="font-size:40px;opacity:.2;"></i><p class="mt-3">No hostels configured yet.</p></div></div>
+  {% endfor %}
+</div>
+{% endblock %}

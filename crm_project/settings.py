@@ -186,3 +186,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ── Email (development) ───────────────────────────────────────────────────────
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@easyian.com'
+
+# ── Celery (async tasks + periodic scheduling) ────────────────────────────────
+CELERY_BROKER_URL     = config('CELERY_BROKER_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default='redis://localhost:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+
+# ── Celery Beat schedule (periodic tasks) ─────────────────────────────────────
+CELERY_BEAT_SCHEDULE = {
+    'sync-indiamart-leads-every-5-min': {
+        'task': 'integrations.tasks.sync_indiamart_leads',
+        'schedule': 300.0,  # every 5 minutes
+    },
+    'sync-meta-leads-catchup-every-30-min': {
+        'task': 'integrations.tasks.sync_meta_leads_catchup',
+        'schedule': 1800.0,  # every 30 minutes
+    },
+}
+
+# ── Meta / IndiaMART webhook security ─────────────────────────────────────────
+META_APP_SECRET = config('META_APP_SECRET', default='')

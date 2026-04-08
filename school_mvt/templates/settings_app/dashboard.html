@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Settings</li>{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card mb-3">
+      <div class="card-header"><i class="bi bi-sliders text-primary me-2"></i><h6 class="mb-0">School Settings</h6></div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3"><label class="form-label">Key</label><input type="text" name="key" class="form-control" placeholder="e.g. school_phone" required></div>
+          <div class="mb-3"><label class="form-label">Value</label><input type="text" name="value" class="form-control" placeholder="Value" required></div>
+          <div class="mb-3"><label class="form-label">Description</label><input type="text" name="description" class="form-control" placeholder="Optional description"></div>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-save me-2"></i>Save Setting</button>
+        </form>
+      </div>
+    </div>
+    <div class="card table-card">
+      <div class="card-header"><h6 class="mb-0">All Settings</h6></div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Key</th><th>Value</th><th>Updated</th></tr></thead>
+          <tbody>
+            {% for s in settings %}<tr><td><code style="font-size:12px;">{{ s.key }}</code></td><td style="font-size:13px;">{{ s.value|truncatechars:50 }}</td><td style="font-size:11px;color:#64748b;">{{ s.updated_at|date:"d M Y" }}</td></tr>
+            {% empty %}<tr><td colspan="3" class="text-center text-muted py-4">No settings configured.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card mb-3">
+      <div class="card-header"><i class="bi bi-award-fill text-warning me-2"></i><h6 class="mb-0">Grade Configuration</h6></div>
+      <div class="table-responsive">
+        <table class="table mb-0">
+          <thead><tr><th>Grade</th><th>Min %</th><th>Max %</th><th>Grade Point</th></tr></thead>
+          <tbody>
+            {% for g in grade_config %}<tr><td><span class="badge bg-primary">{{ g.grade }}</span></td><td>{{ g.min_percentage }}%</td><td>{{ g.max_percentage }}%</td><td>{{ g.grade_point }}</td></tr>
+            {% empty %}<tr><td colspan="4" class="text-center text-muted py-4">No grade config. Will use default.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="bi bi-calendar-fill text-success me-2"></i><h6 class="mb-0">Academic Years</h6></div>
+      <div class="table-responsive">
+        <table class="table mb-0">
+          <thead><tr><th>Year</th><th>Start</th><th>End</th><th>Current</th></tr></thead>
+          <tbody>
+            {% for ay in academic_years %}<tr><td class="fw-600">{{ ay.year }}</td><td style="font-size:13px;">{{ ay.start_date }}</td><td style="font-size:13px;">{{ ay.end_date }}</td><td>{% if ay.is_current %}<span class="badge bg-success">Current</span>{% endif %}</td></tr>
+            {% empty %}<tr><td colspan="4" class="text-center text-muted py-4">No academic years defined.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

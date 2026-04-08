@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'staff:list' %}">Staff</a></li>
+<li class="breadcrumb-item active">Leave Requests</li>
+{% endblock %}
+
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2">
+    <select name="status" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      <option value="">All Status</option>
+      {% for val, label in status_choices %}
+      <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </form>
+  {% if pending_count %}
+  <span class="badge bg-warning text-dark ms-2 px-3 py-2">
+    <i class="bi bi-clock me-1"></i>{{ pending_count }} Pending
+  </span>
+  {% endif %}
+</div>
+
+<div class="card table-card">
+  <div class="card-header">
+    <i class="bi bi-calendar-x-fill text-warning me-2"></i>
+    <h6 class="mb-0">Leave Requests</h6>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr><th>Staff</th><th>Leave Type</th><th>From</th><th>To</th><th>Days</th><th>Applied On</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for leave in leaves %}
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar" style="width:30px;height:30px;font-size:11px;">
+                {{ leave.staff.user.first_name.0 }}{{ leave.staff.user.last_name.0 }}
+              </div>
+              <div>
+                <div class="fw-600" style="font-size:13.5px;">{{ leave.staff.full_name }}</div>
+                <div style="font-size:11px;color:#64748b;">{{ leave.staff.employee_id }}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge bg-info-subtle text-info">{{ leave.leave_type.code }}</span></td>
+          <td style="font-size:13px;">{{ leave.from_date }}</td>
+          <td style="font-size:13px;">{{ leave.to_date }}</td>
+          <td>
+            <span class="badge bg-secondary-subtle text-secondary">{{ leave.total_days }}d</span>
+          </td>
+          <td style="font-size:12px;color:#64748b;">{{ leave.applied_on|date:"d M Y" }}</td>
+          <td>
+            {% if leave.status == 'pending' %}
+            <span class="badge bg-warning-subtle text-warning">Pending</span>
+            {% elif leave.status == 'approved' %}
+            <span class="badge bg-success-subtle text-success">Approved</span>
+            {% elif leave.status == 'rejected' %}
+            <span class="badge bg-danger-subtle text-danger">Rejected</span>
+            {% else %}
+            <span class="badge bg-secondary-subtle text-secondary">Cancelled</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if leave.status == 'pending' %}
+            <div class="d-flex gap-1">
+              <form method="post" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="leave_id" value="{{ leave.pk }}">
+                <input type="hidden" name="action" value="approve">
+                <button type="submit" class="btn btn-sm btn-success" title="Approve">
+                  <i class="bi bi-check-lg"></i>
+                </button>
+              </form>
+              <form method="post" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="leave_id" value="{{ leave.pk }}">
+                <input type="hidden" name="action" value="reject">
+                <button type="submit" class="btn btn-sm btn-danger" title="Reject">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </form>
+            </div>
+            {% else %}
+            <span class="text-muted" style="font-size:12px;">
+              {% if leave.approved_by %}By {{ leave.approved_by.get_full_name }}{% endif %}
+            </span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center text-muted py-5">No leave requests found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

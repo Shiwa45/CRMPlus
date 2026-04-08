@@ -139,7 +139,7 @@ class CustomAuthToken(ObtainAuthToken):
             if slug_header and slug_header.lower() != 'public':
                 try:
                     m = memberships.get(tenant__slug=slug_header)
-                    return self._format_tenant(m)
+                    return self._format_tenant(m, request)
                 except TenantUser.DoesNotExist:
                     pass
 
@@ -157,7 +157,7 @@ class CustomAuthToken(ObtainAuthToken):
             # Fall back to first membership
             m = memberships.first()
             if m:
-                return self._format_tenant(m)
+                return self._format_tenant(m, request)
 
         except Exception:
             pass
@@ -172,13 +172,20 @@ class CustomAuthToken(ObtainAuthToken):
         }
 
     @staticmethod
-    def _format_tenant(membership) -> dict:
+    def _format_tenant(membership, request) -> dict:
         t = membership.tenant
+        logo_url = None
+        try:
+            if t.logo:
+                logo_url = request.build_absolute_uri(t.logo.url)
+        except Exception:
+            logo_url = None
         return {
             'schema_name': t.schema_name,
             'tenant_id':   t.pk,
             'tenant_name': t.name,
             'tenant_slug': t.slug,
+            'tenant_logo': logo_url,
             'tenant_role': membership.role,
             'plan_name':   t.plan.name if t.plan else None,
         }

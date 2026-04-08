@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "reports:dashboard" %}">Reports</a></li><li class="breadcrumb-item active">Academic</li>{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#e8f0ff;color:#1a56db;"><i class="bi bi-people-fill"></i></div><div class="stat-value">{{ total_students }}</div><div class="stat-label">Total Active Students</div></div></div>
+</div>
+<div class="card table-card">
+  <div class="card-header"><i class="bi bi-bar-chart-fill text-primary me-2"></i><h6 class="mb-0">Class-wise Student Count</h6></div>
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead><tr><th>Class</th><th>Students</th><th>Distribution</th></tr></thead>
+      <tbody>
+        {% for cls in class_wise %}
+        <tr>
+          <td class="fw-600" style="font-size:13.5px;">{{ cls.name }}</td>
+          <td><span class="badge bg-primary-subtle text-primary">{{ cls.student_count }}</span></td>
+          <td style="width:200px;">
+            <div class="progress" style="height:8px;"><div class="progress-bar bg-primary" style="width:{% widthratio cls.student_count total_students 100 %}%"></div></div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="text-center text-muted py-4">No data.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

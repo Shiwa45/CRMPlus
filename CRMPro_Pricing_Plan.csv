@@ -1,0 +1,117 @@
+CRMPro - SaaS Pricing Plan (Indian Market)
+
+1. Pricing Tiers (Monthly per user, billed annually)
+Plan,Free,Starter,Growth,Business,Enterprise
+Price (Annual),₹0,₹499,₹999,₹1,999,₹3,499
+Price (Monthly),₹0,₹699,₹1,299,₹2,499,₹4,499
+Max Users,2,5,15,50,Unlimited
+Target,Solo / Trial,Micro-biz,SMBs,Mid-market,Large orgs
+
+2. Lead & Contact Management
+Feature,Free,Starter,Growth,Business,Enterprise
+Leads,100,500,"5,000","25,000",Unlimited
+Contacts,200,"1,000","10,000","50,000",Unlimited
+Lead Sources & Tracking,Yes,Yes,Yes,Yes,Yes
+Lead Assignment (manual),Yes,Yes,Yes,Yes,Yes
+Lead Assignment (auto),No,No,Yes,Yes,Yes
+Company Management,Yes,Yes,Yes,Yes,Yes
+Document Storage,100 MB,1 GB,5 GB,20 GB,100 GB
+Duplicate Detection,No,No,Yes,Yes,Yes
+Bulk Import,No,Yes,Yes,Yes,Yes
+
+3. Sales Pipeline & Deals
+Feature,Free,Starter,Growth,Business,Enterprise
+Deals,50,200,"2,000","10,000",Unlimited
+Pipelines,1,1,3,10,Unlimited
+Kanban Board,Yes,Yes,Yes,Yes,Yes
+Stage History & Tracking,No,Yes,Yes,Yes,Yes
+Weighted Pipeline Value,No,No,Yes,Yes,Yes
+Deal Activities,Yes,Yes,Yes,Yes,Yes
+
+4. Quotes Invoicing & Payments
+Feature,Free,Starter,Growth,Business,Enterprise
+GST Quotes,No,Yes,Yes,Yes,Yes
+GST Invoicing,No,Yes,Yes,Yes,Yes
+Products Catalog,No,50,500,Unlimited,Unlimited
+Payment Tracking,No,Yes,Yes,Yes,Yes
+Tax Profiles,No,1,3,10,Unlimited
+PDF Generation,No,Yes,Yes,Yes,Yes
+Recurring Invoicing,No,No,Yes,Yes,Yes
+
+5. Communication & Engagement
+Feature,Free,Starter,Growth,Business,Enterprise
+Email Sending,50/day,200/day,"1,000/day","5,000/day","20,000/day"
+Email Templates,5,20,Unlimited,Unlimited,Unlimited
+Email Tracking,No,Yes,Yes,Yes,Yes
+Email Campaigns,No,No,Yes,Yes,Yes
+Email Sequences,No,No,Yes,Yes,Yes
+WhatsApp Integration,No,No,No,Yes,Yes
+WhatsApp Templates,No,No,No,Yes,Yes
+Bulk WhatsApp,No,No,No,No,Yes
+
+6. Workflow Automation
+Feature,Free,Starter,Growth,Business,Enterprise
+Active Workflows,0,3,10,50,Unlimited
+Triggers,No,Basic,All,All,All
+Conditions & Filters,No,Yes,Yes,Yes,Yes
+Actions,No,"3 types",All,All,All
+Scheduled Workflows,No,No,Yes,Yes,Yes
+Execution Logs,No,No,Yes,Yes,Yes
+
+7. Tickets & Customer Support
+Feature,Free,Starter,Growth,Business,Enterprise
+Ticketing System,No,No,Yes,Yes,Yes
+SLA Policies,No,No,1,5,Unlimited
+Ticket Categories,No,No,Yes,Yes,Yes
+Internal Notes,No,No,Yes,Yes,Yes
+CSAT Surveys,No,No,No,Yes,Yes
+
+8. Integrations
+Feature,Free,Starter,Growth,Business,Enterprise
+IndiaMART,No,No,Yes,Yes,Yes
+Meta Lead Ads,No,No,Yes,Yes,Yes
+Razorpay,No,No,No,Yes,Yes
+Zapier / Webhooks,No,No,No,Yes,Yes
+REST API Access,No,No,No,Yes,Yes
+Custom Domain,No,No,No,No,Yes
+
+9. AI & Analytics
+Feature,Free,Starter,Growth,Business,Enterprise
+Basic Dashboards,Yes,Yes,Yes,Yes,Yes
+Advanced Reports,No,No,Yes,Yes,Yes
+AI Assistant (Gemini),No,No,No,Yes,Yes
+AI Lead Scoring,No,No,No,No,Yes
+Revenue Forecasting,No,No,No,No,Yes
+Sarvam AI,No,No,No,No,Yes
+
+10. Admin & Security
+Feature,Free,Starter,Growth,Business,Enterprise
+Roles,2,3,6,6,6+
+Audit Logs,No,No,30 days,1 year,Unlimited
+2FA,No,Yes,Yes,Yes,Yes
+Team Invitations,No,Yes,Yes,Yes,Yes
+GSTIN/PAN Validation,No,No,Yes,Yes,Yes
+Data Export,No,CSV,CSV,CSV+API,Full+API
+
+11. Add-Ons
+Add-On,Price,Available On
+Extra Users,₹399/user/month,Starter+
+WhatsApp API,₹999/month + usage,Growth+
+Cloud Telephony,₹1,499/month,Growth+
+"Extra Storage (10GB)",₹199/month,All
+AI Pack,₹499/user/month,Growth+
+Dedicated IP,₹2,999/month,Business+
+White-label/Domain,₹4,999/month,Business+
+Priority Support,₹1,999/month,All
+
+12. Competitor Benchmarking (annual)
+Feature Area,CRMPro Growth,Zoho Professional,Freshsales Pro,LeadSquared Pro
+Price,₹999,₹1500,₹3300,₹2500
+Lead Management,Yes,Yes,Yes,Yes
+GST Invoicing,Yes (Built-in),₹ Zoho Books,No,No
+WhatsApp,Add-on,Add-on,Add-on,Add-on
+Ticketing/Helpdesk,Yes (Built-in),₹ Zoho Desk,₹ Freshdesk,No
+Workflow Automation,Yes,Yes,Yes,Yes
+IndiaMART Integration,Yes,No,No,Yes
+Email Campaigns,Yes (Built-in),₹ Zoho Campaigns,No,Yes
+Mobile App,Yes,Yes,Yes,Yes

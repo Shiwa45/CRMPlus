@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block breadcrumb %}<li class="breadcrumb-item active">Library</li>{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#e8f0ff;color:#1a56db;"><i class="bi bi-journals"></i></div>
+      <div class="stat-value">{{ total_books }}</div>
+      <div class="stat-label">Total Books</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fff7ed;color:#d97706;"><i class="bi bi-book-fill"></i></div>
+      <div class="stat-value">{{ total_issued }}</div>
+      <div class="stat-label">Currently Issued</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-exclamation-triangle-fill"></i></div>
+      <div class="stat-value text-danger">{{ overdue }}</div>
+      <div class="stat-label">Overdue</div>
+    </div>
+  </div>
+</div>
+
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap w-100">
+    <div class="input-group" style="max-width:260px;">
+      <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+      <input type="text" name="q" class="form-control border-start-0" placeholder="Title, author, ISBN…" value="{{ q }}">
+    </div>
+    <select name="category" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      <option value="">All Categories</option>
+      {% for cat in categories %}<option value="{{ cat.pk }}">{{ cat.name }}</option>{% endfor %}
+    </select>
+    <div class="form-check ms-2">
+      <input class="form-check-input" type="checkbox" name="available" id="avail_check" onchange="this.form.submit()">
+      <label class="form-check-label" for="avail_check" style="font-size:13px;">Available only</label>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Search</button>
+    <a href="{% url 'library:issue_return' %}" class="btn btn-success ms-auto">
+      <i class="bi bi-book me-1"></i>Issue / Return
+    </a>
+  </form>
+</div>
+
+<div class="card table-card">
+  <div class="card-header d-flex align-items-center">
+    <i class="bi bi-journals text-primary me-2"></i>
+    <h6 class="mb-0">Books Catalog</h6>
+    <span class="badge bg-primary-subtle text-primary ms-auto">{{ page_obj.paginator.count }} books</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr><th>Title</th><th>Author</th><th>Category</th><th>ISBN</th><th>Copies</th><th>Available</th><th>Location</th></tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td>
+            <div class="fw-600" style="font-size:13.5px;">{{ book.title }}</div>
+            {% if book.is_ebook %}<span class="badge bg-info-subtle text-info" style="font-size:10px;">E-Book</span>{% endif %}
+          </td>
+          <td style="font-size:13px;">{{ book.author }}</td>
+          <td>{% if book.category %}<span class="badge bg-secondary-subtle text-secondary">{{ book.category.name }}</span>{% endif %}</td>
+          <td><code style="font-size:11px;">{{ book.isbn|default:"—" }}</code></td>
+          <td style="font-size:13px;">{{ book.total_copies }}</td>
+          <td>
+            {% if book.available_copies > 0 %}
+            <span class="badge bg-success-subtle text-success">{{ book.available_copies }}</span>
+            {% else %}
+            <span class="badge bg-danger-subtle text-danger">None</span>
+            {% endif %}
+          </td>
+          <td style="font-size:12px;">{{ book.rack_number|default:"—" }} / {{ book.shelf_number|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-5">
+          <i class="bi bi-journals" style="font-size:40px;opacity:.2;"></i>
+          <p class="mt-3">No books found.</p>
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if is_paginated %}
+<nav class="mt-4 d-flex justify-content-center">
+  <ul class="pagination pagination-sm gap-1">
+    {% if page_obj.has_previous %}<li class="page-item"><a class="page-link rounded" href="?page={{ page_obj.previous_page_number }}&q={{ q }}"><i class="bi bi-chevron-left"></i></a></li>{% endif %}
+    {% for num in page_obj.paginator.page_range %}{% if page_obj.number == num %}<li class="page-item active"><span class="page-link rounded">{{ num }}</span></li>
+    {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}<li class="page-item"><a class="page-link rounded" href="?page={{ num }}&q={{ q }}">{{ num }}</a></li>{% endif %}{% endfor %}
+    {% if page_obj.has_next %}<li class="page-item"><a class="page-link rounded" href="?page={{ page_obj.next_page_number }}&q={{ q }}"><i class="bi bi-chevron-right"></i></a></li>{% endif %}
+  </ul>
+</nav>
+{% endif %}
+{% endblock %}

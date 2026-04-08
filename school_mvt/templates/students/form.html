@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'students:list' %}">Students</a></li>
+<li class="breadcrumb-item active">{{ action }} Student</li>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="row g-3">
+
+    <!-- Section: Personal Info -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="bi bi-person-fill text-primary"></i>
+          <h6>Personal Information</h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">First Name <span class="text-danger">*</span></label>
+              {{ form.first_name }}
+              {% if form.first_name.errors %}<div class="text-danger mt-1" style="font-size:12px;">{{ form.first_name.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Last Name <span class="text-danger">*</span></label>
+              {{ form.last_name }}
+              {% if form.last_name.errors %}<div class="text-danger mt-1" style="font-size:12px;">{{ form.last_name.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Admission Number <span class="text-danger">*</span></label>
+              {{ form.admission_number }}
+              {% if form.admission_number.errors %}<div class="text-danger mt-1" style="font-size:12px;">{{ form.admission_number.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+              {{ form.date_of_birth }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Gender <span class="text-danger">*</span></label>
+              {{ form.gender }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Blood Group</label>
+              {{ form.blood_group }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Category</label>
+              {{ form.category }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Aadhar Number</label>
+              {{ form.aadhar_number }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Roll Number</label>
+              {{ form.roll_number }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Photo</label>
+              {{ form.photo }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Academic Info -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="bi bi-book-fill text-success"></i>
+          <h6>Academic Information</h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Class</label>
+              {{ form.current_class }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Section</label>
+              {{ form.current_section }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Admission Date</label>
+              {{ form.admission_date }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Academic Year</label>
+              {{ form.academic_year }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Status</label>
+              {{ form.status }}
+            </div>
+            <div class="col-md-3 d-flex align-items-center pt-4">
+              <div class="form-check">
+                {{ form.requires_transport }}
+                <label class="form-check-label" style="font-size:13.5px;">Requires Transport</label>
+              </div>
+            </div>
+            <div class="col-md-3 d-flex align-items-center pt-4">
+              <div class="form-check">
+                {{ form.requires_hostel }}
+                <label class="form-check-label" style="font-size:13.5px;">Requires Hostel</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Address -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="bi bi-geo-alt-fill text-warning"></i>
+          <h6>Address Details</h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Address</label>
+              {{ form.address }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">City</label>
+              {{ form.city }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">State</label>
+              {{ form.state }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Pincode</label>
+              {{ form.pincode }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Medical -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="bi bi-heart-pulse-fill text-danger"></i>
+          <h6>Medical Information</h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Medical Conditions</label>
+              {{ form.medical_conditions }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Allergies</label>
+              {{ form.allergies }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Emergency Contact</label>
+              {{ form.emergency_contact }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="col-12">
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary px-4">
+          <i class="bi bi-check-circle me-2"></i>{{ action }} Student
+        </button>
+        <a href="{% url 'students:list' %}" class="btn btn-outline-secondary px-4">
+          <i class="bi bi-x-circle me-2"></i>Cancel
+        </a>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}

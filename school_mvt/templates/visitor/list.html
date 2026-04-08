@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Visitor Management</li>{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#e8f0ff;color:#1a56db;"><i class="bi bi-person-check-fill"></i></div><div class="stat-value">{{ today_count }}</div><div class="stat-label">Visitors Today</div></div></div>
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon" style="background:#ecfdf5;color:#059669;"><i class="bi bi-door-open-fill"></i></div><div class="stat-value">{{ inside_count }}</div><div class="stat-label">Currently Inside</div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header"><i class="bi bi-person-plus-fill text-primary me-2"></i><h6 class="mb-0">Visitor Check-In</h6></div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="checkin">
+          <div class="mb-3"><label class="form-label">Visitor Name</label><input type="text" name="visitor_name" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Phone</label><input type="tel" name="phone" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Purpose</label><select name="purpose" class="form-select" required>{% for val, label in purpose_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}</select></div>
+          <div class="mb-3"><label class="form-label">Whom to Meet</label><input type="text" name="whom_to_meet" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Department</label><input type="text" name="department" class="form-control"></div>
+          <div class="mb-3"><label class="form-label">ID Proof Type</label><input type="text" name="id_proof_type" class="form-control" placeholder="Aadhar/Passport/DL"></div>
+          <div class="mb-3"><label class="form-label">ID Number</label><input type="text" name="id_proof_number" class="form-control"></div>
+          <button type="submit" class="btn btn-primary w-100"><i class="bi bi-person-check me-2"></i>Check In</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="filters-bar mb-3">
+      <form method="get" class="d-flex align-items-center gap-2">
+        <input type="date" name="date" class="form-control" style="max-width:180px;" value="{{ selected_date }}" onchange="this.form.submit()">
+      </form>
+    </div>
+    <div class="card table-card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>Visitor</th><th>Purpose</th><th>Meeting</th><th>Check-In</th><th>Check-Out</th><th>Action</th></tr></thead>
+          <tbody>
+            {% for v in visitors %}
+            <tr>
+              <td><div class="fw-600" style="font-size:13.5px;">{{ v.visitor_name }}</div><div style="font-size:11px;color:#64748b;">{{ v.phone }}</div></td>
+              <td><span class="badge bg-primary-subtle text-primary">{{ v.get_purpose_display }}</span></td>
+              <td style="font-size:13px;">{{ v.whom_to_meet }}</td>
+              <td style="font-size:12px;color:#64748b;">{{ v.check_in_time|date:"H:i" }}</td>
+              <td style="font-size:12px;color:#64748b;">{{ v.check_out_time|date:"H:i"|default:"Inside" }}</td>
+              <td>
+                {% if not v.check_out_time %}
+                <form method="post"><{% csrf_token %}<input type="hidden" name="action" value="checkout"><input type="hidden" name="visitor_id" value="{{ v.pk }}"><button type="submit" class="btn btn-sm btn-warning">Check Out</button></form>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center text-muted py-5">No visitors for this date.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

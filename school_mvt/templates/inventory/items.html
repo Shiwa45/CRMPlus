@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "inventory:dashboard" %}">Inventory</a></li><li class="breadcrumb-item active">Items</li>{% endblock %}
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2">
+    <select name="category" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      <option value="">All Categories</option>
+      {% for cat in categories %}<option value="{{ cat.pk }}">{{ cat.name }}</option>{% endfor %}
+    </select>
+    <div class="form-check ms-2"><input class="form-check-input" type="checkbox" name="low_stock" onchange="this.form.submit()"><label class="form-check-label" style="font-size:13px;">Low Stock Only</label></div>
+  </form>
+  <span class="ms-auto" style="font-size:13px;color:#64748b;">Total Value: <strong>₹{{ total_value|floatformat:0|intcomma }}</strong></span>
+</div>
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Code</th><th>Item</th><th>Category</th><th>Stock</th><th>Min Stock</th><th>Unit Price</th><th>Alert</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td><code style="font-size:12px;">{{ item.item_code }}</code></td>
+          <td class="fw-600" style="font-size:13.5px;">{{ item.name }}</td>
+          <td>{% if item.category %}<span class="badge bg-secondary-subtle text-secondary">{{ item.category.name }}</span>{% endif %}</td>
+          <td><strong {% if item.is_low_stock %}class="text-danger"{% endif %}>{{ item.current_stock }} {{ item.unit }}</strong></td>
+          <td style="font-size:13px;">{{ item.minimum_stock }} {{ item.unit }}</td>
+          <td style="font-size:13px;">₹{{ item.unit_price }}</td>
+          <td>{% if item.is_low_stock %}<span class="badge bg-danger-subtle text-danger"><i class="bi bi-exclamation-triangle me-1"></i>Low Stock</span>{% else %}<span class="badge bg-success-subtle text-success">OK</span>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-5">No inventory items.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

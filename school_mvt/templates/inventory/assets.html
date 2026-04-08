@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url "inventory:dashboard" %}">Inventory</a></li><li class="breadcrumb-item active">Assets</li>{% endblock %}
+{% block content %}
+<div class="filters-bar">
+  <form method="get" class="d-flex align-items-center gap-2 flex-wrap w-100">
+    <div class="input-group" style="max-width:220px;"><span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span><input type="text" name="q" class="form-control border-start-0" placeholder="Asset name or code…" value="{{ request.GET.q }}"></div>
+    <select name="category" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      <option value="">All Categories</option>
+      {% for cat in categories %}<option value="{{ cat.pk }}">{{ cat.name }}</option>{% endfor %}
+    </select>
+    <select name="status" class="form-select" style="max-width:160px;" onchange="this.form.submit()">
+      {% for val, label in status_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Search</button>
+    <button class="btn btn-outline-primary ms-auto" data-bs-toggle="modal" data-bs-target="#addAssetModal"><i class="bi bi-plus me-1"></i>Add Asset</button>
+  </form>
+</div>
+<div class="card table-card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Asset Code</th><th>Name</th><th>Category</th><th>Purchase Date</th><th>Value</th><th>Location</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for asset in assets %}
+        <tr>
+          <td><code style="font-size:12px;">{{ asset.asset_code }}</code></td>
+          <td class="fw-600" style="font-size:13.5px;">{{ asset.name }}</td>
+          <td>{% if asset.category %}<span class="badge bg-secondary-subtle text-secondary">{{ asset.category.name }}</span>{% endif %}</td>
+          <td style="font-size:13px;">{{ asset.purchase_date|default:"—" }}</td>
+          <td style="font-size:13px;">₹{{ asset.purchase_price|intcomma }}</td>
+          <td style="font-size:12px;color:#64748b;">{{ asset.current_location|default:"—" }}</td>
+          <td>{% if asset.status == "active" %}<span class="badge bg-success-subtle text-success">Active</span>{% elif asset.status == "under_maintenance" %}<span class="badge bg-warning-subtle text-warning">Maintenance</span>{% else %}<span class="badge bg-secondary-subtle text-secondary">{{ asset.get_status_display }}</span>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-5">No assets registered yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
